@@ -1,0 +1,312 @@
+<div class="page-wrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <app-profile-header tab="4"></app-profile-header>
+      <ion-row>
+        <ion-col size="12" sizeLg="8" class="leftPane">
+          <ion-row class="feature-title">
+            <p>
+              Please provide your payment information below for
+              <span>Smart Contract</span> payouts.
+            </p>
+          </ion-row>
+          <ion-row class="buttonSection">
+            <div class="button">
+              <button
+                nbButton
+                shape="semi-round"
+                type="button"
+                fullWidth
+                status="primary"
+                (click)="showForm(1)"
+              >
+                Add Account
+              </button>
+            </div>
+            <div class="button">
+              <button
+                nbButton
+                shape="semi-round"
+                type="button"
+                fullWidth
+                status="primary"
+                (click)="showForm(2)"
+              >
+                Add Paypal
+              </button>
+            </div>
+          </ion-row>
+          <form
+            [nbSpinner]="addAccountLoading"
+            [formGroup]="bankForm"
+            (ngSubmit)="createAccount(bankForm)"
+          >
+            <ion-row class="formSection" *ngIf="formType == 1">
+              <ion-col size="6">
+                <div class="item">
+                  <span class="fieldName">Bank Name</span>
+                  <input
+                    class="form-input"
+                    formControlName="bankName"
+                    required
+                    autocomplete="off"
+                    [ngClass]="{'is-invalid': bankformControls.bankName.touched && submitted && !bankformControls.bankName.valid}"
+                  />
+                </div>
+              </ion-col>
+              <ion-col size="6">
+                <div class="item">
+                  <span class="fieldName">Account Type</span>
+                  <nb-select
+                    [(ngModel)]="accountType"
+                    formControlName="accountType"
+                    [ngClass]="{'is-invalid': !bankformControls.accountType.pristine && submitted && !bankformControls.accountType.valid}"
+                  >
+                    <nb-option
+                      *ngFor="let item of ['Checking', 'Saving']"
+                      [value]="item"
+                    >
+                      {{item}}
+                    </nb-option>
+                  </nb-select>
+                </div>
+              </ion-col>
+              <ion-col size="6">
+                <div class="item">
+                  <span class="fieldName">Account Number</span>
+                  <input
+                    class="form-input"
+                    type="number"
+                    formControlName="accountNumber"
+                    required
+                    autocomplete="off"
+                    pattern="[0-9]{10}"
+                    [ngClass]="{'is-invalid': !bankformControls.accountNumber.pristine && submitted && !bankformControls.accountNumber.valid}"
+                  />
+                </div>
+              </ion-col>
+              <ion-col size="6">
+                <div class="item">
+                  <span class="fieldName">Routing Number</span>
+                  <input
+                    class="form-input"
+                    formControlName="routingNumber"
+                    required
+                    autocomplete="off"
+                    pattern="[0-9]{9}"
+                    type="number"
+                    [ngClass]="{'is-invalid': !bankformControls.routingNumber.pristine && submitted && !bankformControls.routingNumber.valid}"
+                  />
+                </div>
+              </ion-col>
+              <ion-col size="12" class="horizontalCenterRow mt10">
+                <button nbButton status="info" type="submit">
+                  <div class="wrapper">
+                    <span class="gradientText">Submit</span>
+                  </div>
+                </button>
+              </ion-col>
+            </ion-row>
+          </form>
+          <ion-row class="formSection" *ngIf="formType == 2">
+            <ion-col size="12" class="formBody">
+              <div class="item">
+                <span class="fieldName"> Paypal Email</span>
+                <div class="verticalCenterRow">
+                  <input
+                    class="form-input paypalInput"
+                    name="email"
+                    required
+                    #emailModel="ngModel"
+                    [(ngModel)]="paypalEmail"
+                    [pattern]="emailRegEx"
+                    autocomplete="off"
+                    [ngClass]="{'is-invalid': !emailModel.pristine && submitted && !emailModel.valid}"
+                  />
+                  <button
+                    nbButton
+                    status="info"
+                    type="submit"
+                    (click)="createPaypal()"
+                  >
+                    <div class="wrapper">
+                      <span class="gradientText">Submit</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <div
+            [nbSpinner]="setPrimaryPaymentLoading"
+            class="gradientTable paymentTable"
+            *ngIf="bankObs | async; else loading;"
+          >
+            <div class="border-bottom ion-padding-horizontal tableHeader">
+              <ion-row class="rowWrapper">
+                <ion-col size="1" class="verticalCenterRow"></ion-col>
+                <ion-col size="1" class="verticalCenterRow icon-col"></ion-col>
+                <ion-col size="3" class="verticalCenterRow">Bank Name</ion-col>
+                <ion-col size="2.5" class="verticalCenterRow account-type"
+                  >Account Type</ion-col
+                >
+                <ion-col size="3" class="verticalCenterRow"
+                  >Bank Account</ion-col
+                >
+                <ion-col
+                  sizeSm="1.5"
+                  size="2.5"
+                  class="verticalCenterRow"
+                ></ion-col>
+              </ion-row>
+            </div>
+
+            <!-- NO DATA START -->
+            <div class="mt20" *ngIf="!banks?.length">
+              <h6>
+                <strong><i>No payment methods available</i></strong>
+              </h6>
+            </div>
+            <!-- NO DATA END -->
+
+            <ion-radio-group (ionChange)="setPrimaryPayment($event)">
+              <div
+                class="tableBody"
+                *ngFor="let payment of banks; let index = index"
+              >
+                <ion-row class="rowWrapper">
+                  <ion-col size="1" class="verticalCenterRow radio">
+                    <ion-radio
+                      [value]="payment"
+                      [ngClass]="{ 'radio-checked': payment.flag_primary }"
+                    ></ion-radio>
+                  </ion-col>
+                  <ion-col size="1" class="verticalCenterRow icon icon-col">
+                    <i class="fas fa-money-check-alt"></i>
+                  </ion-col>
+                  <ion-col size="3" class="verticalCenterRow"
+                    >{{ payment.bank_name }}</ion-col
+                  >
+                  <ion-col size="2.5" class="verticalCenterRow account-type"
+                    >{{ payment.account_type }}</ion-col
+                  >
+                  <ion-col size="3" class="verticalCenterRow"
+                    >{{ payment.account_number | accountNumber}}</ion-col
+                  >
+                  <ion-col
+                    sizeSm="1.5"
+                    size="2.5"
+                    class="verticalCenterRow delete"
+                  >
+                    <button
+                      nbButton
+                      status="danger"
+                      (click)="delete(deleteDialog, payment, 'bank')"
+                      *ngIf="!payment.flag_primary"
+                    >
+                      Remove
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </div>
+              <div
+                class="tableBody"
+                *ngFor="let payment of paypals; let index = index"
+              >
+                <ion-row class="rowWrapper">
+                  <ion-col size="1" class="verticalCenterRow radio">
+                    <ion-radio
+                      [value]="payment"
+                      [ngClass]="{ 'radio-checked': payment.flag_primary }"
+                    ></ion-radio>
+                  </ion-col>
+                  <ion-col size="1" class="verticalCenterRow icon icon-col">
+                    <i class="fab fa-cc-paypal"></i>
+                  </ion-col>
+                  <ion-col size="8.5" class="verticalCenterRow"
+                    >{{ payment.paypal }}</ion-col
+                  >
+                  <ion-col
+                    sizeSm="1.5"
+                    size="2.5"
+                    class="verticalCenterRow delete"
+                  >
+                    <button
+                      nbButton
+                      status="danger"
+                      (click)="delete(deleteDialog, payment, 'paypal')"
+                      *ngIf="!payment.flag_primary"
+                    >
+                      Remove
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </ion-radio-group>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeLg="4" class="rightPane horizontalCenterRow">
+          <img src="{{cloudUrl}}/images/computer.png" />
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</div>
+
+<ng-template #deleteDialog let-data let-ref="dialogRef">
+  <ion-card class="deleteDialogBody">
+    <ion-card-header>
+      <span>Remove</span>
+      <span><i class="fas fa-close" (click)="closeDialog(ref)"></i></span>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row class="container">
+        <ion-col size="12" class="message"> Delete your account? </ion-col>
+        <ion-col size="12" *ngIf="deletePaymentType == 'bank'">
+          <ion-row>
+            <ion-col size="6">
+              Bank Name: <span>{{deletePaymentInfo.bank_name}}</span>
+            </ion-col>
+            <ion-col size="6">
+              Account Type: <span>{{deletePaymentInfo.account_type}}</span>
+            </ion-col>
+            <ion-col size="12">
+              Account Number:
+              <span
+                >{{deletePaymentInfo.account_number | accountNumber:
+                'bank'}}</span
+              >
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col size="12" *ngIf="deletePaymentType == 'paypal'">
+          <ion-row>
+            <ion-col size="12">
+              Paypal Email: <span>{{deletePaymentInfo.paypal}}</span>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      <ion-row class="horizontalCenterRow p10">
+        <ion-col size="6">
+          <button
+            nbButton
+            shape="semi-round"
+            fullWidth
+            status="info"
+            (click)="deletePayment(ref)"
+          >
+            <span class="gradientText">Remove</span>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ng-template>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

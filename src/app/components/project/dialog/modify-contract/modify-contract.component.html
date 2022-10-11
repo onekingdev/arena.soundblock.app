@@ -1,0 +1,127 @@
+<div class="modal-header">
+  <span>Modify Contract</span>
+  <span><i class="fas fa-close" role="button" (click)="close()"></i></span>
+</div>
+<div [ngClass]="showForm?'':''" class="modal-body  modifyContractDialog">
+  <div class="container">
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup)"
+      (keydown.enter)="$event.preventDefault()">
+      <div class="row content">
+        <div class="col-12 col-lg-8 left-panel">
+          <!-- ERRORS -->
+          <div class="row payoutWarning">
+            <div class="col-12" *ngIf="wrongValue">
+              <alert (click)="wrongValue = false" type="danger">Wrong Payout Values, Allocation should be <= 100
+                  </alert>
+            </div>
+
+            <div class="col-12" *ngIf="payoutFull">
+              <alert (click)="payoutFull = false" type="danger">Payout is not allocated.</alert>
+            </div>
+          </div>
+          <!-- ERRORS -->
+
+          <!-- ADD NEW MEMBER DROPDOWN -->
+          <div class="new-member-dropdown">
+            <ng-select #memberSelect [loading]="getTeamMembersLoading" placeholder="Select team member"
+              (change)="addMember($event)">
+              <ng-option value="Add member">
+                <i>{{ addUserText }}</i>
+              </ng-option>
+
+              <ng-option *ngFor="let member of availableTeamMembers" [value]="member"
+                [disabled]="checkMemberIsAdded(member.email)"
+                [ngClass]="{ disabled: checkMemberIsAdded(member.email) }">
+                {{ member.name }}
+              </ng-option>
+            </ng-select>
+          </div>
+          <!-- ADD NEW MEMBER DROPDOWN -->
+
+          <!-- ADDED MEMBERS -->
+          <div id="paymentSection" formArrayName="members" class="payoutBody">
+            <div class="row" [style.border-bottom]="
+                    formMembers.value.length > 1 ? '2px solid #518dc9' : 'none'
+                  " [formGroupName]="index" *ngFor="let fg of formMembers.controls; let index = index">
+              <!-- NAME -->
+              <div class="col-12 col-sm-6 col-lg-3">
+                <span>Name</span>
+                <div class="member-details">
+                  {{ fg.controls.name.value }}
+                </div>
+              </div>
+              <!-- NAME -->
+
+              <!-- EMAIL -->
+              <div class="col-12 col-sm-6 col-lg-3">
+                <span>Email</span>
+                <div class="member-details">
+                  {{ fg.controls.email.value }}
+                </div>
+              </div>
+              <!-- EMAIL -->
+
+              <!-- ROLE -->
+              <div class="roleCol col-6 col-lg-3">
+                <span>Role</span>
+
+                <ng-select *ngIf="
+                        hasAddMembersPermission && !fg.controls.isOwner.value
+                      " [loading]="userUUIDRoleLoading === fg.controls.uuid.value" (change)="
+                        changeMemberRole(fg.controls.uuid.value,index, $event)
+                      " formControlName="role_id" [items]=" (profileService.projectRoles | async)"
+                  [bindLabel]="'dataRole'" [bindValue]="'dataUUID'" [searchable]="false">
+                </ng-select>
+                <div *ngIf="
+                        !hasAddMembersPermission || fg.controls.isOwner.value
+                      " class="member-details">
+                  Owner
+                </div>
+              </div>
+              <!-- ROLE -->
+
+              <!-- PAYOUT -->
+              <div class="col-6 col-lg-3">
+                <span>Payout</span>
+                <div class="row">
+                  <div class="col-9">
+                    <div class="payoutInput">
+                      <input type="number" required autocomplete="off" class="form-input" formControlName="payout"
+                        name="payout" (change)="onPayout(fg, index)"
+                        step="0.01"
+                        [value]="fg.get('payout').value | number"
+                        [ngClass]="{
+                              'is-invalid':
+                                (fg.controls.payout.touched || submitted) &&
+                                !fg.controls.payout.valid
+                            }" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"/>
+                      <span class="percentage">%</span>
+                    </div>
+                  </div>
+                  <div class="deleteBtn col-3" [hidden]="fg.value.isOwner" (click)="deleteMember(index)"
+                    *ngIf="formMembers.controls.length">
+                    <i class="fas fa-close"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- PAYOUT -->
+            </div>
+          </div>
+          <!-- ADDED MEMBERS -->
+        </div>
+        <!-- CHART -->
+        <div class="col-12 col-lg-4 right-panel hide-xs hide-vs">
+          <div class="imageDiv">
+            <app-chart id="{{ projectId }}"></app-chart>
+          </div>
+        </div>
+        <!-- CHART -->
+      </div>
+      <div class="row buttons mt-3 mb-3 horizontalCenterRow">
+        <button nbButton [disabled]="formGroup.invalid" type="submit" status="info" class="m5">
+          <span class="gradientText">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

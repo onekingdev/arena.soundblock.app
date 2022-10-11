@@ -1,0 +1,49 @@
+.uploadArtworkPanel {
+    // padding: 30px 30px;
+    @media screen and (max-width: 767px) {
+      flex: 0 0 33.33333% !important;
+    }
+    .imageDiv {
+      max-width: 610px; margin: 0 auto; display: flex; justify-content: center; flex-direction: column;
+      width: 100%;
+      .imageWrapper {
+        display: flex; align-items: center; position: relative;
+        width: 100%;
+        position: relative;
+        // img { border-radius: 10px; object-fit: contain; width: 100%;}
+        .img { border-radius: 10px; padding-top: 100%; width: 100%;}
+        input { position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0;}
+        .inputDiv {
+          position: absolute;
+          top: 0; left: 0; right: 0; bottom: 0;
+          opacity: 0;
+          &:hover { cursor: pointer; }
+        }
+      }
+      button { max-width: 200px; margin: auto; }
+  }
+}
+
+.artist-info-icon {
+  padding: 10px;
+  border-radius: 50%;
+ // border: 1px solid black;
+}
+
+.artist-detail {
+    height: calc(100vh - 209px);
+    overflow: auto;
+}
+
+.btn-gradient {
+  padding: 0.6875rem 2.5rem !important;
+  border: none !important;
+  background: linear-gradient(90deg, #518dc9 0%, #782c7f 100%);
+  span { color: white !important; font-weight: normal !important; font-family: Open Sans, sans-serif !important;}
+}
+
+
+.btn-gradient:hover {
+  box-shadow: 0px 0px 10px 0 rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}

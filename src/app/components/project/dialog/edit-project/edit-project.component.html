@@ -1,0 +1,280 @@
+<div class="modifyContractDialog card">
+  <div class="card-header">
+    <span>Edit Project</span>
+    <span><i class="fas fa-close" (click)="cancel()"></i></span>
+  </div>
+  <div class="card-body pt-0" [nbSpinner]="editProjectLoading">
+    <div class="content">
+      <form [formGroup]="form">
+        <div class="row mb-2">
+          <div class="col-12">
+            <div>
+              <label>Artist Display Name</label>
+            </div>
+            <input type="text" class="form-input" formControlName="artist"
+            (change)="editProjectRequest('project_artist', this.formControls.artist.value)"
+            >
+          </div>
+        </div>
+        <div >
+          <div class="d-flex">
+            <label class="mb-3">Artists*
+              <i class="fas fa-info-circle" tooltip="This field is used to indicate which artist profiles your project should appear on. This information can also be entered on a per-track basis; if an artist only appears on one track, you may wish to enter it there instead.
+                  "></i>
+            </label>
+          </div>
+          <div class="d-flex">
+            <button class="btn-gradient mb-3" (click) = "openAddArtistModal()">
+              <span>Add Artist</span>
+            </button>
+          </div>
+          
+          <div class="mb-3 row" *ngIf="selectedArtists?.length">
+            <div class="mt-2 col-md-6 col-lg-6 col-vl-6 col-xl-6 col-12 col-sm-6" *ngFor="let artist of selectedArtists;let i = index">
+            
+                <div class="card artist-card" role="button">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <img class="artist-img" [src]="artist.avatar_url" (error)="this.artist.avatar_url = 'https://cloud.develop.account.arena.com/assets/static/avatar_v2.jpg'" />
+                      <div class="artist-detail"><p>
+                        {{artist.artist_name}}
+                      </p>
+                      <div class="    // this.selectedArtists = this.project.artists;    // this.selectedArtists = this.project.artists;tom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" (change)="artist.artist_type==='primary'?artist.artist_type='featuring':artist.artist_type='primary'" [id]="'customSwitch5' + i"
+                        [checked]="artist.artist_type==='primary'? true: false">
+                        <label class="custom-control-label pt-2" [for]="'customSwitch5' + i">{{artist.artist_type}}</label>
+                      </div>
+                      </div>
+                      <i class="fal fa-trash-alt" (click)="deleteSelectedArtist(artist)"></i>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-sm-6 mb-2">
+            <div>
+              <label class="mt-2">Project Title:</label>
+            </div>
+            <input autocomplete="off" class="form-input" name="title" formControlName="title" minlength="3" required
+            (change)="editProjectRequest('title', this.formControls.title.value)"
+              [ngClass]="{
+                'is-invalid':
+                  form.controls.title.errors && form.controls.title.touched
+              }" />
+            <div *ngIf="form.controls.title.errors && form.controls.title.touched" class="alert alert-danger">
+              Title is required and should be at least 3 characters
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 mb-2">
+            <div>
+              <label class="mt-2">Format:</label>
+            </div>
+            <ng-select name="type" formControlName="type" class="customSelect"
+            (change)="editProjectRequest('format_id', this.formControls.type.value)"
+            required [ngClass]="{
+              'is-invalid':
+                form.controls.type.errors && form.controls.type.touched
+            }" [items]="profileService.projectFormats | async" [bindLabel]="'dataFormat'" [bindValue]="'dataUUID'">
+
+            </ng-select>
+            <div *ngIf="form.controls.type.errors && form.controls.type.touched" class="alert alert-danger">
+              Type is required
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 mb-2">
+            <div>
+              <label class="mt-1">UPC:
+                <i class="fas fa-info-circle"
+                  Tooltip="Leave this field blank if you do not have a UPC; we will generate one for you"
+                  >
+                </i>
+              </label>
+            </div>
+            <input autocomplete="off" class="form-input" name="upc" formControlName="upc"
+            (change)="editProjectRequest('upc', this.formControls.upc.value)"
+              [attr.disabled]="upcDisabled || project.status.deployment ? true : null" />
+          </div>
+          <div class="col-12 col-sm-6 mb-2">
+            <div>
+              <label class="mt-2">Release Date:
+                <i class="fas fa-info-circle"
+                  tooltip="If this project was released in the past, please use that date. Otherwise, please use the date you expect this project to be released.">
+                </i>
+              </label>
+            </div>
+            <input class="form-input datatime" name="releaseDate" required
+            [bsConfig]="{ adaptivePosition: true,showWeekNumbers: false}"
+            (ngModelChange)="editProjectRequest('date', this.formControls.releaseDate.value)"
+            bsDatepicker
+              formControlName="releaseDate"
+              value="{{form.controls['releaseDate'].value | date : 'MM/DD/YYYY'}}"
+              [ngClass]="{'is-invalid': form.controls.releaseDate.errors && form.controls.releaseDate.touched}" />
+            <div *ngIf="form.controls.releaseDate.errors && form.controls.releaseDate.touched"
+              class="alert alert-danger">
+              Release Date is required
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6 mb-2">
+            <div>
+              <label class="mt-2">Project Volumes:</label>
+            </div>
+            <input autocomplete="off" class="form-input" name="title" formControlName="projectVolumes"
+            (change)="editProjectRequest('project_volumes', this.formControls.projectVolumes.value)"
+            [ngClass]="{
+                'is-invalid':
+                  form.controls.projectVolumes.errors && form.controls.projectVolumes.touched
+              }" />
+          </div>
+          <div class="col-6 mb-2">
+            <div>
+              <label class="mt-2">Project Language:</label>
+            </div>
+            <ng-select name="type" formControlName="projectLanguage" class="customSelect"
+            (change)="editProjectRequest('project_language', this.formControls.projectLanguage.value)"
+            required [ngClass]="{
+              'is-invalid':
+                form.controls.projectLanguage.errors && form.controls.projectLanguage.touched
+            }" [items]="profileService.languages | async" [bindLabel]="'dataLanguage'" [bindValue]="'dataUUID'">
+
+            </ng-select>
+            <div *ngIf="form.controls.projectLanguage.errors && form.controls.projectLanguage.touched"
+              class="alert alert-danger">
+              Language is required
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-8 mb-2">
+            <div>
+              <label class="mt-2">Copyright Name:</label>
+            </div>
+            <input autocomplete="off" class="form-input" name="title"
+            (change)="editProjectRequest('project_copyright_name', this.formControls.projectCopyrightName.value)"
+              formControlName="projectCopyrightName" [ngClass]="{
+                'is-invalid':
+                  form.controls.projectCopyrightName.errors && form.controls.projectCopyrightName.touched
+              }" />
+          </div>
+          <div class="col-4 mb-2">
+            <div>
+              <label>Copyright Year:</label>
+            </div>
+            <input class="form-input" formControlName="projectCopyrightYear"
+            (change)="editProjectRequest('project_copyright_year', this.formControls.projectCopyrightYear.value)"
+            [ngClass]="{'is-invalid': form.controls.projectCopyrightYear.errors && form.controls.projectCopyrightYear.touched}"
+            >
+          </div>
+        </div>
+
+        <div class="row ">
+          <div class="col-8 mb-2">
+            <div>
+              <label>Recording Location:</label>
+            </div>
+            <input autocomplete="off" class="form-input" name="title"
+            (change)="editProjectRequest('project_recording_location', this.formControls.projectRecordingLocation.value)"
+              formControlName="projectRecordingLocation" [ngClass]="{
+                'is-invalid':
+                  form.controls.projectRecordingLocation.errors && form.controls.projectRecordingLocation.touched
+              }" />
+          </div>
+          <div class="col-4 mb-2">
+            <div>
+              <label >Recording Year:</label>
+            </div>
+            <input class="form-input" formControlName="projectRecordingYear"
+            (change)="editProjectRequest('project_recording_year', this.formControls.projectRecordingYear.value)"
+            [ngClass]="{'is-invalid': form.controls.projectRecordingYear.errors && form.controls.projectRecordingYear.touched}"
+            >
+        </div>
+    </div>
+    <div class="row ">
+      <div class="col-6 mb-2">
+        <div>
+          <ion-label for="genre">Primary Genre</ion-label>
+        </div>
+        <ng-select formControlName="primaryGenre" class="customSelect" fullWidth
+        (change)="editProjectRequest('genre_primary', this.formControls.primaryGenre.value)"
+        >
+          <ng-option *ngFor="let genre of primaryGenres " [value]="genre.dataUUID">{{genre.dataGenre}}
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="col-6 mb-2">
+        <div>
+          <ion-label for="genre">Secondary Genre</ion-label>
+        </div>
+        <ng-select formControlName="secondaryGenre" class="customSelect" 
+        (change)="editProjectRequest('genre_secondary', this.formControls.secondaryGenre.value)"
+        fullWidth>
+          <ng-option *ngFor="let genre of secondaryGenres" [value]="genre.dataUUID">{{genre.dataGenre}}
+          </ng-option>
+        </ng-select>
+      </div>
+    </div>
+    <div class=" row">
+      <div class="mb-2 col-12 col-vl-6 col-xl-6 col-md-6 col-lg-6">
+        <div>
+          <label>Record Label:</label>
+        </div>
+        <input autocomplete="off" class="form-input" name="label" formControlName="label" 
+        (change)="editProjectRequest('label', this.formControls.label.value)"
+        />
+      </div>
+      <div class=" mb-2 col-12 col-vl-6 col-xl-6 col-md-6 col-lg-6">
+        <div>
+          <ion-label for="releaseTitle">Release Version</ion-label>
+        </div>
+        <input class="form-input" formControlName="releaseVersion"
+        (change)="editProjectRequest('project_title_release', this.formControls.releaseVersion.value)"
+        >
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-6 mt-2 mb-2">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="customSwitch2" formControlName="flagProjectExplicit"
+          (change)="editProjectFlags('flag_project_explicit', this.formControls.flagProjectExplicit.value || false)"
+          >
+          <label class="custom-control-label pt-2" for="customSwitch2">Explicit</label>
+        </div>
+      </div>
+      <div class="col-6 mt-2 mb-2">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="customSwitch1"
+            formControlName="flagProjectCompilation"
+            (change)="editProjectFlags('flag_project_compilation', this.formControls.flagProjectCompilation.value || false)"
+            >
+          <label class="custom-control-label pt-2" for="customSwitch1">Compilation</label>
+        </div>
+      </div>
+    </div>
+
+    </form>
+
+    <div class="mt-3 d-flex justify-content-center" *ngIf="volumeRestrictionError">
+      <div class="alert alert-danger" role="alert">
+        {{volumeRestrictionError}}
+      </div>
+    </div>
+
+    <div class="horizontalCenterRow row p10 pt30">
+      <div class="col-6">
+        <button nbButton shape="semi-round" fullWidth status="info" (click)="cancel()">
+          <span class="gradientText">Cancel</span>
+        </button>
+      </div>
+      <div class="col-6">
+        <button nbButton shape="semi-round" fullWidth status="primary" [disabled]="form.invalid" (click)="editProject()">
+          Save
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>

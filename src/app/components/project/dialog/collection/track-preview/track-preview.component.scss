@@ -1,0 +1,61 @@
+.trackPreview {
+  width: 800px;
+  ::ng-deep .native-textarea {
+    height: 100px;
+  }
+
+  ion-card-content {
+    .container {
+      .playback-wrapper { 
+        display: flex; flex-direction: column; margin-top: 1rem;
+        .volume-control {
+          display: flex; align-items: center; padding: 0 1rem;
+            input[type='range'] {
+              display: block; width: 100px; -webkit-appearance: none; background-color: #aaaaaa; height: 5px; border-radius: 5px; outline: 0;
+              &::-webkit-slider-thumb {
+                -webkit-appearance: none; background-color: #e74c3c; width: 15px; height: 15px;border-radius: 50%; border: 2px solid white;
+                cursor: pointer; transition: 0.3s ease-in-out; }          
+              &::-webkit-slider-thumb:hover {
+                background-color: white; border: 2px solid #e74c3c; }
+              &::-webkit-slider-thumb:active {
+                transform: scale(1.2); }
+            }
+        }
+        .playback-time {
+          display: flex; flex-direction: column; margin: 0 1rem; margin-top: 1rem; font-weight: bold; }
+        .playback {
+          margin: 1rem 0; margin-bottom: 0; display: flex; align-items: center; height: 60px;
+          .controls {
+            margin: 0 1rem;
+            i.disabled {
+              color: lightgray; cursor: not-allowed; }
+          }
+          .wavesurfer { width: 100%; }
+        }
+      }
+      .preview-actions, .preview-message {
+        margin-top: 1rem; margin-left: 1rem;
+      }
+      .loading-wrapper {
+        width: 100%; margin-right: 15px; background-color: rgb(215, 230, 255); height: 3px; position: relative;
+        * { transition: all 1s ease; }
+        .percentage { bottom: 8px; position: absolute; font-weight: bold; transform: translateX(-10px); }
+        .progress { position: absolute; height: 3px; background-color: rgb(56, 128, 255); }
+      }
+      @media screen and (max-width: 576px) {
+        .isrc-col { display: none; }
+      }
+      .tableBody {
+        height: 280px;
+        overflow: auto;
+        .rowWrapper {
+          cursor: pointer;
+          &.disabled { cursor: not-allowed; }
+          &.selected { cursor: default;
+            ion-col { background-color: #edf1f7; }
+          }
+       }
+      }
+    }
+  }
+}

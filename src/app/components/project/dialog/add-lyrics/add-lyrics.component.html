@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <div class="modal-title pull-left">Add Lyrics</div>
+  <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+      <span aria-hidden="true"><i class="fal fa-times"></i></span>
+  </button>
+</div>
+<div class="modal-body" [formGroup]="form">
+  <ng-select class="mb-2" formControlName="language" [items]="languages | async" [placeholder]="'Select Language'" [searchable]="false" [bindLabel]="'dataLanguage'" [bindValue]="'dataUUID'"></ng-select>
+  <textarea rows="10" class="form-input" [placeholder]="'Lyrics'" formControlName="lyrics"></textarea>
+  <div class="d-flex justify-content-center">
+    <button status="info" (click)="onSubmit()" [disabled]="form.invalid" class="appearance-filled size-medium shape-rectangle status-info">
+      <div class="gradientText">
+        <span>
+          <i *ngIf="isSubmitting" class="fas fa-circle-notch fa-spin"></i>
+          {{lyrics?'Update':'Add'}}
+        </span>
+      </div>
+    </button>
+  </div>
+</div>

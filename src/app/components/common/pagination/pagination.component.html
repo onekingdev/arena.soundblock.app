@@ -1,0 +1,11 @@
+<div size="12" class="pagination horizontalCenterRow verticalCenterRow mt10">
+  <ul class="paging" [ngClass]="isBlockChainPage?'blockchain-pager':'pager'">
+    <li><span class="prev" [ngClass]="isBlockChainPage?'far fa-chevron-double-left':'fa fa-arrow-left'"
+        (click)="pagePrev()" *ngIf="curPage != 1"></span></li>
+    <li *ngFor="let page of aryPageShowing; let i = index">
+      <span [ngClass]="{'active': page == curPage}" (click)="pageMoving(page)">{{page}}</span>
+    </li>
+    <li><span class="next" [ngClass]="isBlockChainPage?'fas fa-chevron-double-right':'fa fa-arrow-right'"
+        (click)="pageNext()" *ngIf="curPage != lastPage"></span></li>
+  </ul>
+</div>

@@ -1,0 +1,36 @@
+.accounts-wrapper {
+  width: 100%;
+  padding: 15px;
+  background-image: linear-gradient(#fff, #fff),
+    linear-gradient(90deg, #518dc9, #782c7f);
+  box-shadow: 0 5px 5px 0 rgba(140, 110, 171, 0.19);
+  border: .2em double transparent;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-radius: 10px;
+  margin-bottom: 10px;
+
+  * {
+    font-size: 0.9rem;
+  }
+
+  .title {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  .date {
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+  h6 {
+    i {
+      font-size: 1.25rem !important;
+    }
+  }
+}
+
+.loading_button {
+  color: #000 !important;
+  font-size: 1.2rem;
+  font-weight: bold;
+}

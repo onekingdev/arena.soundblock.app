@@ -1,0 +1,141 @@
+<div class="page-wrapper readyWrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <service-type></service-type>
+      <ion-row>
+        <ion-col size="12" sizeMd="6" class="leftPane">
+          <ion-row class="horizontalCenterRow">
+            <h4 class="gradientText">Sign In</h4>
+          </ion-row>
+          <form #form="ngForm" (ngSubmit)="signIn(form)" class="signin-form">
+            <div class="m10">
+              <input type="email" id="email" class="form-input" name="email" required [(ngModel)]="email"
+                placeholder="Username or Email" #emailModel="ngModel"
+                [ngClass]="{'is-invalid': !emailModel.pristine && !emailModel.valid}" />
+            </div>
+            <div class="m10 password-wrapper">
+              <input name="password" [(ngModel)]="password" #passwordModel="ngModel" required
+                type="{{showPass ? 'text' : 'password'}}" class="form-input" minlength="6" placeholder="Password"
+                [ngClass]="{'is-invalid':!passwordModel.pristine && !passwordModel.valid}" />
+              <div class="eyeWrapper">
+                <i (click)="showPass = !showPass" class="fa"
+                  [ngClass]="{'fa-eye': !showPass, 'fa-eye-slash': showPass}"></i>
+              </div>
+            </div>
+            <div class="m10" *ngIf="tfaEnabled">
+              <input name="tfaCode" [(ngModel)]="tfaCode" #tfaCodeModel="ngModel" class="form-input" type="number"
+                [ngClass]="{ 'is-invalid':!tfaCodeModel.pristine && !tfaCodeModel.valid}" placeholder="Auth Code" />
+            </div>
+            <div class="m10 error" *ngIf="statusCode == 400">
+              <span>Invalid user or password</span>
+            </div>
+            <div class="m10 error" *ngIf="statusCode == 422">
+              <span>Invalid 2FA Code</span>
+            </div>
+            <div class="more-actions m15">
+              <a class="redirect-links" (click)="navigate('password-recovery')">Forgot password</a>
+            </div>
+            <div class="horizontalCenterRow mb20 mt30">
+              <button nbButton shape="semi-round" class="signinBtn" type="submit" status="primary">
+                SIGN IN
+              </button>
+            </div>
+          </form>
+        </ion-col>
+        <ion-col size="12" sizeMd="6" class="rightPane">
+          <ion-row class="horizontalCenterRow">
+            <h4 class="gradientText">Sign Up</h4>
+
+          </ion-row>
+          <div>
+            <div class="text-center font-weight-bold">Thank you for joining Soundblock.</div>
+            <p> This step is for your user account; please enter your full name into the name field so we can process
+              your individual payments. In the next step, you can use a band name for your Soundblock account if that is
+              your preference.
+            </p>
+          </div>
+          <form #signupForm="ngForm" (ngSubmit)="$event.preventDefault; signUp(signupForm)">
+            <ion-row class="p5">
+              <input autocomplete="off" type="text" (change)="onNameChange($event)" [(ngModel)]="user.name" id="name" #name="ngModel" name="name"
+                class="form-input" minlength="1" required placeholder="Name"
+                [ngClass]="{'is-invalid': !name.valid && !name.pristine}" />
+            </ion-row>
+            <ion-row class="p5">
+              <input autocomplete="off" type="email" [(ngModel)]="user.email" #signupEmail="ngModel" name="signupEmail"
+                id="signupEmail" signupEmail class="form-input"
+                pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z0-9.-]{1,}[.]{1}[a-zA-Z]{2,}" placeholder="Email"
+                [ngClass]="{'is-invalid': !signupEmail.valid && !signupEmail.pristine}" />
+            </ion-row>
+            <div style="padding-right: 20px;" class="addPhoneForm row pl-1 pt-1 pb-1" >
+              <ng-select name="phoneType" class="phoneTypeSelect col-4" #phoneType="ngModel" required autocomplete="false" [(ngModel)]="user.phone_type">
+                <ng-option *ngFor="let item of phoneTypes" [value]="item">
+                  {{item}}
+                </ng-option>
+              </ng-select>
+              <input
+                autocomplete="off"
+                class="form-input col-8"
+                name="phoneNumber"
+                placeholder="Phone"
+                #userPhone = "ngModel"
+                required
+                [(ngModel)]="user.phone_number"
+                (input)="numbersOnlyValidator($event)"
+                [ngClass]="{'is-invalid': !userPhone.valid && !userPhone.pristine}"
+              />
+            </div>
+            <div class="row p5 no-gutters">
+              <div class="col-md-6 col-vl-6 col-lg-6 col-xl-6 col-12 passInput pass ">
+                <input autocomplete="off" (keyup)="onChangePassword()" [(ngModel)]="user.password" #signupPass="ngModel"
+                  type="password" class="form-input" required name="signupPass" placeholder="Password"
+                  [ngClass]="{'is-invalid':passwordStrength !== 'Strong' &&!signupPass.pristine &&passwordStrength !== 'Medium'}" />
+              </div>
+              <div class="col-md-6 col-vl-6 col-lg-6 col-xl-6 col-12 passInput comfirm">
+                <input autocomplete="off" [(ngModel)]="passwordConfirm" type="password" #password2="ngModel"
+                  name="password2" class="form-input" placeholder="Confirm Password"
+                  (ngModelChange)="mustMatch(user.password, passwordConfirm)"
+                  [ngClass]="{'is-invalid':!password2.pristine && passwordConfirm !== user.password}" />
+              </div>
+            </div>
+            <div class="row p5">
+              <div class="col-12" *ngIf="user.password && user.password.length">
+                <ion-text class="password-strength">
+                  Password Strength:
+                  <ion-text class="strength-level"
+                    [color]="passwordStrength === 'Strong'? 'success': passwordStrength === 'Medium'? 'warning': 'danger'">
+                    {{ passwordStrength }}
+                  </ion-text>
+                </ion-text>
+              </div>
+            </div>
+            <div class="privacy-policy">
+              <div class="pt5">
+                <ion-checkbox (ionChange)="agreed = !agreed"></ion-checkbox>
+              </div>
+              <small class="policy">
+                By clicking the “I Agree” checkbox, or by accessing, visiting, browsing, using or attempting to
+                interact with or use any part of Soundblock.com,
+                or any of our software, services, products or content, You agree that you have read, understand and
+                agree to comply with
+                and be bound by this Service Agreement, Terms of Use, and Privacy Policy (“Agreement”).
+                <!-- <a class="policy-link transition-action">Privacy Policy</a> -->
+              </small>
+            </div>
+            <div *ngIf="signupError" class="alert alert-danger">{{signupError}}</div>
+            <ion-row class="errors" *ngFor="let err of errors">
+              <i>{{ err }}</i>
+            </ion-row>
+            <ion-row class="createAccountBtn">
+              <button [disabled]="signupForm.invalid || !agreed" nbButton status="primary" type="submit">
+                CREATE ACCOUNT
+              </button>
+            </ion-row>
+          </form>
+        </ion-col>
+      </ion-row>
+    </div>
+    <div class="page-footer">
+      <app-page-footer></app-page-footer>
+    </div>
+  </div>
+</div>

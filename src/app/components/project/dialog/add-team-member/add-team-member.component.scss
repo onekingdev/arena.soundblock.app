@@ -1,0 +1,162 @@
+.projectTab {
+  border-bottom: solid 1px #edf1f7;
+  margin: 0 10px;
+  display: flex;
+  flex-direction: row;
+
+  .tablinks {
+    outline: none;
+    box-sizing: content-box;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.9rem;
+    flex: 1;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0;
+
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      padding: 15px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .border {
+      width: 100%;
+      height: 3px;
+      background-color: white;
+    }
+
+    &:hover {
+      .border {
+        background: lightgray;
+      }
+    }
+
+    &.active {
+      .border {
+        background: linear-gradient(90deg, #518dc9 0%, #782c7f 100%);
+      }
+    }
+
+    span {
+      font-size: 0.9rem;
+      color: black;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  }
+}
+
+.dialogForm {
+  .content {
+    .role {
+      width: 100%;
+    }
+
+    .permission {
+      padding: 0 20px 10px 20px;
+
+      .project {
+        padding-bottom: 5px;
+      }
+    }
+  }
+}
+
+.accountTab {
+  height: 350px;
+}
+
+.fileTab {
+  height: 325px;
+}
+
+.reportsTab {
+  height: 200px;
+}
+
+@media screen and (max-width: 767px) {
+  .fileTab {
+    height: 437px;
+  }
+}
+
+.tab {
+  padding: 20px 30px;
+  justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: auto;
+
+  .select-all {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    button {
+      width: auto;
+      height: auto;
+      padding: 8px;
+      margin: -8px;
+      border-radius: 5px;
+      background-color: transparent;
+      transition: all 0.3s;
+      float: unset;
+  
+      &:hover {
+        background-color: lightgray;
+      }
+    }
+  }
+  &.fileTab {
+    justify-content: flex-start;
+  }
+}
+
+.permissionDialog {
+  width: 600px;
+
+  .content {
+    .role {
+      width: 100%;
+    }
+  }
+}
+.form-padding {
+  padding: 16px;
+ }
+ .card{
+   cursor: pointer;
+   .custom-control-label:before{
+    background-color:white;
+    border: 1px solid gray;
+  }
+  .custom-checkbox .custom-control-input:checked~.custom-control-label::before{
+    background-color:#782c7f;
+    width: 20px;
+    height: 20px;
+  }
+  .custom-checkbox .custom-control-input:checked~.custom-control-label::after{
+    background-size:15px;
+    width: 20px;
+    height: 20px;
+  }
+ }
+ .card-header{
+   color: #fff!important;
+   background: linear-gradient(90deg,#518dc9,#782c7f);
+   font-weight: 700;
+   display: flex;
+   justify-content: space-between;
+ }
+ .custom-control-label{
+  font-family: itc-avant-garde-gothic-pro,sans-serif;
+  font-style: normal;
+  letter-spacing: normal;
+  font-size: 1rem;
+}

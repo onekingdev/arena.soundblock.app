@@ -1,0 +1,72 @@
+<ion-card class="blockchainDialog">
+  <ion-card-header>
+    <span>Blockchain</span>
+    <span><i class="fas fa-close" (click)="close()"></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <div class="container">
+      <div class="versionTabs">
+        <div class="tab" *ngFor="let item of [1,2,3]" [ngClass]="{'selected': item == tab}" (click)="selectTab(item)">
+          <span [ngClass]="{'gradientText': item != tab}">{{item}}</span>
+        </div>
+      </div>
+      <div class="content">
+        <div class="sectionHeading">
+          <span class="gradientText">Blockchain Data</span>
+        </div>
+        <div class="sectionContent">
+          <ion-row>
+            <ion-col size="12" sizeMd="3"><b>ID</b></ion-col>
+            <ion-col size="12" sizeMd="9">{{data.metadata.id}} <b class="colorBlue">(v{{data.metadata.version}})</b></ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" sizeMd="3"><b>Sequence</b></ion-col>
+            <ion-col size="12" sizeMd="9">{{data.blockAddress.strandId}} <b class="colorBlue">({{data.blockAddress.sequenceNo}})</b></ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" sizeMd="3"><b>Transaction</b></ion-col>
+            <ion-col size="12" sizeMd="9">{{data.metadata.txTime | date: 'MM/dd/yyyy hh:mm:ss'}} ({{data.metadata.txId}})</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12" sizeMd="3"><b>Hash</b></ion-col>
+            <ion-col size="12" sizeMd="9">{{data.hash}}</ion-col>
+          </ion-row>
+        </div>
+        <div class="sectionHeading">
+          <span class="gradientText">Blockchain Record</span>
+        </div>
+        <div class="sectionContent">
+          <ion-row *ngFor="let item of blockchainRecord">
+            <ion-col size="12" sizeMd="3"><b>{{item.name}}</b></ion-col>
+            <ion-col size="12" sizeMd="9" *ngIf="item.type == 'bool'">
+              <span [ngClass]="{'colorBlue': item.data == true, 'colorPurple': item.data == false}">{{item.data}}</span>
+            </ion-col>
+            <ion-col size="12" sizeMd="9" *ngIf="item.type == 'date'">
+              <span>{{item.data | date: 'MM/dd/yyyy hh:mm:ss'}}</span>
+            </ion-col>
+            <ion-col size="12" sizeMd="9" *ngIf="item.type == 'int' || item.type == 'float'">
+              <span class="colorGray">{{item.data}}</span>
+            </ion-col>
+            <ion-col size="12" sizeMd="9" *ngIf="item.type == 'string'">
+              <span>{{item.data}}</span>
+            </ion-col>
+            <ion-col size="12" sizeMd="9" *ngIf="item.type == 'struct'">
+              <ion-row *ngFor="let item of getEntries(item.data)" class="structType">
+                <ion-col size="12"><b>{{item.name}}</b></ion-col>
+                <ion-col size="12">{{item.data}}</ion-col>
+              </ion-row>
+            </ion-col>
+            <ion-col size="12" sizeMd="9" *ngIf="item.type == 'array'">
+              <div *ngFor="let listItem of item.data">
+                <ion-row *ngFor="let subItem of getEntries(listItem)" class="structType">
+                  <ion-col size="5"><b>{{subItem.name}}</b></ion-col>
+                  <ion-col size="7">{{subItem.data | json}}</ion-col>
+                </ion-row>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+      </div>
+    </div>
+  </ion-card-content>
+</ion-card>

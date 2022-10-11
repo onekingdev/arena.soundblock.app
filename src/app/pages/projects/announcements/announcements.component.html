@@ -1,0 +1,41 @@
+<div *ngIf="isDataLoaded && announcementsObs; else loading">
+  <div class="accounts-wrapper" *ngIf="!announcementsObs.data || announcementsObs.data.length === 0">
+    <h6 style='text-align: center;'>
+      <i>Nothing to display here.</i>
+    </h6>
+  </div>
+  <div *ngIf="announcementsObs.data && announcementsObs.data.length > 0">
+    <div class="accounts-wrapper" *ngFor="let announcement of announcementsObs.data">
+      <span class="title gradientText">{{ announcement.announcement_title }}</span>
+
+      <p class="message" [innerHTML]="announcement.announcement_message"></p>
+      
+      <p class="date" *ngIf="announcement.stamp_created === announcement.stamp_updated">Posted on {{ announcement.stamp_created | epoch: 'mediumDate' }}</p>
+      <p class="date" *ngIf="announcement.stamp_created !== announcement.stamp_updated">Posted on {{ announcement.stamp_created | epoch: 'mediumDate' }} (Updated {{ announcement.stamp_updated | epoch: 'mediumDate' }})</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- Global Pagination -->
+<app-pagination *ngIf="announcementsObs !== null && announcementsObs.last_page > 1"
+  curPage="{{announcementsObs.current_page}}"
+  lastPage="{{announcementsObs.last_page}}"
+  (onPagePrev)="pagePrev($event)"
+  (onPageNext)="pageNext($event)"
+  (onPageSelected)="pageSelected($event)">  
+</app-pagination>
+
+<ng-template #loading>
+  <!-- <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div> -->
+  <div class="asyncLoading d-flex justify-content-center align-items-center flex-column" style="height: calc(100vh - 130px);">
+    <img src="assets/images/soundblock-logo.png" style="margin-bottom: 1rem;"/>
+    <button class="btn loading_button" type="button" disabled>
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="width: 1.5rem; height: 1.5rem;"></span>
+      <span class="ml-2">Loading...</span>
+    </button>
+  </div>
+</ng-template>

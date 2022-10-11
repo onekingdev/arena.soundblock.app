@@ -1,0 +1,113 @@
+<div class="page-wrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <app-profile-header tab="2"></app-profile-header>
+      <ion-row class="heading">
+        <p>Please provide your <span>address information</span> below.</p>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col size="12" sizeMd="6" class="panel">
+          <div class="panelContainer">
+            <ion-row>
+              <ion-col size="6" class="verticalCenterColumn">
+                <label class="mb5"> Type: </label>
+                <nb-select
+                  class="addressTypeSelect"
+                  [(ngModel)]="address.type"
+                  required
+                >
+                  <nb-option *ngFor="let item of addressTypes" [value]="item">
+                    {{item}}
+                  </nb-option>
+                </nb-select>
+              </ion-col>
+              <ion-col size="6">
+                <label class="mb5"> Street: </label>
+                <input
+                  autocomplete="off"
+                  class="form-input"
+                  name="street"
+                  [(ngModel)]="address.street"
+                  required
+                />
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col size="6">
+                <label class="mb5"> Line 2: </label>
+                <input
+                  autocomplete="off"
+                  class="form-input"
+                  name="city"
+                  [(ngModel)]="address.city"
+                  required
+                />
+              </ion-col>
+              <ion-col size="6">
+                <label class="mb5"> Zip Code: </label>
+                <input
+                  autocomplete="off"
+                  class="form-input"
+                  name="zipCode"
+                  [(ngModel)]="address.zipCode"
+                  required
+                />
+              </ion-col>
+            </ion-row>
+
+            <ion-row class="horizontalCenterRow mt20">
+              <button nbButton status="primary" (click)="addAddress()">
+                Add
+              </button>
+            </ion-row>
+          </div>
+        </ion-col>
+        <!--  -->
+        <ion-col
+          size="12"
+          sizeMd="6"
+          class="panel"
+          *ngIf="addresses && !addresses.length && addressesLoaded"
+        >
+        <h6><i>Nothing to display here.</i></h6>
+        </ion-col>
+        <ion-col
+          size="12"
+          sizeMd="6"
+          class="panel"
+          *ngIf="addresses && addresses.length; else loading;"
+        >
+          <ion-row class="item" *ngFor="let item of addresses; let i = index">
+            <ion-col size="2">
+              <span class="title"><b>{{item.postal_type}}</b></span>
+            </ion-col>
+            <ion-col size="8">
+              <span class="data"
+                >{{item.postal_street}}, {{item.postal_city}},
+                {{item.postal_country}}, {{item.postal_zipcode}}</span
+              >
+            </ion-col>
+            <ion-col size="2" class="delete">
+              <button
+                nbButton
+                status="danger"
+                (click)="deleteAddress(item)"
+                *ngIf="!item.flag_primary"
+              >
+                Delete
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div [hidden]="addresses && !addresses.length && addressesLoaded" class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

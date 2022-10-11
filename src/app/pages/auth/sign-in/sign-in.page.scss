@@ -1,0 +1,106 @@
+.page-wrapper {
+  overflow: auto;
+  background-color: #fafafa;
+  padding-top: 1px;
+  .page-container {
+    .content-wrapper {
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 40px;
+      padding: 0 15px;
+      display: flex;
+      align-items: center;
+      @media (min-width: 768px) {
+        padding: 0 24px;
+      }
+
+      .left-pane {
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        img {
+          width: 100%;
+          object-fit: contain;
+          height: 100%;
+          @media (max-width: 767px) {
+            padding: 10px 30px;
+            max-width: 300px;
+          }
+        }
+      }
+
+      .right-pane {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .signin-card {
+          padding: 20px 0;
+          width: 100%;
+          max-width: 500px;
+          height: fit-content;
+          background: white;
+          padding: 2.5vw;
+          border-radius: 5px;
+          display: flex;
+          flex-direction: column;
+          border-right: solid 2px #8c6eab;
+          border-top: solid 2px #8c6eab;
+          box-shadow: 5px 5px 5px 0 #518dc950;
+          border-left: solid 2px #518dc9;
+          border-bottom: solid 2px #518dc9;
+
+          .redirect-links {
+            font-size: 1rem;
+            color: #518dc9;
+          }
+          .password-wrapper {
+            position: relative;
+            .eyeWrapper {
+              position: absolute;
+              height: 100%;
+              top: 0;
+              right: 0;
+              width: 10%;
+              display: flex;
+              align-content: center;
+              .toggle-password {
+                color: #303030 !important;
+              }
+              i {
+                position: relative;
+                margin: auto;
+              }
+            }
+          }
+          .more-actions {
+            display: flex;
+            justify-content: space-between;
+            .forgot-password {
+              float: left;
+            }
+            a {
+              cursor: pointer;
+              text-decoration: none;
+              line-height: 30px;
+              font-size: 0.8rem;
+              text-transform: uppercase;
+              transition: 0.3s all;
+              &:hover {
+                transform: scaleX(1);
+                text-decoration: underline;
+              }
+            }
+          }
+          .error {
+            color: rgb(255, 0, 0);
+            font-size: 1rem;
+            margin-top: 10px;
+          }
+          .signinBtn {
+            width: 200px;
+          }
+        }
+      }
+    }
+  }
+}

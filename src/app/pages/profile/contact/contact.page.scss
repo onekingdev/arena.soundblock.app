@@ -1,0 +1,156 @@
+.heading {
+  margin: 1rem 5px 8px 1.5rem;
+  display: flex;
+  line-height: normal;
+
+  @media screen and (max-width: 767px) {
+    margin: 0 10px;
+  }
+
+  p {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-weight: bold;
+
+    span {
+      color: #518dc9;
+    }
+  }
+}
+
+.sectionTitle {
+  color: #518dc9;
+  font-weight: bold;
+  padding: 10px 5px;
+  font-size: 1.2rem;
+}
+
+.panel {
+  padding: 20px;
+
+  @media screen and (max-width: 767px) {
+    padding: 10px;
+  }
+
+  .panelContainer {
+    padding: 1rem;
+    border-radius: 5px;
+    height: 100%;
+
+    &.bluePane {
+      border: solid 2px #518dc9;
+      box-shadow: 5px 5px 5px 0 #518dc950;
+    }
+
+    &.purplePane {
+      border: solid 2px #8c6eab;
+      box-shadow: 5px 5px 5px 0 #8c6eab50;
+    }
+
+    .messages {
+      margin-top: -6px;
+      margin-bottom: 13px;
+      font-weight: bold;
+      font-size: 1.05rem;
+
+      .success {
+        color: #518dc9;
+      }
+
+      .error {
+        color: #ff3d71;
+      }
+    }
+
+    .contacts-list {
+      max-height: 250px;
+    }
+
+    .addEmailForm {
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+      height: 60px;
+
+      input {
+        flex: 1;
+      }
+
+      button {
+        width: 100px;
+        margin: 0 10px;
+      }
+    }
+    .addPhoneForm {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin: 15px 0;
+      height: 60px;
+
+      .phoneTypeSelect {
+        width: 25%;
+        margin-right: 10px;
+      }
+
+      input {
+        flex: 1;
+      }
+
+      button {
+        width: 100px;
+      }
+    }
+
+    .item {
+      display: flex;
+      flex-wrap: nowrap;
+      background: #d5e1f340;
+      padding: 5px;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+      height: 50px;
+
+      .data {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: block;
+      }
+
+      .radio-col {
+        min-width: 30px !important;
+      }
+
+      button {
+        width: 65px;
+        padding: 5px;
+        height: auto;
+        border-radius: 5px !important;
+        font-size: 0.8rem;
+        margin: 0 5px;
+      }
+    }
+  }
+}
+
+.verifyDialogBody {
+  width: 350px;
+
+  ion-card-content {
+    .container {
+      padding: 1rem;
+      font-size: 1rem;
+      color: gray;
+
+      ion-col {
+        padding: 10px 0;
+      }
+
+      span {
+        color: #222b45;
+      }
+    }
+  }
+}

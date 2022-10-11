@@ -1,0 +1,123 @@
+<ion-header no-shadow no-border>
+  <div class="info-container">
+    <ion-row class="desktopMenu hide-xs hide-vs hide-sm">
+      <ion-col size="3" class="logoWrapper">
+        <div class="logo verticalCenterRow">
+          <a [routerLink]="userHasService?'home':'auth/signup'"><img routerLinkActive="router-link-active"
+              src="{{cloudUrl}}/images/soundblock-logo.png" /></a>
+          <span class='beta'>BETA</span>
+        </div>
+      </ion-col>
+      <ion-col class="menu ion-text-right" size="9">
+        <div class="menu-header ion-float-right">
+          <ul id="menu-main-nav" class="navbar-nav">
+            <div routerLink="profile" class="menu-item hide-md" *ngIf="authService.isAuthorized && userHasService">
+              <i class="icon-colors fad fa-user-crown"></i>
+              <div class="menu-name">
+                <span>PROFILE</span>
+              </div>
+            </div>
+            <div routerLink="" class="menu-item" *ngIf="authService.isAuthorized && userHasService">
+              <i class="icon-colors-2 fad fa-user-music"></i>
+              <div class="menu-name">
+                <span>PROJECTS</span>
+              </div>
+            </div>
+            <div routerLink="reports" class="menu-item" *ngIf="authService.isAuthorized && userHasService">
+              <i class="icon-colors fad fa-user-chart"></i>
+              <div class="menu-name">
+                <span>REPORTS</span>
+              </div>
+            </div>
+            <div routerLink="settings" class="menu-item" *ngIf="authService.isAuthorized && userHasService">
+              <i class="icon-colors fad fa-user-cog"></i>
+              <div class="menu-name">
+                <span>SETTINGS</span>
+              </div>
+            </div>
+            <div (click)="showHideTicketbar()" class="menu-item " *ngIf="authService.isAuthorized">
+              <i class="icon-colors fad fa-user-headset"></i>
+              <div *ngIf="ticketNotifications" style="top: -1px; right: 60px;"
+                class="pl-2 pt-1 pb-1 pr-2 position-absolute text-white top-0 start-100 translate-middle badge rounded-pill support-link-bg square-badge"
+              >
+                <span>{{ticketNotifications}}</span>
+                <div class="visually-hidden">unread messages</div>
+              </div>
+              <div class="menu-name">
+                <span class="position-relative">SUPPORT
+                </span>
+              </div>
+            </div>
+            <div routerLink="auth/signin" class="menu-item" *ngIf="!authService.isAuthorized">
+              <i class="icon-colors fad fa-sign-in-alt"></i>
+              <div class="menu-name">
+                <span>Sign In</span>
+              </div>
+            </div>
+            <div routerLink="auth/signup" class="menu-item" *ngIf="!authService.isAuthorized">
+              <i class="icon-colors fad fa-user-plus"></i>
+              <div class="menu-name">
+                <span>Sign Up</span>
+              </div>
+            </div>
+          </ul>
+          <div class="avatar" *ngIf="authService.isAuthorized" (click)="showUserPopover($event)">
+            <img [src]="user.avatar" />
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+    <ion-row class="mobileMenu hide-md hide-lg hide-vl hide-xl">
+      <ion-col size="3" class="logoWrapper">
+        <div class="logo">
+          <a routerLink="home"><img routerLinkActive="router-link-active"
+              src="{{cloudUrl}}/images/soundblock-logo.png" /></a>
+          <span class='beta-mobile'>BETA</span>
+        </div>
+      </ion-col>
+
+      <div class="menu">
+        <div role="button" *ngIf="authService.isAuthorized && !userHasService" class="menuItem mr-2"
+          (click)="signOut()">
+          <i class="icon-colors fad fa-sign-out-alt mr-1"></i><span>Sign Out</span>
+        </div>
+        <div class="icon mr10" (click)="showUsermenu($event)" *ngIf="authService.isAuthorized && userHasService">
+          <img [src]="user.avatar" />
+        </div>
+
+        <div routerLink="settings" class="menu-item mr15" *ngIf="authService.isAuthorized && userHasService">
+          <span><i class="icon-colors fad fa-user-cog" nbTooltip="Settings" nbTooltipPlacement="top"
+              nbTooltipStatus="info"></i></span>
+        </div>
+
+        <div (click)="showHideTicketbar()" class="menu-item mr15" *ngIf="authService.isAuthorized">
+          <span><i class="icon-colors fad fa-user-headset"></i></span>
+          <div *ngIf="ticketNotifications" style="top: 3px; right: 60px;"
+            class="pl-2 pt-1 pb-1 pr-2 position-absolute text-white top-0 start-100 translate-middle badge rounded-pill support-link-bg square-badge"
+          >
+            <span>{{ticketNotifications}}</span>
+            <div class="visually-hidden">unread messages</div>
+          </div>
+        </div>
+
+          <div routerLink="reports" class="menu-item mr15" *ngIf="authService.isAuthorized">
+            <span><i class="icon-colors fad fa-user-chart"></i></span>
+          </div>
+
+          <div routerLink="projects" class="menu-item mr15" *ngIf="authService.isAuthorized && userHasService">
+            <span><i class="icon-colors-2 fad fa-user-music"></i></span>
+          </div>
+
+          <div routerLink="profile" class="menu-item mr15" *ngIf="authService.isAuthorized && userHasService">
+            <span><i class="icon-colors fad fa-user-crown"></i></span>
+          </div>
+          <div routerLink="auth/signup" class="menu-item" *ngIf="!authService.isAuthorized">
+            <span><i class="icon-colors fad fa-user-plus mr5"></i>Sign Up</span>
+          </div>
+          <div routerLink="auth/signin" class="menu-item mr20" *ngIf="!authService.isAuthorized">
+            <span><i class="icon-colors fad fa-sign-in-alt mr5"></i>Sign In</span>
+          </div>
+        </div>
+    </ion-row>
+  </div>
+</ion-header>

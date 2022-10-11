@@ -1,0 +1,366 @@
+<div class='page-wrapper documentsInfoWrapper'>
+  <div class='page-container'>
+    <div class='content-wrapper'>
+      <div class='mainContent' [ngClass]="{'menuExpand': currentTab !== Tab.INFO, 'menuCollapse': currentTab === Tab.INFO}" id='mainContent'>
+        <app-infoheader></app-infoheader>
+        <app-tabheader tab='project'></app-tabheader>
+        <div class="row">
+          <div class='category col-12'>
+            <div class='categoryButton' [ngClass]="{'active': currentTab === Tab.INFO}"
+                 (click)='setCollectionSection(Tab.INFO)'>
+              <i class='fa-info'
+                 [ngClass]="{'fas': currentTab === Tab.INFO, 'fad icon-colors': currentTab !== Tab.INFO}"></i>
+              <p>Info</p>
+            </div>
+            <div class='categoryButton'
+                 [ngClass]="{'active': currentTab === Tab.MUSIC || currentTab === Tab.TRACK_PREVIEWS}"
+                 (click)='setCollectionSection(Tab.MUSIC)'>
+              <i class='fa-list-music'
+                 [ngClass]="{'fas': currentTab === Tab.MUSIC || currentTab === Tab.TRACK_PREVIEWS, 'fad icon-colors': currentTab !== Tab.MUSIC && currentTab !== Tab.TRACK_PREVIEWS}"></i>
+              <p>Tracks</p>
+            </div>
+            <div class='categoryButton' [ngClass]="{'active': currentTab === Tab.VIDEO}"
+                 (click)='setCollectionSection(Tab.VIDEO)'>
+              <i class='fa-photo-video icon-colors'
+                 [ngClass]="{'fas': currentTab === Tab.VIDEO, 'fad icon-colors': currentTab !== Tab.VIDEO}"></i>
+              <p>Video</p>
+            </div>
+            <div class='categoryButton' [ngClass]="{'active': currentTab === Tab.MERCH}"
+                 (click)='setCollectionSection(Tab.MERCH)'>
+              <i class='fa-tags'
+                 [ngClass]="{'fas': currentTab === Tab.MERCH, 'fad icon-colors-2': currentTab !== Tab.MERCH}"></i>
+              <p class='hide-xs hide-vs hide-sm hide-md hide-lg'>Merchandise</p>
+              <p class='hide-vl hide-xl'>Merch</p>
+            </div>
+            <div class='categoryButton' [ngClass]="{'active': currentTab === Tab.FILES}"
+                 (click)='setCollectionSection(Tab.FILES)'>
+              <i class='fa-folder-tree'
+                 [ngClass]="{'fas': currentTab === Tab.FILES, 'fad icon-colors': currentTab !== Tab.FILES}"></i>
+              <p>Files</p>
+            </div>
+          </div>
+        </div>
+        <div class='feature-body'>
+          <div>
+            <div *ngIf='currentTab !== Tab.INFO && currentTab !== Tab.TRACK_PREVIEWS' class="row">
+              <div class='col-12'>
+                <app-assettable></app-assettable>
+              </div>
+            </div>
+            <div *ngIf='currentTab === Tab.TRACK_PREVIEWS'>
+              <app-track-previews></app-track-previews>
+            </div>
+            <div *ngIf='currentTab === Tab.INFO'>
+              <!-- TOP SECTION -->
+              <div class='top-section'>
+                <div class="row">
+                  <div class="col-xl-7 col-vs-12 col-lg-7 col-md-12 col-xs-12 nopadding">
+                    <div class="row">
+                      <div class="col-xl-12 col-lg-12 col-vl-12 col-12 hide-xs nopadding">
+                        <!-- PROJECT INFO -->
+                        <div class='projectInfo mt-5'>
+                          <div class="row">
+                            <div class="col-md-5 col-sm-12 vertical_layout_center">
+                              <div class="row">
+                                <div class='projectTitle gradientText mb-4 col-12'>
+                                  <span>{{projectInfo?.project_title}}</span>
+                                </div>
+                                <div class="col-12 mb-2" *ngIf = "projectInfo?.project_artist">
+                                  <span><b>Artist Display Name:</b>&nbsp;{{projectInfo?.project_artist}}</span>
+                                </div>
+                                <div class="col-12 mb-2" *ngIf = "projectInfo?.project_upc">
+                                  <span><b>UPC:</b> {{projectInfo?.project_upc}}</span>
+                                </div>
+                                <div class="col-12 mb-2" *ngIf = "projectInfo?.project_date">
+                                  <span><b>Release Date: </b>{{ projectInfo?.project_date | date: 'MM/dd/YY'}}</span>
+                                </div>
+                                <div class="col-12 mb-2" *ngIf = "primaryArtists?.length">
+                                  <b>Primary:</b>
+                                  <ul class="pl-3">
+                                    <li *ngFor="let artist of primaryArtists">
+                                      {{artist.artist_name}}
+                                  </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-7 hide-sm">
+                              <app-historybar isInfo="currentTab === Tab.INFO" *ngIf = "currentTab === Tab.INFO"></app-historybar>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- PROJECT INFO -->
+                      </div>
+                      <div class="col-12 col-vl-12 col-xl-12 col-lg-12">
+                        <div class="projectTab">
+                          <button class="tablinks" [ngClass]="{'active': childTab == 1}" (click)="setChildTab(1)">
+                            <div class="wrapper">
+                              <i class="fad fa-user-crown icon-colors"></i><span>Project</span>
+                            </div>
+                            <div class="border"></div>
+                          </button>
+                          <button class="tablinks" [ngClass]="{'active': childTab == 2}" (click)="setChildTab(2)" *ngIf = "tempCollectionFiles && tempCollectionFiles.length !== 0">
+                            <div class="wrapper">
+                              <i class="fad fa-list-music icon-colors"></i><span>Tracks</span>
+                            </div>
+                            <div class="border"></div>
+                          </button>
+                        </div>
+                      </div>
+                      <!-- Child Tab Page -->
+                      <div class="col-12">
+                        <div class="child_tab" *ngIf="childTab === 1">
+                          <div class="row">
+                            <div class="col-6" *ngIf="featuringArtists?.length">
+                              <b>Featuring:</b>
+                              <ul class="pl-3">
+                                <li *ngFor="let artist of featuringArtists">
+                                  {{artist.artist_name}}
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 col-sm-12 mb-2"  *ngIf='projectInfo?.format'>
+                              <b>Format: </b> {{ projectInfo?.format?.dataFormat}}
+                            </div>
+                            <div class="col-md-6 col-sm-12 mb-2" *ngIf='projectInfo?.language.dataLanguage'>
+                              <span><b>Language: </b> {{projectInfo?.language?.dataLanguage}}</span>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 col-sm-12 mb-2"*ngIf='projectInfo?.primary_genre?.dataGenre'>
+                              <span><b>Primary Genre: </b> {{projectInfo?.primary_genre?.dataGenre}}</span>
+                            </div>
+                            <div class="col-md-6 col-sm-12 mb-2" *ngIf='projectInfo?.primary_genre?.dataGenre'>
+                              <span><b>Secondary: </b> {{projectInfo?.secondary_genre?.dataGenre}}</span>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 col-sm-12 mb-2" *ngIf='projectInfo?.project_volumes'>
+                              <span><b>Total Volumes: </b> {{projectInfo?.project_volumes}}</span>
+                            </div>
+                            <div class="col-md-6 col-sm-12 mb-2" *ngIf='projectInfo?.tracks?.length'>
+                              <span><b>Total Tracks: </b> {{projectInfo?.tracks?.length}}</span>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12 mb-2" *ngIf='projectInfo?.project_label'>
+                              <span><b>Record Label:</b> {{projectInfo?.project_label}}</span>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 col-sm-12 mb-2" *ngIf='projectInfo?.project_recording_location'>
+                              <span><b>Recording Location: </b> {{projectInfo?.project_recording_location}}</span>
+                            </div>
+                            <div class="col-md-6 col-sm-12 mb-2" *ngIf='projectInfo?.project_recording_year'>
+                              <span><b>Recording Year: </b> {{projectInfo?.project_recording_year}}</span>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 col-sm-12 mb-2" *ngIf='projectInfo?.project_copyright_name'>
+                              <span><b>Copyright Name: </b> {{projectInfo?.project_copyright_name}}</span>
+                            </div>
+                            <div class="col-md-6 col-sm-12 mb-2" *ngIf='projectInfo?.project_copyright_year'>
+                              <span><b>Copyright Year: </b> {{projectInfo?.project_copyright_year}}</span>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6 col-sm-12 mb-2" *ngIf='projectInfo?.flag_project_compilation'>
+                              <span><b>Compilation</b></span>
+                            </div>
+                            <div class="col-md-6 col-sm-12 mb-2" *ngIf='projectInfo?.flag_project_explicit'>
+                              <span><b>Explicit</b></span>
+                            </div>
+                          </div>
+                          <div class="col-12" *ngIf='projectInfo?.account'>
+                            <span><b>Soundblock Account:</b> {{projectInfo?.account.account_name}}</span>
+                          </div>
+                        </div>
+                        <div class="child_tab_2" *ngIf="childTab === 2">
+                          <div class="track_table example-list" cdkDropList (cdkDropListDropped)="drop($event)">
+                            <div class="track_table_row example-box" *ngFor="let row of tempCollectionFiles" cdkDrag>
+                              <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                              <div class="track_col-1 track_col-sm-1 track_table_column">
+                                <i
+                                  role="button"
+                                  class="fas fa-play"
+                                  *ngIf='trackUUIDLoading !== row.file_uuid'
+                                  [hidden]='trackUUIDPlaying === row.file_uuid'
+                                  [class.disabled]='trackUUIDLoading && trackUUIDLoading !== row.file_uuid'
+                                  (click)="playTrack(row)"
+                                ></i>
+                                <i
+                                  *ngIf='trackUUIDPlaying === row.file_uuid'
+                                  (click)='stopPlayingTrack()'
+                                  title='Stop'
+                                  class='fas fa-stop icon-colors'
+                                ></i>
+                                <div
+                                  class='download-progress'
+                                  *ngIf='downloadTrackProgress && trackUUIDLoading === row.file_uuid'
+                                >
+                                  {{ downloadTrackProgress }}
+                                </div>
+                                <ion-spinner
+                                  *ngIf='trackUUIDLoading === row.file_uuid'
+                                  name='crescent'
+                                ></ion-spinner>
+                              </div>
+                              <div class="track_col-2 track_col-sm-3 track_table_column" style="font-size: 0.9rem;">{{row.track.track_volume_number + "." + getTrackNumber(row.track.track_number)}}</div>
+                              <div class="track_col-sm-4 track_table_column d-flex align-items-center justify-content-center flex-column hide-vl hide-xl hide-lg hide-md">
+                                <span>
+                                  {{row.file_title}}
+                                </span>
+                                <span>
+                                  {{getTime(row.meta.track_duration)}}
+                                </span>
+                              </div>
+                              <div class="track_col-4 track_col-sm-6 track_table_column align-left hide-xs hide-vs hide-sm">{{row.file_title}}</div>
+                              <div class="track_col-3 track_col-sm-3 track_table_column hide-xs hide-vs hide-sm">{{getTime(row.meta.track_duration)}}</div>
+                              <div class="track_col-3 track_col-sm-3 track_table_column">
+                                <button (click) = "updateFile($event, row)" nbTooltip="Edit Track">
+                                  <i class="fas fa-edit"></i>
+                                  <span class="hide-track-col">Edit Track</span>
+                                </button>
+                              </div>
+                              <div class="track_col-3 track_col-sm-3 track_table_column">
+                                <button (click) = "onHistory($event, row)" nbTooltip="History">
+                                  <i class="fas fa-clipboard-list"></i>
+                                  <span class="hide-track-col">History</span>
+                                </button>
+                              </div>
+                              <div class="track_col-3 track_col-sm-3 track_table_column">
+                                <button (click) = "downloadFiles(row, $event)" nbTooltip="Download">
+                                  <i class="fas fa-download"></i>
+                                  <span class="hide-track-col">Download</span>
+                                </button>
+                              </div>
+                              <div class="track_col-3 track_col-sm-3 track_table_column">
+                                <button (click) = "showBlockchainViewer(row.track.ledger_uuid, $event)" nbTooltip="Blockchain">
+                                  <i class="fas fa-dice-d6"></i>
+                                  <span class="hide-track-col">Blockchain</span>
+                                </button>
+                              </div>
+                              <!-- <div class="col-1 track_table_column "><i role="button" class="track-icon fas fa-edit" nbTooltip="Edit" (click)="updateFile($event, row)"></i></div>
+                              <div class="col-1 track_table_column "><i role="button" class="track-icon fas fa-clipboard-list" nbTooltip="History" (click)="onHistory($event, row)"></i></div>
+                              <div class="col-1 track_table_column "><i role="button" class="track-icon fas fa-download" nbTooltip="Download" (click)="downloadFiles(row, $event)"></i></div>
+                              <div class="col-1 track_table_column "><i role="button" class="track-icon fas fa-dice-d6" nbTooltip="Blockchain Record" (click)="showBlockchainViewer(row.track.ledger_uuid,$event)"></i></div> -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- End Of Child Tab Page -->
+                      <div class=" col-12 col-vl-12 col-xl-12 col-lg-12 nopadding">
+                        <!-- PROJECT GUIDE -->
+                        <div class="row"
+                          *ngIf=" projectInfo.status.deployment?.deployment_status !== 'Deployed'"
+                          class='projectGuide mt-5'>
+                          <!-- ADD TEAM MEMBERS -->
+                          <div class="col-12 mb-4">
+                            <span class='otherLink'>Next Steps
+                              <!-- <i class="fad fa-link ml10" nbTooltip="Go to links" nbTooltipPlacement="top" nbTooltipStatus="info"></i> -->
+                            </span>
+                          </div>
+                          <div class="col-12 mb-2"
+                            *ngIf='checkPermission(Permissions.PROJECT_MEMBER_CREATE) && !projectInfo?.status?.flag_team'
+                            >
+                            <i
+                              [class]="(!projectInfo?.status?.flag_team && projectInfo?.status?.contract?.flag_status !== 'Active' ? 'fa-minus colorBlue' : 'fa-check') + ' fas mr10'"></i>
+                            <a (click)="navigate('project/'+projectId+'/team')"
+                               *ngIf="!projectInfo?.status?.flag_team && projectInfo?.status?.contract?.flag_status !== 'Active'">
+                              Add Team Members
+                            </a>
+                            <span class='staticLink'
+                                  *ngIf="projectInfo?.status?.flag_team || projectInfo?.status?.contract?.flag_status === 'Active'">
+                              Add Team Members
+                            </span>
+                          </div>
+                          <!-- ADD TEAM MEMBERS -->
+                          <!-- CREATE CONTRACT -->
+                          <div class="col-12 mb-2" >
+                            <i
+                            *ngIf="checkPermission(Permissions.ACCOUNT_PROJECT_CONTRACT) || projectInfo?.status?.contract?.flag_status === 'Active' "
+                              [class]="(projectInfo?.status?.contract?.flag_status === 'Active' ? 'fa-check colorBlack' : 'fa-minus colorBlue') + ' fas mr10'"></i>
+                            <a (click)="navigate('project/'+projectId+'/contract')"
+                               *ngIf="projectInfo?.status?.contract?.flag_status !== 'Active' && checkPermission(Permissions.ACCOUNT_PROJECT_CONTRACT)">Create Contract</a>
+                            <span class='staticLink' *ngIf="projectInfo?.status?.contract?.flag_status === 'Active'">Contract Started</span>
+                          </div>
+                          <!-- CREATE CONTRACT -->
+                          <!-- DEPLOY TO PLATFORMS -->
+                          <div class="col-12 mb-2" *ngIf='checkPermission(Permissions.ACCOUNT_PROJECT_DEPLOY) && projectInfo?.status?.contract?.flag_status === "Active"'>
+                            <i
+                              [class]="(projectInfo?.status?.deployment?.deployment_status === 'Deployed' ? 'fa-check' : 'fa-minus') + ' fas mr10 colorBlue'"></i>
+                            <a
+                            (click)="navigate('project/'+projectId+'/deployments')"
+                               *ngIf="projectInfo?.status?.deployment?.deployment_status !== 'Deployed'">Deploy To
+                              Platforms</a>
+                          </div>
+                          <!-- DEPLOY TO PLATFORMS -->
+                          <!-- UPLOAD FILES -->
+                          <div class="col-12"
+                            *ngIf='projectInfo?.status?.exists_collection && (checkPermission(Permissions.PROJECT_FILE_VIDEO_ADD) || checkPermission(Permissions.PROJECT_FILE_MUSIC_ADD) || checkPermission(Permissions.PROJECT_FILE_MERCH_ADD) || checkPermission(Permissions.PROJECT_FILE_OTHER_ADD))'
+                            >
+                            <i class='fas fa-check mr10 colorBlack'></i>
+                            <span class='heading colorBlack'>Upload Files</span>
+                        </div>
+                          <div class="col-12"
+                            *ngIf='!projectInfo?.status?.exists_collection && (checkPermission(Permissions.PROJECT_FILE_VIDEO_ADD) || checkPermission(Permissions.PROJECT_FILE_MUSIC_ADD) || checkPermission(Permissions.PROJECT_FILE_MERCH_ADD) || checkPermission(Permissions.PROJECT_FILE_OTHER_ADD))'
+                            >
+                            <i class='fas fa-minus mr10 colorBlack'></i>
+                            <span class='heading colorBlack'>Upload Files</span>
+                            <button nbButton (click)='uploadFile()' status='info' class='uploadButton'>
+                              <span class='gradientText '>Upload File</span>
+                            </button>
+                          </div>
+                          <!-- UPLOAD FILES -->
+                        </div>
+                        <!-- PROJECT GUIDE -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- PROJECT BAND WIDTH -->
+                  <div class="col-xl-5 col-12 col-lg-5 no-right-padding">
+                    <div class="row">
+                      <!-- <div class="col-12 no-right-padding" [hidden]='diskspace === 0'>
+                        <div class='canvasWrapper'>
+                          <div class='chart'>
+                            <canvas #discCanvas>{{ discChart }}</canvas>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12 no-right-padding" [hidden]='badwidth === 0'>
+                        <div class='canvasWrapper'>
+                          <div class='chart'>
+                            <canvas #bandCanvas>{{ bandChart }}</canvas>
+                          </div>
+                        </div>
+                      </div> -->
+                      <div class="col-12 no-right-padding">
+                        <div class='canvasWrapper'>
+                          <div class='chart chart-monthly'>
+                            <canvas #monthlyCanvas>{{ monthlyChart }}</canvas>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- DEPLOY TO PLATFORMS -->
+                    </div>
+                  </div>
+                  <!-- PROJECT BANDWIDTH-->
+                </div>
+              </div>
+              <!-- TOP SECTION -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <app-historybar class='sidemenu hidebar' *ngIf = "currentTab !== Tab.INFO"></app-historybar>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+</div>
+</ng-template>

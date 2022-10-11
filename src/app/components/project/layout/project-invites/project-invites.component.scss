@@ -1,0 +1,60 @@
+.invite-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  // height: 130px;
+  padding: 15px;
+  background-image: linear-gradient(#fff, #fff),
+    linear-gradient(90deg, #518dc9, #782c7f);
+  box-shadow: 0 5px 5px 0 rgba(140, 110, 171, 0.19);
+  border: 0.2em double transparent;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-radius: 10px;
+  margin-bottom: 10px;
+
+  * {
+    font-size: 0.9rem;
+  }
+  h6 {
+    i {
+      font-size: 1.25rem !important;
+    }
+  }
+
+  .projects-info {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 5px 10px;
+
+    @media screen and (max-width: 900px) {
+      display: none;
+    }
+  }
+
+  .service-info {
+    .info-property {
+      border-bottom: 1px solid rgb(222, 222, 222);
+      height: 30px;
+      display: flex;
+      align-items: center;
+      padding: 0 0.5rem;
+
+      b {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .service-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    button {
+      height: 35px;
+      width: 100px;
+    }
+  }
+}

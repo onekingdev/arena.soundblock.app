@@ -1,0 +1,37 @@
+nb-dialog-container {
+  ion-card {
+    background: white !important;
+    box-shadow: none !important;
+    border: 2px solid white !important;
+    border-radius: 0 !important;
+    color: #222b45 !important;
+    width: 500px;
+    @media (max-width: 767px) {
+      width: 95vw !important;
+    }
+    ion-card-header {
+      color: white !important;
+      background: linear-gradient(90deg, #518dc9 0%, #782c7f 100%);
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      i {
+        cursor: pointer;
+      }
+    }
+    ion-card-content {
+      padding: 0 !important;
+      font-size: 1rem;
+    }
+  }
+}
+
+nb-base-calendar {
+  nb-card-header {
+    // background: linear-gradient(90deg, #518dc9 0%, #782c7f 100%);
+    font-weight: bold;
+    nb-calendar-header .header {
+      color: white !important;
+    }
+  }
+}

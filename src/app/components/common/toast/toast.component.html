@@ -1,0 +1,19 @@
+
+<ion-card class="notificationToast" *ngFor="let toast of toasts" @newTrigger (click)="removeToast(toast)">
+  <ion-card-header>
+    <span>Soundblock</span>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row class="content">
+      <div class="bellIcon">
+        <i class="fad fa-bells icon-colors"></i>
+      </div>
+      <div class="message">
+        <p><b>{{toast.notification.notification_memo}}</b></p>
+      </div>
+    </ion-row>
+    <ion-row class="actions" [innerHtml]="toast.notification.notification_action | safeHtml" *ngIf="toast.notification.notification_action">
+      
+    </ion-row>
+  </ion-card-content>
+</ion-card>

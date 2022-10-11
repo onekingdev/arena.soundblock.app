@@ -1,0 +1,84 @@
+name: Staging Deploy
+
+on:
+  push:
+    branches: [ staging ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://npm.pkg.github.com/
+      - run: npm install -g @ionic/cli
+      - run: npm i -g cordova
+      - run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.ARENA_PACKAGE_TOKEN_READ }}
+      - name: Build Project
+        env:
+          CURRENT_CLOUD_URL: ${{ secrets.AWS_CLOUD_URL_STAGING }}
+          DEVELOP_CLOUD_URL: ${{ secrets.AWS_CLOUD_URL_DEVELOP }}
+          STAGING_CLOUD_URL: ${{ secrets.AWS_CLOUD_URL_STAGING }}
+          MASTER_CLOUD_URL: ${{ secrets.AWS_CLOUD_URL }}
+          API_DEVELOP_URL: ${{ secrets.ARENA_API_CORE_DEVELOP }}
+          API_STAGING_URL: ${{ secrets.ARENA_API_CORE_STAGING }}
+          API_URL: ${{ secrets.ARENA_API_CORE }}
+        run: ionic cordova build browser --configuration=staging --confirm
+
+      - name: Zip Project
+        id: zip-project
+        run: zip -r deploy.zip .platform/ www/
+
+      - name: Get Commit Hash
+        id: version-hash
+        run: |
+          echo "::set-output name=hash::${GITHUB_SHA}"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_IAM_KEY_STAGING }}
+          aws-secret-access-key: ${{ secrets.AWS_IAM_SECRET_STAGING }}
+          aws-region: ${{ secrets.AWS_REGION_STAGING }}
+
+      - name: Save assets to S3
+        run: |
+          aws s3 sync ./src/assets s3://${{ secrets.AWS_BUCKET_STAGING }}/public/deployments/${{ steps.version-hash.outputs.hash }}/assets --acl public-read
+
+      - name: Save www to S3
+        run: |
+          aws s3 sync ./www s3://${{ secrets.AWS_BUCKET_STAGING }}/public/deployments/${{ steps.version-hash.outputs.hash }} --acl public-read
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v10
+        with:
+          aws_access_key: ${{ secrets.AWS_IAM_KEY_STAGING }}
+          aws_secret_key: ${{ secrets.AWS_IAM_SECRET_STAGING }}
+          application_name: ${{ secrets.AWS_EB_APP_STAGING }}
+          environment_name: ${{ secrets.AWS_EB_ENV_STAGING }}
+          version_label: ${{ steps.version-hash.outputs.hash }}
+          region: ${{ secrets.AWS_REGION_STAGING }}
+          deployment_package: deploy.zip
+
+      - name: Slack Notification
+        uses: wei/curl@v1
+        with:
+          args: -X POST ${{ secrets.ARENA_API_SLACK_ENDPOINT }}
+            --data-urlencode 'repo_owner=${{github.repository_owner}}'
+            --data-urlencode 'repo=${{github.repository}}'
+            --data-urlencode 'commit=${{github.sha}}'
+            --data-urlencode 'status=${{job.status}}'
+            --data-urlencode 'workflow=${{github.workflow}}'
+            --data-urlencode 'actor=${{github.event.head_commit.author.username}}'
+            --data-urlencode 'repo_url=${{github.event.repository.url}}'
+        if: always()

@@ -1,0 +1,197 @@
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.leftPane {
+  .feature-title {
+    margin: 1rem 5px 8px 5px;
+    display: flex;
+    line-height: normal;
+
+    @media screen and (max-width: 767px) {
+      margin: 0 5px;
+    }
+
+    p {
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      font-weight: bold;
+
+      span {
+        color: #518dc9;
+      }
+    }
+  }
+  .buttonSection {
+    display: flex;
+
+    @media screen and (max-width: 767px) {
+      justify-content: center;
+    }
+
+    .button {
+      height: 50px;
+      max-width: 200px;
+      padding: 5px;
+      flex: 1;
+
+      button {
+        height: 100%;
+        width: 100%;
+
+        i {
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+
+  .removeWrapper {
+    margin-bottom: 10px;
+    border-bottom: solid 1px lightgray;
+
+    span {
+      margin-bottom: 10px;
+      float: right;
+      cursor: pointer;
+
+      i {
+        color: red;
+      }
+    }
+  }
+
+  .formSection {
+    padding: 20px 0;
+    border-bottom: solid 1px lightgray;
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      .fieldName {
+        margin-bottom: 5px;
+      }
+
+      .paypalInput {
+        max-width: 400px;
+        margin: 0 20px 0 0;
+      }
+    }
+
+    button {
+      width: 200px;
+    }
+  }
+
+  .paymentTable {
+    margin-top: 10px;
+
+    @media screen and (max-width: 576px) {
+      .icon-col {
+        display: none;
+      }
+    }
+
+    .tableHeader {
+      color: #222b45;
+    }
+
+    ion-col {
+      padding: 1rem 0.5rem;
+    }
+
+    .icon {
+      padding: 1rem;
+
+      @media (max-width: 767px) {
+        padding: 0;
+      }
+
+      i {
+        font-size: 1.5rem;
+
+        &.fa-cc-paypal {
+          font-size: 1.7rem;
+        }
+      }
+    }
+
+    .delete {
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+
+      button {
+        width: 65px;
+        padding: 5px;
+        height: auto;
+        border-radius: 5px !important;
+        font-size: 0.8rem;
+        margin: 0 5px;
+      }
+    }
+
+    .radio {
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    ion-radio {
+      --color: #222b45;
+      --color-checked: #222b45;
+    }
+  }
+}
+
+.rightPane {
+  img {
+    width: 100%;
+    object-fit: contain;
+    object-position: top;
+    max-width: 400px;
+
+    @media (max-width: 767px) {
+      max-width: 200px;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .leftPane {
+    order: 2;
+  }
+
+  .rightPane {
+    display: none;
+  }
+}
+
+.deleteDialogBody {
+  ion-card-content {
+    .container {
+      padding: 1rem;
+      font-size: 1rem;
+
+      ion-col {
+        padding: 10px 0;
+      }
+
+      .message {
+        font-size: 1rem;
+        color: #222b45;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      span {
+        color: #222b45;
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+<div class="page-wrapper teamPageWrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <div class="mainContent" id="mainContent">
+        <app-infoheader></app-infoheader>
+        <app-tabheader tab="team"></app-tabheader>
+        <div
+          class="full-width full-height teamWrapper"
+          *ngIf="team; else loading"
+        >
+          <app-teamtable
+            [team]="team"
+            class="full-width"
+            (changed)="getProjectTeam()"
+          ></app-teamtable>
+        </div>
+      </div>
+      <!-- <app-historybar class="sidemenu hidebar"></app-historybar> -->
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

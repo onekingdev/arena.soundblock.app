@@ -1,0 +1,64 @@
+<div class="modal-header">
+  <div class="modal-title pull-left">Track Notes</div>
+  <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="mt-3">
+    <div [formGroup]="form">
+      <div>
+        <ng-select formControlName="language" [items]="languages | async" [placeholder]="'Select Language'" [searchable]="false" [bindLabel]="'dataLanguage'" [bindValue]="'dataUUID'"></ng-select>
+        <textarea (change)="editNote(notes[0])" rows="10" class="mt-3 form-input" [placeholder]="'Notes'" formControlName="notes"></textarea>
+      </div>
+      <div class="d-flex justify-content-center mt-3">
+        <button status="info" (click)="notes?.length?onDeleteNote(notes[0]):addNotes()" [disabled]="form.invalid" class="appearance-filled size-medium shape-rectangle status-info">
+          <div class="gradientText">
+            <span>
+              <i *ngIf="isSubmitting" class="fas fa-circle-notch gradientText fa-spin"></i>
+              {{buttonText}}
+            </span>
+            
+          </div>
+        </button>
+      </div>
+      <p class="mt-2 text-center text-success" *ngIf="isSubmitted">
+       {{submittedText}} <i class="ml-2 fas fa-check"></i>
+      </p>
+    </div><!-- <div class="modal-header">
+  <div class="modal-title pull-left">Track Notes</div>
+  <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="d-flex justify-content-end">
+    <button status="info" (click)="addNotes()" class="appearance-filled size-medium shape-rectangle status-info">
+      <div class="gradientText">
+        <span>
+          <i class='fas fa-plus-circle gradientText mr-1'></i>
+          Track Notes
+        </span>
+      </div>
+    </button>
+  </div>
+  <div class="container mt-3">
+    <table class="table table-fixed">
+      <thead class="table-header">
+        <tr>
+          <th>Notes</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let note of notes">
+          <td>{{note.track_note}}</td>
+          <td>
+            <i role="button" (click)="editNote(note)" class="fas fa-edit mr-2"></i>
+            <i role="button" (click)="onDeleteNote(note)" class="fas fa-trash-alt"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->

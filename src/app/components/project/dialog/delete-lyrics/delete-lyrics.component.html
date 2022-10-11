@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <div class="modal-title pull-left">Delete Lyrics</div>
+  <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+  </button>
+</div>
+<div class="modal-body">
+  Are you sure you want to remove this Lyrics?
+</div>
+<div class="modal-footer">
+  <span *ngIf="isDeleted" class="text-danger text-right">
+      {{isDeletedError?.error.status.message}}
+  </span>
+  <span *ngIf="isDeleted" class="text-success text-right">
+      <span >Lyrics Removed</span>
+  </span>
+  <button (click)="bsModalRef.hide()" class="btn btn-secondary">
+    <span class="gradientText">
+      Cancel
+    </span>
+  </button>
+  <button
+          (click)="onDeleteLyrics()"
+          [disabled]="isDeleting || isDeleted" class="btn btn-round btn-primary">
+      <i *ngIf="isDeleting" class="fas fa-circle-notch fa-spin"></i>
+      <i *ngIf="!isDeleting" class="fas fa-check"></i>
+      <span class="gradientText">
+        <span class="gradientText">
+          Save
+        </span>
+      </span>
+  </button>
+</div>

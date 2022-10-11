@@ -1,0 +1,141 @@
+.feature-body {
+    padding: 30px 0;
+    display: flex;
+  
+    // Temp until 2fa setup is restored
+    .full-width {
+      display: flex;
+      justify-content: center;
+    }
+  
+    .heading {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #518dc9;
+      text-shadow: 1px 1px 3px #cbe5ff;
+      margin: 10px 0 20px 0;
+      text-transform: uppercase;
+    }
+  
+    .panel {
+      padding: 20px;
+  
+      @media screen and (max-width: 767px) {
+        padding: 10px;
+      }
+  
+      .panelContainer {
+        padding: 2.5vw;
+        border-radius: 5px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+  
+        &.bluePane {
+          border: solid 2px #518dc9;
+          box-shadow: 5px 5px 5px 0 #518dc950;
+        }
+  
+        &.purplePane {
+          border: solid 2px #8c6eab;
+          box-shadow: 5px 5px 5px 0 #8c6eab50;
+        }
+  
+        .password-wrapper {
+          flex: 1;
+  
+          .passwordField {
+            position: relative;
+          }
+  
+          .eyeWrapper {
+            position: absolute;
+            height: 100%;
+            top: 0;
+            right: 0;
+            width: 10%;
+            display: flex;
+            align-content: center;
+            margin-right: 10px;
+  
+            .toggle-password {
+              color: #303030 !important;
+            }
+  
+            i {
+              position: relative;
+              margin: auto;
+            }
+          }
+  
+          .passwordCheckWrapper {
+            color: red;
+            padding: 10px;
+  
+            nb-alert {
+              padding: 10px;
+              margin: 0;
+            }
+          }
+  
+          button {
+            max-width: 300px;
+            cursor: pointer;
+  
+            i {
+              margin-right: 10px;
+            }
+          }
+  
+          button:disabled,
+          button[disabled] {
+            opacity: 0.9;
+            cursor: not-allowed;
+          }
+        }
+  
+        .tfa-btn {
+          &.disable {
+            background: linear-gradient(90deg, #c95157 0%, #7f6d2c 100%);
+          }
+        }
+  
+        .qr-container {
+          width: 230px;
+          height: 230px;
+          display: flex;
+          align-items: center;
+          background: #fafafa;
+          border: solid 1px lightgray;
+          border-radius: 2px;
+          margin: 10px auto;
+          justify-content: center;
+  
+          img {
+            mix-blend-mode: multiply;
+          }
+        }
+  
+        .secret-key {
+          min-height: 50px;
+          display: flex;
+          align-items: center;
+  
+          p {
+            word-break: break-all;
+          }
+        }
+  
+        .auth-code {
+          display: flex;
+          align-items: center;
+  
+          input {
+            flex: 1;
+            margin: 10px;
+          }
+        }
+      }
+    }
+  }
+  

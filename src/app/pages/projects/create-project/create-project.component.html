@@ -1,0 +1,317 @@
+<div class="page-wrapper">
+  <div class="page-container p-3">
+    <form [formGroup]="form" class="content-wrapper">
+      <div class="row">
+        <div [nbSpinner]="createProjectLoading" id="projectInfoSection" class="col-12 col-md-12 col-lg-12 projectForm">
+
+          <div class="row">
+            <div class="col-12 col-lg-5 col-vl-5 col-xl-5 col-md-5">
+              <div *ngIf="userHasOwnService">
+                <div class="createServiceLink">
+                  <span class=" text-center" (click)="navigatePage('settings/accounts/')">Create or Manage Soundblock
+                    Accounts?</span>
+                </div>
+              </div>
+              <div class="sectionBody">
+                <div class="mb-3">
+                  <div>
+                    <app-service-selector [errors]="formControls.service.errors" [touched]="null"
+                      [_selectedService]="formControls?.service?.value" [touched]="formControls.service.touched"
+                      [services]="services" [userUUID]="profileService.user.value.user_uuid"
+                      (valueChanged)="selectService($event)">
+                    </app-service-selector>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <ng-container *ngIf="formControls.service.value">
+            <div class="row">
+              <div class="col-12 sectionBody hide-lg hide-vl hide-xl">
+                <div class="mobile-artwork-viewer"
+                  [ngClass]="{'error': formControls.artworkPath.errors && formControls.artworkPath.touched}">
+                  <img [src]="formControls.artworkPath.value" />
+                  <i class="fas fa-pen "></i>
+                </div>
+                <div class="mt-3 mb-3" style="text-align: center;">
+                  <button
+                    class='btn-gradient'
+                    [disabled]="!formControls.service.value || projectArtworkLoading"
+                    status="primary"
+                    (click)="showCropModal()"
+                  >
+                    <span>Upload Artwork</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                <div>
+                  <div class="mb-3">
+                    <label>Artist Display Name*:
+                      <i class="fas fa-info-circle"
+                        tooltip="Use this field to indicate how you want your project to appear on the platforms; if there are multiple artists featured in your project, you will have an opportunity to include their information where relevant. "></i>
+                    </label>
+                  </div>
+                  <input autocomplete="off" class="form-input" name="artist" formControlName="artist"
+                    [ngClass]="{'is-invalid': formControls.artist.errors && formControls.artist.touched}" />
+                </div>
+              </div>
+            </div>
+            <div class="d-flex">
+              <label class="mb-3">Artists*
+                <i class="fas fa-info-circle"
+                  tooltip="This field is used to indicate which artist profiles your project should appear on. This information can also be entered on a per-track basis; if an artist only appears on one track, you may wish to enter it there instead."></i>
+              </label>
+            </div>
+            <div class="d-flex">
+              <button class="btn-gradient" (click)="openAddArtistModal()"><span>Add Artist</span></button>
+            </div>
+            <div class="mb-3 row" *ngIf="selectedArtists.length">
+              <div class="mt-2 col-md-4 col-lg-3 col-vl-3 col-xl-3 col-12 col-sm-6"
+                *ngFor="let artist of selectedArtists;let i = index">
+                <div class="card artist-card" role="button">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                      <img class="artist-img" [src]="artist.url"
+                        (error)="this.artist.url = 'https://cloud.develop.account.arena.com/assets/static/avatar_v2.jpg'" />
+                      <div class="artist-detail">
+                        <p>
+                          {{artist.artist}}
+                        </p>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input"
+                            (change)="artist.type==='primary'?artist.type='featuring':artist.type='primary'"
+                            [id]="'customSwitch5' + i" [checked]="artist.type==='primary'? true: false">
+                          <label class="custom-control-label pt-2" [for]="'customSwitch5' + i">{{artist.type}}</label>
+                        </div>
+                      </div>
+                      <i class="fal fa-trash-alt" (click)="deleteSelectedArtist(artist)"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                <div class="sectionBody">
+                  <div class="row">
+                    <div class="col-12 col-md-2 col-lg-2">
+                      <div class="mb-3 mt-3">
+                        <label>Format*:</label>
+                      </div>
+                      <ng-select [searchable]="false" [items]="(profileService.projectFormats | async)"
+                        formControlName="format" [bindLabel]="'dataFormat'" [bindValue]="'dataUUID'"
+                        [ngClass]="{'is-invalid': formControls.format.errors && formControls.format.touched}"
+                        class="customSelect">
+                      </ng-select>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-12">
+                      <div class="mb-3 mt-3">
+                        <label>Title*:</label>
+                      </div>
+                      <input autocomplete="off" class="form-input" name="title" formControlName="title" minlength="3"
+                        required [ngClass]="{'is-invalid': formControls.title.errors && formControls.title.touched}" />
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-12">
+                      <div class="mb-3 mt-3">
+                        <label>Release Date*:
+                          <i class="fas fa-info-circle"
+                            nbTooltip="If this project was released in the past, please use that date. Otherwise, please use the date you expect this project to be released."
+                            nbTooltipStatus="info">
+                          </i>
+                        </label>
+                      </div>
+                      <input class="form-input datatime" name="releaseDate" formControlName="releaseDate" required
+                        [nbDatepicker]="formpicker" [readOnly]="true"
+                        [ngClass]="{'is-invalid': formControls.releaseDate.errors && formControls.releaseDate.touched}" />
+                      <nb-datepicker #formpicker></nb-datepicker>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-12">
+                      <div class="mb-3 mt-3">
+                        <label>Total Volumes*:
+                          <i class="fas fa-info-circle" tooltip="Use this field for multi-disc sets. "></i>
+                        </label>
+
+                      </div>
+                      <input autocomplete="off" class="form-input" name="volumes" formControlName="volumes"
+                        [ngClass]="{'is-invalid': formControls.volumes.errors && formControls.volumes.touched}" />
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-12 d-flex align-items-end pb-2">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch1"
+                          formControlName="compilation">
+                        <label class="custom-control-label pt-2" for="customSwitch1">Compilation</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-3 col-lg-3">
+                      <div class="mb-3 mt-3">
+                        <label>Language*:</label>
+                      </div>
+                      <ng-select formControlName="language"
+                        [ngClass]="{'is-invalid': formControls.language.errors && formControls.language.touched}"
+                        [searchable]="false" class="customSelect">
+                        <ng-option *ngFor="let language of topLanguages" [value]="language.dataUUID">
+                          {{language.dataLanguage}}</ng-option>
+                        <ng-option *ngIf="topLanguages.length !== 0" [disabled]="true"> - - - </ng-option>
+                        <ng-option *ngFor="let language of otherLanguages" [value]="language.dataUUID">
+                          {{language.dataLanguage}}</ng-option>
+                      </ng-select>
+                    </div>
+                    <div class="col-12 col-md-5 col-lg-5">
+                      <div class="mb-3 mt-3">
+                        <label>Release Version:
+                          <i class="tooltip-350 fas fa-info-circle"
+                            tooltip='Use this field if there are several versions of your project; examples include "Single" or "Full Album" or "Live at Studio X." '></i>
+                        </label>
+
+                      </div>
+                      <input autocomplete="off" class="form-input" name="release" formControlName="release"
+                        minlength="3" />
+                    </div>
+                    <div class="col-12 col-md-2 col-lg-2 d-flex align-items-end pb-2">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch2"
+                          formControlName="explicit">
+                        <label class="custom-control-label pt-2" for="customSwitch2">Explicit</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-lg-6 col-vl-6 col-xl-6">
+                      <div class="row">
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-6 col-vl-6">
+                          <div class="mb-3 mt-3">
+                            <label>Primary Genre*:</label>
+                          </div>
+                          <ng-select [searchable]="false" formControlName="primaryGenres"
+                            [ngClass]="{'is-invalid': formControls.primaryGenres.errors && formControls.primaryGenres.touched}"
+                            class="customSelect">
+                            <ng-option *ngFor="let genre of primaryGenres" [value]="genre.dataUUID"><span
+                                [innerHTML]="genre.dataGenre"></span></ng-option>
+                          </ng-select>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-6 col-vl-6">
+                          <div class="mb-3 mt-3">
+                            <label>Secondary Genre:</label>
+                          </div>
+                          <ng-select [searchable]="false" formControlName="secondaryGenres"
+                            [ngClass]="{'is-invalid': formControls.secondaryGenres.errors && formControls.secondaryGenres.touched}"
+                            class="customSelect">
+                            <ng-option *ngFor="let genre of secondaryGenres" [value]="genre.dataUUID"><span
+                                [innerHTML]="genre.dataGenre"></span></ng-option>
+                          </ng-select>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="mb-3 mt-3">
+                            <label>Record Label*:</label>
+                          </div>
+                          <input class="form-input" name="label" formControlName="label" required [ngClass]="{'is-invalid': formControls.label.errors && formControls.label.touched}" />
+                          <nb-datepicker #formpicker></nb-datepicker>
+                          <div class="mb-3 mt-3">
+                            <label>UPC:
+                              <i class="fas fa-info-circle"
+                                nbTooltip="Leave this field blank if you do not have a UPC; we will generate one for you"
+                                nbTooltipStatus="info">
+                              </i>
+                            </label>
+                          </div>
+                          <input autocomplete="off" class="form-input" name="upc" formControlName="upc"
+                            [ngClass]="{'is-invalid': formControls.upc.errors && formControls.upc.touched}" />
+    
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="formControls.service.value" class="col-6 hide-sm hide-vs hide-xs hide-md d-flex align-items-center justify-content-center">
+                      <div class="uploadArtworkPanel verticalCenterRow">
+                        <div class="imageDiv d-flex flex-row flex-column">
+                          <div [nbSpinner]="projectArtworkLoading" class="mr-2">
+                            <img height="200px" [src]="formControls.artworkPath.value" style="border-radius: 3px;"/>
+                          </div>
+                          <div class="d-flex align-items-center">
+                            <button
+                              class='btn-gradient mb-3 mt-3'
+                              [disabled]="!formControls.service.value || projectArtworkLoading"
+                              status="primary"
+                              (click)="showCropModal()"
+                            >
+                              <span style="text-transform: capitalize;">Upload Artwork</span>
+                            </button>
+                            <div *ngIf="formControls.artworkPath.errors && formControls.artworkPath.touched"
+                              class="alert alert-danger" style="margin: 0 auto">
+                              <span *ngIf="formControls.artworkPath.errors.required">Artwork is required</span>
+                              <span *ngIf="formControls.artworkPath.errors.invalidFormat">File is not an valid image,
+                                please try
+                                again</span>
+                            </div>
+                            <div class="alert alert-danger mt-2" *ngIf="imageError">{{imageError}}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-4">
+                      <div class="mb-3 mt-3">
+                        <label>Recording Year:
+                        </label>
+                      </div>
+                      <input class="form-input" type="number" formControlName="recordingYear"
+                        [ngClass]="{'is-invalid': formControls.recordingYear.errors && formControls.recordingYear.touched}">
+                    </div>
+                    <div class="col-8">
+                      <div class="mb-3 mt-3">
+                        <label>Location:
+                        </label>
+                      </div>
+                      <input autocomplete="off" class="form-input" name="recordingLocation"
+                        formControlName="recordingLocation" />
+                    </div>
+                    <div class="col-4">
+                      <div class="mb-3 mt-3">
+                        <label>Copyright Year*:
+                        </label>
+                      </div>
+                      <input formControlName="copyRightYear" class="form-input" type="number"
+                        [ngClass]="{'is-invalid': formControls.copyRightYear.errors && formControls.copyRightYear.touched}">
+                    </div>
+                    <div class="col-8">
+                      <div class="mb-3 mt-3">
+                        <label>Copyright Name*:
+                        </label>
+                      </div>
+                      <input autocomplete="off" class="form-input" name="copyRightName" formControlName="copyRightName"
+                        [ngClass]="{'is-invalid': formControls.copyRightName.errors && formControls.copyRightName.touched}" />
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="createProjectErrorMessage" class="row buttons mt-3 mb-3 horizontalCenterRow">
+              <nb-alert status="danger"> {{ createProjectErrorMessage }} </nb-alert>
+            </div>
+            <div class="buttons mt-3 mb-3">
+              <div class="actions">
+                <button nbButton class="m5 btnSaveAction btn-draft" status="info" (click)="saveDraft()">
+                  <i class="mr10 mt1 fal fa-save"></i>
+                  <span class="verticalCenterRow">Save to Drafts</span>
+                </button>
+                <button nbButton routerDirection="forward" [disabled]="projectArtworkLoading" status="primary"
+                  class="m5" (click)="onSubmit()">
+                  <i class="mr10 mt1 fas fa-plus-square"></i> Create
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

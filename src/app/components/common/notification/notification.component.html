@@ -1,0 +1,88 @@
+<ion-card class="notificationDialogBody">
+  <ion-card-header>
+    <span>Notifications</span>
+    <span><i class="fas fa-close" (click)="close()" mat-raised-button mdDialogClose></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row class="notificationTab">
+      <div class="header">
+        <div class="wrapper">
+          <div class="left">
+            <div class="check">
+              <ion-checkbox [(ngModel)]="checkedAll" (ionChange)="onCheckAll()"></ion-checkbox>
+              <span class="ml10">Select All</span>
+            </div>
+            <div class="iconBtn" (click)="getNotifications(paginationInfo?.current_page)">
+              <i class="fas fa-sync"></i>
+            </div>
+            <div class="iconBtn" (click)="onBatchArchive()" *ngIf="checkedArr.length > 0">
+              <i class="fas fa-archive"></i>
+            </div>
+            <div class="iconBtn" (click)="onBatchDelete()" *ngIf="checkedArr.length > 0">
+              <i class="fas fa-trash"></i>
+            </div>
+          </div>
+          <div *ngIf="paginationInfo?.total_pages > 1" class="right">
+            <span class="mr10">
+              {{
+              paginationInfo?.per_page * (paginationInfo?.current_page - 1) +
+              1
+              }}-{{
+              paginationInfo?.per_page * (paginationInfo?.current_page - 1) +
+              paginationInfo?.count
+              }}
+              of {{ paginationInfo?.total }}
+            </span>
+            <button class="iconBtn" [disabled]="!paginationInfo?.links?.previous"
+              (click)="getNotifications(paginationInfo?.current_page - 1)">
+              <i class="fas fa-angle-left"></i>
+            </button>
+            <button class="iconBtn" [disabled]="!paginationInfo?.links?.next"
+              (click)="getNotifications(paginationInfo?.current_page + 1)">
+              <i class="fas fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="notificationsObs | async; else loading" class="full-width notiList">
+        <div class="notification" *ngFor="let item of notifications; let index = index">
+          <div class="check">
+            <ion-checkbox [(ngModel)]="checkedFlag[index]" (ionChange)="checkNotification($event, item, index)">
+            </ion-checkbox>
+          </div>
+          <div class="avatar">
+            <!-- <img [src]="item.avatar"/> -->
+            <img src="assets/images/bj.png" />
+          </div>
+          <div class="content" [ngClass]="{
+              unread: item.notification_detail.notification_state == 'unread'
+            }" (click)="expandItem(index)">
+            <div class="top">
+              <span><b>{{ item.notification_name }}</b></span>
+              <div class="action">
+                <i class="fas fa-envelope" nbTooltip="Mark as Read" nbTooltipPlacement="top" nbTooltipStatus="info"
+                  (click)="onRead($event, item, index)"></i>
+                <i class="fas fa-archive" nbTooltip="Archive" nbTooltipPlacement="top" nbTooltipStatus="info"
+                  (click)="onArchive($event, item)"></i>
+                <i class="fas fa-trash" nbTooltip="Delete" nbTooltipPlacement="top" nbTooltipStatus="info"
+                  (click)="onDelete($event, item)"></i>
+              </div>
+            </div>
+            <div class="bottom expand" [ngClass]="{ expand: expandFlag[index] }">
+              <span>{{ item.notification_memo }}</span>
+              <div class="action" *ngIf="item.notification_action && item.notification_action === 'Default Action' && item.notification_action === 'Not Triggered'" [innerHTML]="item.notification_action | safeHtml">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-row>
+  </ion-card-content>
+</ion-card>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

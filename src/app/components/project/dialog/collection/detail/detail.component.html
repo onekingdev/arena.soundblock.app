@@ -1,0 +1,457 @@
+<div class="modal-header">
+  <span> {{ getDialogTitle() }} </span>
+  <span><i role="button" class="fas fa-close" (click)="close()"></i></span>
+</div>
+<div class="modal-body metaDialogBody">
+  <ng-container *ngIf="step==='upload files'">
+    <app-stepper-component [showStepper]="action==='Add' && step ==='upload files'"
+      [selectedIndex]="data.music.length?2:1">
+      <cdk-step [completed]="true" label="Upload Files"></cdk-step>
+      <cdk-step *ngIf="data.music.length" [completed]="true" label="Track Data"></cdk-step>
+      <cdk-step label="Files Info">
+        <div class="row">
+          <div class="col-12">
+            <div [@fadeOutOnLeave] class="fileInfoList" *ngFor="let file of files; let index = index">
+              <div class="wrapper">
+                <div *ngIf="file.file_category !== 'music'" class="title m5">
+                  <div class="d-flex justify-content-between">
+                    <span>Title</span>
+                    <span class="text-muted file-name">{{file.file_name | uppercase}}</span>
+                  </div>
+                  <input placeholder="" type="text" [value]="file.file_title" (keyup)="onTitleChange($event,file)"
+                    name="title" class="form-input" [ngClass]="{ 'is-invalid': file.title_valid === false }" />
+                </div>
+                <div class="track m5" *ngIf="file.file_category === 'video'">
+                  <span>Track</span>
+                  <ng-select name="track" [items]="tracks" [bindLabel]="'file_title'"
+                    (change)="onClickVideoTrack($event,file)" [ngModel]="file.meta.track" class="custom-ng-select"
+                    required placeholder="Track">
+                    <ng-option (click)="removeVideoTrack(file)" value="null">
+                      <i>No track</i>
+                    </ng-option>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="delete m5 verticalCenterRow" *ngIf="action === 'Add'">
+                <i class="fad fa-trash-alt" (click)="deleteAttachment(file, index)"></i>
+              </div>
+            </div>
+            <div>
+              <form class="track-content" [formGroup]="editForm" *ngIf="category === 'tracks' && action === 'Edit'">
+                <accordion [isAnimated]="true">
+                  <accordion-group #group1 [isOpen]="true">
+                    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                      <div class="color-black pull-left float-left">
+                        <i class="track-info-icon fa-list-music fas mr-2"></i>
+                        Track Detail</div>
+                      <span class="badge mt-2 color-black float-right pull-right">
+                        <i class="fa"
+                          [ngClass]="{'fa-chevron-up': group1.isOpen, 'fa-chevron-down': !group1.isOpen}"></i>
+                      </span>
+                    </button>
+                    <div class="row">
+                      <div class="col-12 col-md-12 col-lg-3 col-vl-3 col-xl-3 mb-2">
+                        <label>Volume Number*</label>
+                        <input placeholder="Volume Number" formControlName="track_volume_number" type="text"
+                        (change)="addReq('track_volume_number', this.editForm.controls.track_volume_number.value)"
+                          class="form-input" />
+                      </div>
+                      <div class="col-12 col-md-12 col-vl-9 col-lg-9 col-xl-9 mb-2">
+                        <label
+                        
+                        >Title*
+                        <i class="fas fa-info-circle"
+                        tooltip='This is how the track title will appear on the music platforms; please ensure this field matches your preferences. '>
+                      </i></label>
+                        <input placeholder="" type="text" [value]="files[0].file_title" (keyup)="onTitleChange($event,files[0])"
+                        name="title" class="form-input" [ngClass]="{ 'is-invalid': files[0].title_valid === false }" />
+                      </div>
+                      
+                    </div>
+                    <div class="row">
+                      <div class="col-12 col-md-12 col-lg-8 col-vl-8 col-xl-8 mb-2">
+                        <div class="title">
+                          <label>Track Version
+                            <i class="fas fa-info-circle"
+                            tooltip='Use this field if there are several versions of your track; examples include "Mix 1" or "Live at Studio X." '></i>
+                          </label>
+                          <input placeholder="Track Version" formControlName="track_version" type="text"
+                          (change)="addReq('track_version', this.editForm.controls.track_version.value)"
+                            class="form-input" />
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-12 col-lg-4 col-vl-4 col-xl-4 mb-2">
+                        <label>Track Release Date*</label>
+                        <input type="text" placeholder="Release Date" class="form-input"
+                        (ngModelChange)="addReq('track_release_date', this.editForm.controls.track_release_date.value)"
+                          [bsConfig]="{showWeekNumbers: false, dateInputFormat: 'MM/DD/YYYY'}"
+                          formControlName="track_release_date" bsDatepicker>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 col-md-12 col-lg-4 col-vl-4 col-xl-4 mb-2">
+                        <label>Recording Location</label>
+                        <input placeholder="Recording Location" formControlName="recording_location" type="text"
+                        (change)="addReq('recording_location', this.editForm.controls.recording_location.value)"
+                          class="form-input" />
+                      </div>
+                      <div class="col-12 col-md-12 col-lg-8 col-vl-8 col-xl-8 mb-2">
+                        <label>Recording Year</label>
+                        <input placeholder="Recording Year" formControlName="recording_year" type="text"
+                        maxlength="4" pattern="\d{4}"
+                        (change)="addReq('recording_year', this.editForm.controls.recording_year.value)"
+                          class="form-input" />
+                      </div>
+                    </div>
+                    <div class="row">
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6 col-xs-12 col-vs-6 col-md-6 col-vl-2 col-xl-2 col-lg-2 mb-2">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" formControlName="flag_track_explicit" class="custom-control-input"
+                          (change)="addReq('flag_track_explicit', this.editForm.controls.flag_track_explicit.value)"
+                            [id]="'customSwitch2'">
+                          <label class="custom-control-label pt-2" [for]="'customSwitch2'">Explicit</label>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-xs-12 col-vs-6 col-md-6 col-vl-3 col-xl-3 col-lg-3 mb-2">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" formControlName="flag_track_instrumental"
+                          (change)="addReq('flag_track_instrumental', this.editForm.controls.flag_track_instrumental.value)"
+                            [id]="'customSwitch3'">
+                          <label class="custom-control-label pt-2" [for]="'customSwitch3'">Instrumental</label>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-xs-12 col-vs-6 col-md-6 col-vl-3 col-xl-3 col-lg-3 mb-2">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" class="custom-control-input" formControlName="flag_allow_preorder"
+                          (change)="addReq('flag_allow_preorder', this.editForm.controls.flag_allow_preorder.value)"
+                            [id]="'customSwitch5'">
+                          <label class="custom-control-label pt-2" [for]="'customSwitch5'">Pre Order</label>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-xs-12 col-vs-6 col-md-6 col-vl-4 col-xl-4 col-lg-4 mb-2">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" formControlName="flag_allow_preorder_preview"
+                          (change)="addReq('flag_allow_preorder_preview', this.editForm.controls.flag_allow_preorder_preview.value)"
+                            class="custom-control-input" [id]="'customSwitch4'">
+                          <label class="custom-control-label pt-2" [for]="'customSwitch4'">Pre Order Preview</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                        <label>Primary Genre*</label>
+                        <ng-select [items]="primaryGenres" placeholder="Primary Genres" [searchable]="false"
+                          [dropdownPosition]="'top'" [bindLabel]="'dataGenre'" formControlName="genre_primary"
+                          (change)="addReq('genre_primary', this.editForm.controls.genre_primary.value)"
+                          [bindValue]="'dataUUID'">
+                        </ng-select>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                        <label>Secondary Genre</label>
+                        <ng-select [items]="secondaryGenres" [searchable]="false" [dropdownPosition]="'top'"
+                          placeholder="Secondary Genres" [bindLabel]="'dataGenre'" [bindValue]="'dataUUID'"
+                          (change)="addReq('genre_secondary', this.editForm.controls.genre_secondary.value)"
+                          formControlName="genre_secondary">
+                        </ng-select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                        <label>Track Language*</label>
+                        <ng-select placeholder="Track Language" [items]="profileService.languages | async"
+                        (change)="addReq('track_language', this.editForm.controls.track_language.value)"
+                          [bindLabel]="'dataLanguage'" [bindValue]="'dataUUID'" formControlName="track_language"
+                          [searchable]="false"></ng-select>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                        <div *ngIf="!editForm.controls['flag_track_instrumental'].value">
+                          <label>Track Vocals Language</label>
+                          <ng-select [items]="profileService.languages | async"
+                          (change)="addReq('track_language_vocals', this.editForm.controls.track_language_vocals.value)"
+                            [bindLabel]="'dataLanguage'" [bindValue]="'dataUUID'"
+                            formControlName="track_language_vocals" [searchable]="false"></ng-select>
+                        </div>
+                        <div *ngIf="editForm.controls['flag_track_instrumental'].value">
+                          <label>Track Vocals Language</label>
+                          <input class="form-input" type="text" readonly>
+                        </div>
+                      </div>
+                    </div>
+                  </accordion-group>
+                  <accordion-group #group8>
+                    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                      <div class="color-black pull-left float-left">
+                        <i class="track-info-icon fas fa-waveform fas mr-2"></i>
+                        Track Preview</div>
+                      <span class="badge mt-2 color-black float-right pull-right">
+                        <i class="fa"
+                          [ngClass]="{'fa-chevron-up': group8.isOpen, 'fa-chevron-down': !group8.isOpen}"></i>
+                      </span>
+                    </button>
+                    <div>
+                      <small>Each track has a 30 second preview window on the music platforms; use this to set where you want the preview to start by dragging the gray bar.</small> 
+                    </div>
+                    <div class="row">
+                      <app-preview class="col-12" #preview [track]="files[0]" [projectUUID]="projectId"></app-preview>
+                    </div>
+                  </accordion-group>
+                  <accordion-group #group2>
+                    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                      <div style="color: black;" class="pull-left float-left">
+                        <i class="fas fa-user-music track-info-icon  mr-2"></i>
+                        Artist Info</div>
+                      <span class="badge mt-2 color-black float-right pull-right">
+                        <i class="fa"
+                          [ngClass]="{'fa-chevron-up': group2.isOpen, 'fa-chevron-down': !group2.isOpen}"></i>
+                      </span>
+                    </button>
+                    <div class="row">
+                      <div class="col-12 mb-2">
+                        <label>Artist Display Name*</label>
+                        <input placeholder="Add Artist" formControlName="track_artist" type="text" class="form-input"
+                        (change)="addReq('track_artist', this.editForm.controls.track_artist.value)"
+                        />
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <label class="mb-3">Artists*
+                        <i class="fas fa-info-circle" tooltip="This field is used to indicate which artist profiles your project should appear on. This information can also be entered on a per-track basis; if an artist only appears on one track, you may wish to enter it there instead.
+                            "></i>
+                        
+                      </label>
+                    </div>
+                    <div class="d-flex">
+                      <button class="btn-gradient mb-3" (click)="openAddArtistModal()">
+                        <span>Add Artist</span>
+                      </button>
+                    </div>
+                    <div *ngIf="artistsLoading" class="d-flex justify-content-center">
+                      <div class="spinner-border"  role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </div>
+                    <div class="mb-3 row" *ngIf="selectedArtists?.length">
+                      <div class="mt-2 col-md-6 col-lg-4 col-vl-4 col-xl-4 col-12 col-sm-6" *ngFor="let artist of selectedArtists;let i = index">
+                      
+                          <div class="card artist-card">
+                            <div class="card-body">
+                              <div class="d-flex justify-content-between">
+                                <img class="artist-img" [src]="artist.avatar_url" (error)="this.artist.avatar_url = 'https://cloud.develop.account.arena.com/assets/static/avatar_v2.jpg'" />
+                                <div class="artist-detail"><p>
+                                  {{artist.artist_name}}
+                                </p>
+                                <div class="custom-control custom-switch">
+                                  <input type="checkbox" class="custom-control-input" (change)="artist.artist_type==='primary'?artist.artist_type='featuring':artist.artist_type='primary'" [id]="'customSwitch5' + i"
+                                  [checked]="artist.artist_type==='primary'? true: false">
+                                  <label class="custom-control-label pt-2" [for]="'customSwitch5' + i">{{artist.artist_type | uppercase}}</label>
+                                </div>
+                                </div>
+                                <i class="fal fa-trash-alt" (click)="deleteSelectedArtist(artist)"></i>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                  </accordion-group>
+                  <accordion-group #group4>
+                    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                      <div style="color: black;" class="pull-left float-left">
+                        <i class="track-info-icon mr-2 fad fa-users"></i>
+                        Publishers</div>
+  
+                      <span class="badge mt-2 color-black float-right pull-right">
+                        <i class="fa"
+                          [ngClass]="{'fa-chevron-up': group4.isOpen, 'fa-chevron-down': !group4.isOpen}"></i>
+                      </span>
+                    </button>
+                    <div class="row">
+                      <div class="col-12 mb-2">
+                        <ng-select [items]="publishersData?.data" [bindLabel]="'publisher_name'"
+                        [loading]="publishersLoading"
+                        (change)="addReq('publishers', this.editForm.controls.publishers.value)"
+                          formControlName="publishers" [multiple]="true" [searchable]="false"></ng-select>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <button status="info" style="height: 25px;" (click)="onManagePublishers()"
+                        class=" appearance-filled size-medium shape-rectangle status-info">
+                        <div class="gradientText">
+                          <span>
+                            Manage
+                          </span>
+                        </div>
+                      </button>
+                    </div>
+  
+                  </accordion-group>
+                  <accordion-group #group5>
+                    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                      <div style="color: black;" class="pull-left float-left">
+                        <i class="track-info-icon mr-2 fad fa-users"></i>
+                        Contributors</div>
+                      <span class="badge mt-2 color-black float-right pull-right">
+                        <i class="fa"
+                          [ngClass]="{'fa-chevron-up': group5.isOpen, 'fa-chevron-down': !group5.isOpen}"></i>
+                      </span>
+                    </button>
+                    <div class="d-flex justify-content-end">
+                      <i *ngIf="!editForm.get('contributors').value.length" style="font-size: 21px;"
+                        (click)="addContributors()" class="fal fa-plus-square"></i>
+                    </div>
+                    <div *ngIf="editForm.get('contributors').value.length" class="row">
+                      <div class="col-md-5 col-lg-5 col-vl-5 col-xl-5 col-12 mb-2">
+                        Contributor Name
+                      </div>
+                      <div class="col-md-5 col-lg-5 col-vl-5 col-xl-5 col-12 mb-2">
+                        Contributor Type
+                      </div>
+                    </div>
+                    <ng-container *ngFor="let contributor of contributors()?.controls; let contributorIndex=index"
+                      formArrayName="contributors">
+                      <div class="row" [formGroupName]="contributorIndex">
+                        <div class="col-md-5 col-lg-5 col-vl-5 col-xl-5 col-12 mb-2">
+                          <input class="form-input" type="text" formControlName="contributor" />
+                        </div>
+                        <div class="col-md-5 col-lg-5 col-vl-5 col-xl-5 col-12 mb-2">
+                          <ng-select [items]="profileService.contributorTypes | async" formControlName="type"
+                            [bindLabel]="'dataContributor'" [bindValue]="'dataUUID'" [searchable]="false">
+                          </ng-select>
+                        </div>
+  
+                        <div role="button" class="delete  pt-2 col-md-1 col-lg-1 col-vl-1 col-xl-1 col-12 mb-2">
+                          <i *ngIf="contributorIndex === 0 || contributorIndex > 0"
+                            (click)="removeContributor(contributorIndex)" class="text-danger fad fa-trash-alt"></i>
+                        </div>
+  
+                        <div role="button" class="delete  pt-2 col-md-1 col-lg-1 col-vl-1 col-xl-1 col-12 mb-2">
+                          <i *ngIf="contributorIndex === 0" style="font-size: 21px;" (click)="addContributors()"
+                            class="fal fa-plus-square"></i>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </accordion-group>
+                  <accordion-group #group6>
+                    <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                      <div style="color: black;" class="pull-left float-left">
+                        <i class="track-info-icon mr-2 fad fa-user-crown"></i>
+                        Rights</div>
+                      <span class="badge mt-2 color-black float-right pull-right">
+                        <i class="fa"
+                          [ngClass]="{'fa-chevron-up': group6.isOpen, 'fa-chevron-down': !group6.isOpen}"></i>
+                      </span>
+                    </button>
+                    <div class="row">
+                      <div class="col-12 col-md-8 col-lg-8 col-vl-8 col-xl-8 mb-2">
+                        <label>Copyright Name*</label>
+                        <input placeholder="Copyright Name" formControlName="copyright_name" type="text"
+                        (change)="addReq('copyright_name', this.editForm.controls.copyright_name.value)"
+                          class="form-input" />
+                      </div>
+                      <div class="col-12 col-md-4 col-lg-4 col-vl-4 col-xl-4 mb-2">
+                        <label>Copyright Year*</label>
+                        <input placeholder="Copyright Year" formControlName="copyright_year" type="text"
+                        maxlength="4" pattern="\d{4}"
+                        (change)="addReq('copyright_year', this.editForm.controls.copyright_year.value)"
+                          class="form-input" />
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                        <label>Country Recording</label>
+                        <input placeholder="Country Recording" formControlName="country_recording" type="text"
+                        (change)="addReq('country_recording', this.editForm.controls.country_recording.value)"
+                          class="form-input" />
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                        <label>Country Comissioning</label>
+                        <input placeholder="Country Comissioning" formControlName="country_commissioning" type="text"
+                        (change)="addReq('country_commissioning', this.editForm.controls.country_commissioning.value)"
+                          name="title" class="form-input" />
+                      </div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col-xs-12 col-sm-12 col-vs-12 col-md-6 col-vl-4 col-xl-4 mb-2">
+                        <label>Rights Holder</label>
+                        <input placeholder="Rights Holder" formControlName="rights_holder" type="text"
+                        (change)="addReq('rights_holder', this.editForm.controls.rights_holder.value)"
+                          class="form-input" />
+                      </div>
+                      <div class="col-xs-12 col-sm-12 col-vs-12 col-md-6 col-vl-4 col-xl-4 mb-2">
+                        <label>Rights Owner</label>
+                        <input placeholder="Rights Owner " formControlName="rights_owner" type="text"
+                        (change)="addReq('rights_owner', this.editForm.controls.rights_owner.value)"
+                          class="form-input" />
+                      </div>
+                      <div class="col-xs-12 col-sm-12 col-vs-12 col-md-12 col-vl-4 col-xl-4 mb-2">
+                        <label>Contract Release Date</label>
+                        <input type="text" placeholder="Contract Release Date" class="form-input"
+                          formControlName="rights_contract"
+                          (ngModelChange)="addReq('rights_contract', this.editForm.controls.rights_contract.value)"
+                          [bsConfig]="{ adaptivePosition: true,showWeekNumbers: false, dateInputFormat: 'YYYY-MM-DD'}"
+                          bsDatepicker>
+                      </div>
+                    </div>
+                  </accordion-group>
+                </accordion>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="p10 full-width">
+          <ion-row class="p10" *ngIf="action === 'Edit' && category!=='tracks'">
+            <ion-input class="form-textarea" color="danger" name="comment" [(ngModel)]="comment"
+              [ngClass]="{ 'is-invalid': validComment === false }" placeholder="Share Comment for Team Members"
+              #commentInput (focusout)="checkCommentValid()" (ionChange)="checkCommentValid()">
+            </ion-input>
+          </ion-row>
+          <div class="row" *ngIf="editTracksError">
+            <div class="col-12 text-center text-danger">
+              {{editTracksError}}
+            </div>
+          </div>
+          <ion-row *ngIf="action === 'Add'">
+            <ion-col size="6" class="horizontalCenterRow">
+              <button nbButton fullWidth status="info" (click)="discard()">
+                <span class="gradientText">Discard</span>
+              </button>
+            </ion-col>
+            <ion-col size="6" class="horizontalCenterRow">
+              <button nbButton shape="semi-round" fullWidth status="primary" (click)="saveNext()">
+                Save & Next
+              </button>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="action === 'Edit'">
+            <ion-col size="6" offset="3" class="horizontalCenterRow">
+              <button shape="semi-round" nbButton [disabled]="category ==='tracks'?editForm.invalid:false" fullWidth status="primary" (click)="save()" (touchstart)="save()">
+                <div *ngIf="isSaving" class="mr-1 spinner-border text-white spinner-border-sm">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                Save 
+              </button>
+            </ion-col>
+          </ion-row>
+        </div>
+      </cdk-step>
+      <cdk-step label="Done"></cdk-step>
+    </app-stepper-component>
+  </ng-container>
+  <ng-container>
+    <app-track-info *ngIf="step ==='track info'" [action]="'Add'" [category]="this.uploadService?.curStep"
+      [data]="this.uploadService.files" [accountUUID]="accountUUID" [publishers]="publishers$ | async"
+      (trackSubmitted)="saveFile($event)"></app-track-info>
+  </ng-container>
+  <ion-row *ngIf="uploadService.uploadFailed && action === 'Add'">
+    <div class="retryButton" (click)="uploadAgain()">
+      <i class="fas fa-redo"></i><span class="ml5">Upload Again</span>
+    </div>
+  </ion-row>
+  <div class="progressBar" *ngIf="action === 'Add'">
+    <div class="current" [style.width.%]="uploadService.progress" [ngClass]="{
+        success: !uploadService.uploadFailed,
+        failed: uploadService.uploadFailed
+      }"></div>
+  </div>
+</div>

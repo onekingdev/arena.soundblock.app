@@ -1,0 +1,220 @@
+<ion-card>
+  <ion-card-header>
+    <span> Browse Collections </span>
+    <span><i class="fas fa-close" (click)="cancel()"></i></span>
+  </ion-card-header>
+
+  <ion-card-content class="cardContent centered">
+    <div class="collections-wrapper">
+      <!-- COLLECTION-LIST START -->
+      <ion-content *ngIf="collections.length; else loading">
+        <ion-list class="colletion-list">
+          <ion-item
+            class="item"
+            [ngClass]="{
+              selected:
+                selectedCollection &&
+                selectedCollection.collection_uuid ===
+                  collection.collection_uuid
+            }"
+            (click)="selectCollection(collection)"
+            *ngFor="let collection of collections"
+          >
+            <div
+              class="sectionIconWrapper hide-sm hide-vs"
+              *ngIf="collection.history as collectionHistory"
+            >
+              <i
+                class="fad fa-list-music icon-colors"
+                *ngIf="collectionHistory.history_category == 'Music'"
+              ></i>
+              <i
+                class="fad fa-photo-video icon-colors"
+                *ngIf="collectionHistory.history_category == 'Video'"
+              ></i>
+              <i
+                class="fad fa-tags icon-colors-2"
+                *ngIf="collectionHistory.history_category == 'Merch'"
+              ></i>
+              <i
+                class="fad fa-folder-tree icon-colors"
+                *ngIf="collectionHistory.history_category == 'Other'"
+              ></i>
+              <i
+                class="fas fa-cabinet-filing"
+                *ngIf="collectionHistory.history_category == 'Multiple'"
+              ></i>
+            </div>
+            <div class="info">
+              <div class="author">
+                <span>{{ collection.stamp_updated_by.name }}</span>
+                <span>{{ collection.stamp_updated | timestamp }}</span>
+              </div>
+              <div [title]="collection.collection_comment" class="comment">{{ collection.collection_comment }}</div>
+              <div
+                class="actions mt5"
+                *ngIf="collection.history as collectionHistory"
+              >
+                <div class="action">
+                  <i
+                    class="fas fa-file-plus"
+                    *ngIf="collectionHistory.file_action == 'Created'"
+                  ></i>
+                  <i
+                    class="fas fa-file-minus"
+                    *ngIf="collectionHistory.file_action == 'Deleted'"
+                  ></i>
+                  <i
+                    class="fas fa-file-code"
+                    *ngIf="collectionHistory.file_action == 'Modified'"
+                  ></i>
+                  <i
+                    class="fas fa-file-edit"
+                    *ngIf="collectionHistory.file_action == 'Reverted'"
+                  ></i>
+                  <i
+                    class="fas fa-file-check"
+                    *ngIf="collectionHistory.file_action == 'Restored'"
+                  ></i>
+                  <span class="ml5">{{
+                    collection?.collection_files_history_count
+                  }}</span>
+                </div>
+                <div *ngIf="collectionHistory.file_action != 'Modified'">
+                  <i class="fas fa-file-search ml10"></i>
+                  <span class="ml5">{{
+                    collection?.history?.history_size | fileSize
+                  }}</span>
+                </div>
+              </div>
+            </div>
+            <!-- </div> -->
+          </ion-item>
+        </ion-list>
+
+        <ion-infinite-scroll threshold="50px" (ionInfinite)="loadNextPage($event)">
+          <ion-infinite-scroll-content
+            loadingSpinner="bubbles"
+            loadingText="Loading colletions..."
+          >
+          </ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-content>
+      <!-- COLLECTION-LIST END -->
+
+      <!-- COLLECTION-HISTORY START -->
+      <div class="collection-history">
+        <div *ngIf="collectionHistory; else loading">
+          <!-- COLLECTION UUID START -->
+          <ion-row>
+            <ion-col class="collection-uuid" size="12">
+              <b>{{ selectedCollection.collection_uuid }}</b>
+            </ion-col>
+          </ion-row>
+          <!-- COLLECTION UUID END -->
+
+          <!-- COLLECTION TABLE HEADER START -->
+          <ion-row>
+            <ion-col
+              size="1"
+              class="verticalCenterRow horizontalCenterRow"
+            ></ion-col>
+            <ion-col size="5">
+              <b>Name</b>
+            </ion-col>
+            <ion-col size="6">
+              <b>Path</b>
+            </ion-col>
+          </ion-row>
+          <!-- COLLECTION TABLE HEADER END -->
+
+          <!-- COLLECTION TABLE CONTENT START -->
+          <ion-row *ngFor="let item of collectionHistory">
+            <ion-col
+              size="1"
+              class="verticalCenterRow horizontalCenterRow"
+              *ngIf="
+                selectedCollection &&
+                selectedCollection.history.file_action as file_action
+              "
+            >
+              <i
+                class="fas fa-plus"
+                *ngIf="file_action == 'Created'"
+                style="color: #3dca3d"
+              ></i>
+              <i
+                class="fas fa-minus"
+                *ngIf="file_action == 'Deleted'"
+                style="color: red"
+              ></i>
+              <i
+                class="fas fa-wrench"
+                *ngIf="file_action == 'Modified'"
+                style="color: #3d4bca"
+              ></i>
+              <i
+                class="fas fa-wrench"
+                *ngIf="file_action == 'Reverted'"
+                style="color: #3d4bca"
+              ></i>
+              <i
+                class="fas fa-reply-all"
+                *ngIf="file_action == 'Restored'"
+                style="color: #3dca3d"
+              ></i>
+            </ion-col>
+            <ion-col size="5">
+              <p>{{ item.file_name }}</p>
+            </ion-col>
+            <ion-col size="6">
+              <p>{{ item.file_path }}</p>
+            </ion-col>
+          </ion-row>
+          <!-- COLLECTION TABLE CONTENT END -->
+        </div>
+      </div>
+      <!-- COLLECTION-HISTORY END -->
+    </div>
+
+    <!-- BUTTONS START -->
+    <ion-row class="horizontalCenterRow p10">
+      <ion-col size="6">
+        <button
+          nbButton
+          shape="semi-round"
+          fullWidth
+          status="primary"
+          (click)="confirm()"
+        >
+          Confirm
+        </button>
+      </ion-col>
+      <ion-col size="6">
+        <button
+          nbButton
+          shape="semi-round"
+          fullWidth
+          status="info"
+          (click)="cancel()"
+        >
+          <span class="gradientText">Cancel</span>
+        </button>
+      </ion-col>
+    </ion-row>
+    <!-- BUTTONS END -->
+  </ion-card-content>
+</ion-card>
+
+<!-- <ng-template #noCollectionSelectedMsg>
+  <div [hidden]="!collections.length" class="no-collection-selected-message">
+    <b>Please select collection to view changes</b>
+  </div>
+</ng-template> -->
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

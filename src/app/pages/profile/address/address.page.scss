@@ -1,0 +1,64 @@
+.heading {
+  margin: 1rem 20px;
+  display: flex;
+  line-height: normal;
+  
+  @media screen and (max-width: 767px) {
+    margin: 0 10px;
+  }
+
+  p {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-weight: bold;
+
+    span {
+      color: #518dc9;
+    }
+  }
+}
+
+.panel {
+  padding: 20px;
+
+  @media screen and (max-width: 767px) {
+    padding: 10px;
+  }
+
+  .panelContainer {
+    padding: 1rem;
+    border-radius: 5px;
+    height: 100%;
+    border: solid 2px #518dc9;
+    box-shadow: 5px 5px 5px 0 #518dc950;
+
+    ion-col {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    background: #d5e1f340;
+    padding: 5px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+  }
+
+  .delete {
+    display: flex;
+    justify-content: center;
+
+    button {
+      width: 65px;
+      padding: 5px;
+      height: auto;
+      border-radius: 5px !important;
+      font-size: 0.8rem;
+      margin: 0 5px;
+    }
+  }
+}

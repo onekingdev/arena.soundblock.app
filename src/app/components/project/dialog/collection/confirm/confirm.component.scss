@@ -1,0 +1,39 @@
+.confirmDialogBody {
+  width: 400px;
+
+  ion-card-header span:first-child {
+    overflow: hidden;
+    white-space: nowrap;
+    margin-right: 10px;
+    text-overflow: ellipsis;
+  }
+
+  ion-card-content {
+    .container {
+      padding: 10px;
+
+      .description {
+        font-size: 1rem;
+        font-weight: bolder;
+      }
+
+      .fileInfo {
+        font-size: 0.9rem;
+        max-height: calc(100vh - 400px);
+        overflow-y: scroll;
+      }
+
+      .fileSize {
+        color: gray;
+      }
+
+      nb-select {
+        width: 100%;
+      }
+
+      ion-textarea {
+        margin: 0;
+      }
+    }
+  }
+}

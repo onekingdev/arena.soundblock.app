@@ -1,0 +1,94 @@
+<div class="page-wrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <ion-row>
+        <ion-col size="12" sizeMd="5" class="left-pane">
+          <img src="{{cloudUrl}}/images/signin.png" />
+        </ion-col>
+        <ion-col size="12" sizeMd="7" class="right-pane">
+          <div class="signin-card">
+            <div class="horizontalCenterRow">
+              <h3 class="gradientText">Sign In</h3>
+            </div>
+            <form #form="ngForm" (ngSubmit)="signIn(form)" class="signin-form">
+              <div class="m10">
+                <input
+                  type="email"
+                  id="email"
+                  class="form-input"
+                  name="email"
+                  required
+                  [(ngModel)]="email"
+                  placeholder="Username or Email"
+                  #emailModel="ngModel"
+                  [ngClass]="{'is-invalid': !emailModel.pristine && !emailModel.valid}"
+                />
+              </div>
+              <div class="m10 password-wrapper">
+                <input
+                  name="password"
+                  [(ngModel)]="password"
+                  #passwordModel="ngModel"
+                  required
+                  type="{{showPass ? 'text' : 'password'}}"
+                  class="form-input"
+                  minlength="6"
+                  placeholder="Password"
+                  [ngClass]="{ 'is-invalid':!passwordModel.pristine && !passwordModel.valid}"
+                />
+                <div class="eyeWrapper">
+                  <i
+                    (click)="showPassword()"
+                    class="fa"
+                    [ngClass]="{'fa-eye': !showPass, 'fa-eye-slash': showPass}"
+                  ></i>
+                </div>
+              </div>
+              <div class="m10" *ngIf="tfaEnabled">
+                <input
+                  name="tfaCode"
+                  [(ngModel)]="tfaCode"
+                  #tfaCodeModel="ngModel"
+                  class="form-input"
+                  type="number"
+                  [ngClass]="{ 'is-invalid':!tfaCodeModel.pristine && !tfaCodeModel.valid}"
+                  placeholder="Auth Code"
+                />
+              </div>
+              <div class="m10 error" *ngIf="statusCode == 400">
+                <span>Invalid user or password</span>
+              </div>
+              <div class="m10 error" *ngIf="statusCode == 422">
+                <span>Invalid 2FA Code</span>
+              </div>
+              <div class="more-actions m15">
+                <a class="redirect-links" (click)="navigate('signup')"
+                  >Create New Account</a
+                >
+                <a
+                  class="redirect-links"
+                  (click)="navigate('password-recovery')"
+                  >Forgot password</a
+                >
+              </div>
+              <div class="horizontalCenterRow mb20 mt30">
+                <button
+                  nbButton
+                  shape="semi-round"
+                  class="signinBtn"
+                  type="submit"
+                  status="primary"
+                >
+                  SIGN IN
+                </button>
+              </div>
+            </form>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+    <div class="page-footer">
+      <app-page-footer></app-page-footer>
+    </div>
+  </div>
+</div>

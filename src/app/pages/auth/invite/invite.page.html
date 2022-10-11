@@ -1,0 +1,141 @@
+<div class="page-wrapper readyWrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <ion-row class="title">
+        <span class="gradientText">You have been invited</span>
+      </ion-row>
+      <ion-row class="mb20 verticalCenterRow">
+        <ion-col size="12" sizeLg="8" class="projectInfo">
+          <ion-row>
+            <ion-col size="12" sizeMd="3" class="artwork">
+              <img [src]="info.project.project_artwork"/>
+              <!-- <img src="assets/images/bj.png"/> -->
+            </ion-col>
+            <ion-col size="12" sizeMd="9" class="metaInfo">
+              <span class="albumTitle">{{ info.project.project_title }}</span>
+              <ion-row class="section">
+                <ion-col size="6">
+                  <p>Service: <b>{{info.account.account_name}}</b></p>
+                </ion-col>
+                <ion-col size="6">
+                  <p>Release Date: <b>{{info.project.project_date}}</b></p>
+                </ion-col>
+                <ion-col size="6">
+                  <p>Revenue: <b>{{info.payout}}%</b></p>
+                </ion-col>
+                <ion-col size="6">
+                  <p>Role: <b>{{info.invite_role}}</b> </p>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col size="4" class="hide-xs hide-vs hide-sm hide-md clipArt">
+          <img src="{{cloudUrl}}/images/computer.png" />
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12" sizeMd="6" class="panel">
+          <div class="panelContainer bluePane">
+            <ion-row class="description">
+              <p>If you already have an account, please <span> sign in </span> here</p>
+            </ion-row>
+            <form #signinForm="ngForm" (ngSubmit)="$event.preventDefault(); signIn(signinForm)">
+              <ion-row>
+                <ion-col size="12" class="emailInput">
+                  <input type="email" id="email" class="form-input" name="email" required [(ngModel)]="email" placeholder="Username or Email" #emailModel="ngModel"
+                    [ngClass]="{'is-invalid': !emailModel.valid && signinForm.submitted}"/>
+                </ion-col>
+                <ion-col size="12" class="passInput">
+                  <input name="password" [(ngModel)]="password" #passwordModel="ngModel" required type="password" class="form-input" 
+                    minlength="6" placeholder="Password" [ngClass]="{ 'is-invalid':(!passwordModel.pristine || signinForm.submitted) && !passwordModel.valid}" />
+                </ion-col>
+              </ion-row>
+              <ion-row class="moreActions">
+                <ion-col size="12" sizeMd="6" class="verticalCenterRow">
+                  <div class="forgotPassword">
+                    <a class="redirect-links" (click)="navigate('password-recovery')">Forgot password?</a><br />
+                  </div>
+                </ion-col>
+                <ion-col class="verticalCenterRow horizontalCenterRow" size="12" sizeMd="6">
+                  <button nbButton shape="semi-round" class="signinBtn" type="submit" status="primary">SIGN IN</button>
+                </ion-col>
+              </ion-row>
+            </form>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeMd="6" class="panel">
+          <div class="panelContainer purplePane">
+            <ion-row class="description p5">
+              <p>If you don't have an account, please <span> register </span> here</p>
+            </ion-row>
+            <form #signupForm="ngForm" (ngSubmit)="$event.preventDefault(); signUp(signupForm)">
+              <ion-row class="p5">
+                <input autocomplete="off" type="text" [(ngModel)]="user.name" id="name" #name="ngModel" name="name" class="form-input" minlength="1" required placeholder="Name" 
+                [ngClass]="{'is-invalid': !name.valid && (!signupEmail.pristine || signupForm.submitted)}" />
+              </ion-row>
+              <ion-row class="p5">
+                <input autocomplete="off" type="email" [(ngModel)]="user.email" #signupEmail="ngModel" name="signupEmail" id="signupEmail" signupEmail class="form-input" 
+                placeholder="Email" [ngClass]="{'is-invalid': !signupEmail.valid && signupForm.submitted}"/>
+              </ion-row>
+              <div style="padding-right: 20px;" class="addPhoneForm row pl-1 pt-1 pb-1">
+                <ng-select name="phoneType" class="phoneTypeSelect col-4 pr-1" #phoneType="ngModel" [(ngModel)]="user.phone_type" required>
+                  <ng-option *ngFor="let item of phoneTypes" [value]="item">
+                    {{item}}
+                  </ng-option>
+                </ng-select>
+                <input
+                required
+                  autocomplete="off"
+                  class="form-input col-8 pl-1"
+                  name="phoneNumber"
+                  placeholder="Phone"
+                  [(ngModel)]="user.phone_number"
+                  (input)="numbersOnlyValidator($event)"
+                />
+              </div>
+              <div class="row p5">
+                <div class="col-md-6 col-vl-6 col-lg-6 col-xl-6 col-12 passInput pass ">
+                  <input autocomplete="off" (keyup)="onChangePassword()" [(ngModel)]="user.password" #signupPass="ngModel"
+                    type="password" class="form-input" required name="signupPass" placeholder="Password"
+                    [ngClass]="{'is-invalid':passwordStrength !== 'Strong' &&!signupPass.pristine &&passwordStrength !== 'Medium'}" />
+                </div>
+                <div class="col-md-6 col-vl-6 col-lg-6 col-xl-6 col-12 passInput confirm">
+                  <input autocomplete="off" [(ngModel)]="passwordConfirm" type="password" #password2="ngModel"
+                    name="password2" class="form-input" placeholder="Confirm Password"
+                    (ngModelChange)="mustMatch(user.password, passwordConfirm)"
+                    [ngClass]="{'is-invalid':!password2.pristine && passwordConfirm !== user.password}" />
+                </div>
+              </div>
+              <div class="row p5">
+                <div class="col-12" *ngIf="user.password && user.password.length">
+                  <ion-text class="password-strength">
+                    Password Strength:
+                    <ion-text class="strength-level"
+                      [color]="passwordStrength === 'Strong'? 'success': passwordStrength === 'Medium'? 'warning': 'danger'">
+                      {{ passwordStrength }}
+                    </ion-text>
+                  </ion-text>
+                </div>
+              </div>
+              <ion-row [ngClass]="{'policyCheckError': signupForm.submitted && !agreed}">
+                <ion-text class="privacy-policy">
+                  <ion-checkbox (ionChange)="agreed = !agreed"></ion-checkbox>
+                  <div class="policy">
+                    I agree with the <a class="policy-link transition-action">Privacy Policy</a>
+                  </div>
+                </ion-text>
+              </ion-row>
+              <ion-row class="createAccountBtn">
+                <button nbButton status="primary" type="submit"> CREATE ACCOUNT</button>
+              </ion-row>
+            </form>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+    <div class="page-footer">
+      <app-page-footer></app-page-footer>
+    </div>
+  </div>
+</div>

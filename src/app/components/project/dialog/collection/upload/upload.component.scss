@@ -1,0 +1,199 @@
+.uploadDialog {
+  width: 450px;
+
+  ::ng-deep .native-textarea {
+    height: 100px;
+  }
+
+  .erorrs nb-alert {
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+  }
+
+  ion-card-content {
+    .circle {
+      border-top: 2px solid #782c7f;
+      border-right: 2px solid #782c7f;
+      border-bottom: 2px solid #518dc9;
+      border-left: 2px solid #518dc9;
+      height: 20px;
+      width: 20px;
+      line-height: 18px;
+      display: inline-grid;
+      text-align: center;
+      border-radius: 50%;
+
+      &::after {
+        content: '\f128';
+        font-size: 12px;
+        font-family: 'Font Awesome 5 Pro';
+        font-weight: 900;
+      }
+
+      &:hover {
+        background: linear-gradient(90deg, #518dc9 0%, #782c7f 100%);
+        color: #fff;
+      }
+    }
+
+    .file-list {
+      max-height: calc(100vh - 400px);
+      overflow-y: auto;
+      width: 100%;
+
+      .file-size {
+        display: flex;
+        align-items: center;
+        width: 86px;
+        justify-content: space-between;
+
+        & > span {
+          margin-right: 0;
+        }
+
+        i {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .fileInfo {
+      display: flex;
+      align-items: center;
+
+      .file-entry {
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 1px 6px 0 rgba(9, 30, 66, 0.25);
+        width: 100%;
+        font-weight: bold;
+
+        .entry-wrapper {
+          display: flex;
+          align-items: center;
+
+          & > .info-wrapper {
+            width: 100%;
+          }
+        }
+
+        .top-info {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 8px;
+
+          .file-actions {
+            display: flex;
+          }
+
+          span {
+            max-width: 90%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+
+          i {
+            cursor: pointer;
+          }
+        }
+
+        .bottom-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          ::ng-deep nb-select {
+            width: 80px !important;
+            height: 25px !important;
+
+            button {
+              width: 80px !important;
+              height: 25px !important;
+              border: none !important;
+              border-radius: 5px;
+              padding: 0 0.5rem !important;
+
+              &:hover {
+                background-color: lightgray !important;
+              }
+            }
+          }
+        }
+
+        .zip-entries {
+          &.expanded {
+            display: none;
+          }
+
+          .file-entry {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+
+            .info-wrapper {
+              width: calc(100% - 15px);
+            }
+
+            & > i {
+              margin-right: 5px;
+              margin-left: -3px;
+            }
+          }
+        }
+      }
+    }
+
+    .inputFileZone {
+      padding: 10px;
+      height: 120px;
+    }
+
+    .commentWrapper {
+      padding: 10px;
+
+      ion-textarea {
+        height: 100px;
+      }
+    }
+
+    .tooltip {
+      padding: 0 0 5px 15px;
+    }
+
+    nb-select {
+      width: 100%;
+    }
+
+    @media (max-width: 767px) {
+      .form-textarea {
+        padding: 5px 10px;
+      }
+    }
+  }
+}
+
+.categoryDialog {
+  width: 650px;
+  .file-list {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    width: 100%;
+
+    .file-size {
+      display: flex;
+      align-items: center;
+      width: 86px;
+      justify-content: space-between;
+
+      & > span {
+        margin-right: 0;
+      }
+
+      i {
+        cursor: pointer;
+      }
+    }
+  }
+
+}

@@ -1,0 +1,232 @@
+ion-header {
+  z-index: 100;
+  box-shadow: 0px 0px 10px 0 rgba(0, 0, 0, 0.15);
+  transition: all 0.5s ease-in-out;
+  background: rgba(255, 255, 255, 0.9);
+
+  .beta{
+    position: absolute;
+    font-size: 13px;
+    left: 128px;
+    bottom: -5px;
+  }
+
+  .support-link-bg {
+    background: linear-gradient(90deg, #518dc9 0%, #782c7f 100%);
+  }
+
+  .beta-mobile{
+    position: absolute;
+    font-size: 9px;
+    left: 95px;
+    bottom: -2px;
+  }
+
+  .info-container {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px 0;
+
+    .desktopMenu {
+      padding: 0 15px;
+      height: 50px;
+
+      .logoWrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        height: 100%;
+
+        .logo {
+          display: flex;
+          font-size: 1.25rem;
+          line-height: inherit;
+          white-space: nowrap;
+
+          a {
+            cursor: pointer;
+            display: flex;
+
+            img {
+              max-width: 150px;
+              max-height: 38px;
+            }
+          }
+        }
+      }
+
+      .menu {
+        height: 100%;
+
+        .menu-header {
+          display: flex;
+          height: 100%;
+          align-items: center;
+
+          .navbar-nav {
+            list-style: none;
+            display: flex;
+
+            .menu-item {
+              float: left;
+              margin-right: 25px;
+              display: flex;
+              color: #000;
+              outline: none;
+
+              i { margin-right: 5px; }
+              .menu-name {
+                span {
+                  color: #000;
+                  text-decoration: none;
+                  font-weight: 700;
+                  text-align: center;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  margin-bottom: 2px;
+                  margin-top: 0px;
+  
+                  @media (max-width: 1300px) {
+                    font-size: 1rem;
+                  }
+  
+                  i {
+                    margin-right: 5px;
+                  }
+  
+                  .icon {
+                    color: #000;
+                  }
+                }
+                &:after {
+                  content: '';
+                  display: block;
+                  height: 2px;
+                  width: 10px;
+                  background-color: transparent;
+                  transition: all .3s;
+                  margin-top: -6px;
+                }
+
+              }
+              .menu-name:hover:after {
+                background-color: black;
+                width: 100%;
+              }
+            }
+            .square-badge {
+              border-radius: 0.1rem !important;
+              text-align: center;
+              line-height: 12px;
+              width: 18px;
+              height: 18px;
+              vertical-align: middle;
+              font-size: 12px;
+
+              span {
+                position: absolute;
+                top: 4.6px; left: 0; right: 0; bottom: 0;
+              }
+            }
+          }
+
+          .avatar {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            position: relative;
+
+            img {
+              width: inherit;
+              height: inherit;
+              border-radius: 50%;
+              object-fit: cover;
+            }
+
+            .badge {
+              position: absolute;
+              top: 0;
+              right: 0;
+              width: 10px;
+              height: 10px;
+              border-radius: 5px;
+              background: #ff3d71;
+            }
+          }
+        }
+      }
+    }
+
+    .mobileMenu {
+      height: 40px;
+      padding: 0px 7px;
+      display: flex;
+
+      .logoWrapper {
+        display: table;
+        .logo {
+          display: table-cell;
+          vertical-align: middle;
+          img { height: 27px; max-width: none; }
+        }
+      }
+
+      .menu-item {
+        outline: none;
+      }
+      .menu {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        flex: 1;
+
+        .icon {
+          display: flex;
+          align-items: center;
+          font-size: 1.7rem;
+          cursor: pointer;
+          width: 35px;
+          height: 35px;
+          position: relative;
+
+          &.support {
+            font-size: 1.5rem;
+          }
+
+          .badge {
+            position: absolute;
+            top: 0;
+            right: 3px;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background: #ff3d71;
+          }
+          
+          img {
+            width: 100%;
+            height: inherit;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+      }
+      
+      .square-badge {
+        border-radius: 0.1rem !important;
+        text-align: center;
+        line-height: 8px;
+        width: 14px;
+        height: 14px;
+        vertical-align: middle;
+        font-size: 10px;
+
+        span {
+          position: absolute;
+          top: 5px; left: 0; right: 0; bottom: 0;
+        }
+      }
+    }
+  }
+}

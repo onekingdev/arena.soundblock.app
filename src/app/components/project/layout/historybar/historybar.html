@@ -1,0 +1,363 @@
+<div class="historybar-container">
+  <div class="infoSection row" *ngIf = "isInfo">
+    <div class="col-6">
+      <div style="position: relative" class="imageWrapper">
+        <div
+          *ngIf="userHasCreateContractPermission"
+          id="artwork"
+          class="inputfile"
+          (click)="showCropModal()"
+          (mouseenter)="hoverState = true"
+          (mouseleave)="hoverState = false"
+        ></div>
+        <img
+          (mouseenter)="hoverState = true"
+          (mouseleave)="hoverState = false"
+          [ngStyle]="{ filter: hoverState && userHasCreateContractPermission ? 'brightness(0.7)' : 'none' }"
+          [src]="project.artwork"
+        />
+        <i
+          *ngIf="userHasCreateContractPermission"
+          [ngStyle]="{ opacity: hoverState ? '1' : '0' }"
+          class="fas fa-edit"
+        ></i>
+      </div>
+    </div>
+    <div class="col-6 vertical_layout_center">
+      <p class="text-danger text-center" *ngIf="imageError">{{imageError}}</p>
+      <div size="12" class="ion-no-padding mb-2">
+        <span class="bolder">{{project.serviceName}}</span>
+      </div>
+      <div size="12" class="ion-no-padding">
+        <span><b>{{project?.project_title}}</b>
+          <div *ngIf="!project.ledger_uuid" class="asyncLoading">
+            <ion-spinner name="lines"></ion-spinner>
+          </div>
+          <i 
+            *ngIf="project.ledger_uuid && !isInfo"
+            class="fad fa-dice-d6 ml10 block-icon" 
+            [style.cursor]="'pointer'" 
+            (click)="showBlockchainViewer(project.ledger_uuid)"
+            nbTooltip="Blockchain Record"
+            nbTooltipPlacement="top"
+            nbTooltipStatus="info"
+          ></i>
+        </span>
+      </div>
+      <div size="12" class="ion-no-padding" *ngIf="isInfo">
+        <button (click)="showBlockchainViewer(project.ledger_uuid)">
+          <i class="fad fa-dice-d6 block-icon"></i><span style="margin-top: 4px;">Record</span>
+        </button>
+      </div>
+      <div size="12" class="ion-no-padding mb-2">
+        <span>{{project?.project_genre}}</span>
+      </div>
+      <div size="12" class="ion-no-padding mb-2">
+        <span>{{project.project_date | date: 'MM-dd-y'}}</span>
+      </div>
+      <div tooltip="UPC" position="bottom" size="12" class="ion-no-padding">
+        <span>{{project.project_upc}}</span>
+      </div>
+
+      <div
+        *ngIf="userHasCreateContractPermission"
+        size="12"
+      >
+        <button (click)="editProject()" class="mt10">
+          <i class="fas fa-edit"></i><span style="margin-top: 4px;">Edit Project</span>
+        </button>
+      </div>
+    </div>
+  </div>  
+  <ion-content *ngIf="!isInfo">
+    <div style="overflow: hidden" class="full-width full-height">
+      <div class="infoSection adjust_size">
+        <div
+          size="12"
+          style="position: relative"
+          class="p10 horizontalCenterRow imageWrapper wrapper"
+          [nbSpinner]="imageUploadLoading"
+        >
+          <div
+            *ngIf="userHasCreateContractPermission"
+            id="artwork"
+            class="inputfile"
+            (click)="showCropModal()"
+            (mouseenter)="hoverState = true"
+            (mouseleave)="hoverState = false"
+          ></div>
+          <img
+            (mouseenter)="hoverState = true"
+            (mouseleave)="hoverState = false"
+            [ngStyle]="{ filter: hoverState && userHasCreateContractPermission ? 'brightness(0.7)' : 'none' }"
+            [src]="project.artwork"
+          />
+          <i
+            *ngIf="userHasCreateContractPermission"
+            [ngStyle]="{ opacity: hoverState ? '1' : '0' }"
+            class="fas fa-edit"
+          ></i>
+      </div>
+      <div>
+        <p class="text-danger text-center" *ngIf="imageError">{{imageError}}</p>
+        <div size="12" class="horizontalCenterRow ion-no-padding">
+          <span class="bolder">{{project.serviceName}}</span>
+        </div>
+        <div size="12" class="horizontalCenterRow ion-no-padding">
+          <span><b>{{project?.project_title}}</b>
+            <div *ngIf="!project.ledger_uuid" class="asyncLoading">
+              <ion-spinner name="lines"></ion-spinner>
+            </div>
+            <i 
+              *ngIf="project.ledger_uuid"
+              class="fad fa-dice-d6 ml10 block-icon" 
+              [style.cursor]="'pointer'" 
+              (click)="showBlockchainViewer(project.ledger_uuid)"
+              nbTooltip="Blockchain Record"
+              nbTooltipPlacement="top"
+              nbTooltipStatus="info"
+            ></i>
+          </span>
+        </div>
+        <div size="12" class="horizontalCenterRow ion-no-padding">
+          <span>{{project?.project_genre}}</span>
+        </div>
+        <div size="12" class="horizontalCenterRow ion-no-padding">
+          <span>{{project.project_date | date: 'MM-dd-y'}}</span>
+        </div>
+        <div tooltip="UPC" position="bottom" size="12" class="horizontalCenterRow ion-no-padding">
+          <span>{{project.project_upc}}</span>
+        </div>
+
+        <div
+          *ngIf="userHasCreateContractPermission"
+          size="12"
+          class="horizontalCenterRow"
+        >
+          <button (click)="editProject()" class="mt10">
+            <i class="fas fa-edit"></i><span style="margin-top: 4px;">Edit Project</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+      <!-- Check if collections are undefined -->
+      <div class="collectionWrapper" *ngIf="collections; else loading;">
+        <!-- <ion-row class="horizontalCenterRow" *ngIf="totalCollections > 0">
+          <span class="gradientText historyTitle">Collections</span>
+        </ion-row> -->
+        <!-- <div class="infoWrapper mb10" *ngIf="recentCollection">
+          <div class="col-recent-status">
+            <nb-alert *ngIf="isRecentCollection" status="info">Current</nb-alert>
+            <nb-alert *ngIf="!isRecentCollection" class="backgroundPurple">Historical</nb-alert>
+            <i
+                class="fad fa-dice-d6 ml10"
+                (click)="showBlockchainViewer(recentCollection.ledger_uuid)"
+                [style.cursor]="'pointer'"
+                nbTooltip="Blockchain Record"
+                nbTooltipPlacement="top"
+                nbTooltipStatus="info"
+              ></i>
+          </div>
+        </div> -->
+
+        <ion-content #historyListRef class="historyRef">
+          <ion-row
+            *ngFor="let collection of collections; let i = index"
+            (click)="selectVersion(collection)"
+            class="historyList"
+          >
+          <ng-container *ngIf="collections[i]?.collection_uuid!== collections[i-1]?.collection_uuid">
+            <ion-col
+              size="12"
+              class="wrapper"
+              [ngClass]="{'selected': isCurrentCollection(collection)}"
+            >
+              <div class="item">
+                <div
+                  class="sectionIconWrapper"
+                  *ngIf="collection?.history as collectionHistory"
+                >
+                  <div>
+                    <i
+                      class="fad fa-list-music icon-colors"
+                      *ngIf="collectionHistory.history_category == 'Music'"
+                    ></i>
+                    <i
+                      class="fad fa-photo-video icon-colors"
+                      *ngIf="collectionHistory.history_category == 'Video'"
+                    ></i>
+                    <i
+                      class="fad fa-tags icon-colors-2"
+                      *ngIf="collectionHistory.history_category == 'Merch'"
+                    ></i>
+                    <i
+                      class="fad fa-folder-tree icon-colors"
+                      *ngIf="collectionHistory.history_category == 'Other'"
+                    ></i>
+                    <i
+                      class="fas fa-cabinet-filing"
+                      *ngIf="collectionHistory.history_category == 'Multiple'"
+                    ></i>
+                  </div>
+                  <div class="blockchain">
+                    <!-- <i
+                      class="fad fa-dice-d6 ml10"
+                      (click)="showBlockchainViewer(recentCollection.ledger_uuid)"
+                      [style.cursor]="'pointer'"
+                      nbTooltip="Blockchain Record"
+                      nbTooltipPlacement="top"
+                      nbTooltipStatus="info"
+                    ></i> -->
+                    <div *ngIf="!collection.ledger_uuid" class="asyncLoading">
+                      <ion-spinner name="lines"></ion-spinner>
+                    </div>
+                    <i 
+                      *ngIf="collection.ledger_uuid"
+                      class="fad fa-dice-d6 ml10"
+                      (click)="showBlockchainViewer(collection.ledger_uuid); $event.stopPropagation();"
+                      [style.cursor]="'pointer'"
+                      nbTooltip="Blockchain Record"
+                      nbTooltipPlacement="top"
+                      nbTooltipStatus="info"
+                    ></i>
+                  </div>
+                </div>
+                <div class="info">
+                  <div class="author">
+                    <span>{{collection.stamp_updated_by.name}}</span>
+                    <span>{{collection.stamp_updated | timestamp}}</span>
+                  </div>
+                  <div [title]="collection.collection_comment" class="comment">
+                    {{collection.collection_comment}}
+                  </div>
+                  <div class="actions mt5" *ngIf="collection?.history as collectionHistory">
+                    <div class="action" (click)="showChangeDetail($event, collection)">
+                      <i class="fas fa-file-plus" *ngIf="collectionHistory.file_action == 'Created'"></i>
+                      <i class="fas fa-file-minus" *ngIf="collectionHistory.file_action == 'Deleted'"></i>
+                      <i class="fas fa-file-code" *ngIf="collectionHistory.file_action == 'Modified'"></i>
+                      <i class="fas fa-file-edit" *ngIf="collectionHistory.file_action == 'Reverted'"></i>
+                      <i class="fas fa-file-check" *ngIf="collectionHistory.file_action == 'Restored'"></i>
+                      <span class="ml5" >{{collection?.collection_files_history_count}}</span>
+                    </div>
+                    <div class="search">
+                      <div *ngIf="collectionHistory.file_action != 'Modified'">
+                        <i class="fas fa-file-search ml10"></i>
+                        <span class="ml5">{{collection?.history?.history_size | fileSize}}</span>
+                      </div>
+                    </div>
+                    <div class="collection-status" *ngIf="isCurrentCollection(collection)">
+                      <nb-alert status="info" *ngIf="i == 0">Current</nb-alert>
+                      <nb-alert class="backgroundPurple" *ngIf="i > 0">Historical</nb-alert>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+          </ng-container>
+          </ion-row>
+
+          <ion-infinite-scroll
+            #infiniteScroll
+            threshold="100px"
+            (ionInfinite)="loadNextPage($event)"
+          >
+            <ion-infinite-scroll-content
+              loadingSpinner="bubbles"
+              loadingText="Loading History..."
+            >
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+        </ion-content>
+      </div>
+    </div>
+  </ion-content>
+</div>
+
+<!-- Change Dialog -->
+<ng-template #changeDetailDialog let-data let-ref="dialogRef">
+  <ion-card class="changeDialog">
+    <ion-card-header>
+      <span>Changes</span>
+      <span>{{historyCollection.collection_uuid}}</span>
+    </ion-card-header>
+    <ion-card-content>
+      <div
+        class="container"
+        *ngIf="historyObs | async as history; else loading;"
+      >
+        <ion-row>
+          <ion-col
+            size="1"
+            class="verticalCenterRow horizontalCenterRow"
+          ></ion-col>
+          <ion-col size="5">
+            <p>Name</p>
+          </ion-col>
+          <ion-col size="6">
+            <p>Path</p>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let item of history">
+          <ion-col
+            size="1"
+            class="verticalCenterRow horizontalCenterRow"
+            *ngIf="historyCollection.history.file_action as file_action"
+          >
+            <i
+              class="fas fa-plus"
+              *ngIf="file_action == 'Created'"
+              style="color: #3dca3d"
+            ></i>
+            <i
+              class="fas fa-minus"
+              *ngIf="file_action == 'Deleted'"
+              style="color: red"
+            ></i>
+            <i
+              class="fas fa-wrench"
+              *ngIf="file_action == 'Modified'"
+              style="color: #3d4bca"
+            ></i>
+            <i
+              class="fas fa-wrench"
+              *ngIf="file_action == 'Reverted'"
+              style="color: #3d4bca"
+            ></i>
+            <i
+              class="fas fa-reply-all"
+              *ngIf="file_action == 'Restored'"
+              style="color: #3dca3d"
+            ></i>
+          </ion-col>
+          <ion-col size="5">
+            <p>{{item.file_name}}</p>
+          </ion-col>
+          <ion-col size="6">
+            <p>{{item.file_path}}</p>
+          </ion-col>
+        </ion-row>
+      </div>
+      <ion-row class="p10">
+        <ion-col size="6" offset="3">
+          <button
+            nbButton
+            shape="semi-round"
+            fullWidth
+            status="info"
+            (click)="closeDialog(ref)"
+          >
+            <span class="gradientText">Close</span>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ng-template>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

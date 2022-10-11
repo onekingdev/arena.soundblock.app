@@ -1,0 +1,19 @@
+<div class="modal-header">
+  <div class="modal-title pull-left">Add Track Publisher</div>
+  <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+      <span aria-hidden="true"><i class="fal fa-times"></i></span>
+  </button>
+</div>
+<div class="modal-body" [formGroup]="form">
+  <ng-select class="mb-2" formControlName="publisher" [items]="publishers" [placeholder]="'Select Publisher'" [searchable]="false" [bindLabel]="'publisher_name'" [bindValue]="'publisher_uuid'"></ng-select>
+  <div class="d-flex justify-content-center">
+    <button status="info" (click)="onSubmit()" [disabled]="form.invalid" class="appearance-filled size-medium shape-rectangle status-info">
+      <div class="gradientText">
+        <span>
+          <i *ngIf="isSubmitting" class="fas fa-circle-notch fa-spin"></i>
+          Add
+        </span>
+      </div>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,347 @@
+<!-- MEMBER DIALOG -->
+<div class="modal-header">
+  <span> {{step === 'addMember'?'Add New Member': isNewMember?'Set Permission':'Edit Permission'}}</span>
+  <i class="fas fa-close" (click)="closeDialog()"></i>
+</div>
+<div class="modal-body">
+  <ng-container *ngIf="step==='addMember'">
+    <form [formGroup]="form" class="dialogForm">
+      <div>
+        <div class="card-body">
+          <div class="row content form-padding">
+            <div class="col-6">
+              <div>First Name:</div>
+              <div>
+                <input type="text" name="name" formControlName="first_name" required class="form-input"
+                  placeholder="First Name" [ngClass]="{
+                    'is-invalid':
+                      form.controls.first_name.touched &&
+                      form.controls.first_name.invalid
+                  }" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div>Last Name:</div>
+              <div>
+                <input type="text" name="name" formControlName="last_name" required class="form-input"
+                  placeholder="Last Name" [ngClass]="{
+                    'is-invalid':
+                      form.controls.last_name.touched &&
+                      form.controls.last_name.invalid
+                  }" />
+              </div>
+            </div>
+          </div>
+          <div class="row content form-padding">
+            <div class="col-12">
+              <div>Email:</div>
+              <div>
+                <input type="email" name="email" formControlName="user_auth_email" required class="form-input"
+                  placeholder="Email" [ngClass]="{
+                    'is-invalid':
+                      form.controls.user_auth_email.touched &&
+                      form.controls.user_auth_email.invalid
+                  }" />
+              </div>
+            </div>
+          </div>
+          <div class="row content form-padding">
+            <div class="col-12">
+              <div>User Role:</div>
+              <div class="ion-mading-start selectWrapper">
+                <ng-select name="role" class="role" required formControlName="user_role_id" placeholder="Role" [ngClass]="{
+                    'is-invalid':
+                      form.controls.user_role_id.touched &&
+                      form.controls.user_role_id.invalid
+                  }">
+                  <ng-option *ngFor="let role of (profileService.projectRoles | async)" [value]="role.dataUUID">
+                    {{ role.dataRole }}</ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row form-padding content is-invalid" *ngIf="addMemberError">
+            <div class="col-12">
+              <div>
+                <p>{{ addMemberError }}</p>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row p10">
+            <div class="col-6 offset-3">
+              <button type="button" nbButton shape="semi-round" (click)="setPermission()" fullWidth status="info">
+                <span class="gradientText">Set Permission</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+  <ng-container *ngIf="step === 'setPermission'">
+    <div class="content">
+      <div class="row form-padding content is-invalid" *ngIf="errors.length > 0">
+        <div class="col-12">
+          <div>
+            <p *ngFor="let error of errors">{{ error }}</p>
+          </div>
+        </div>
+      </div>
+      <!-- TABS -->
+      <div class="projectTab">
+        <button class="tablinks" (click)="selectedTab = PermissionTab.ACCOUNT"
+          [ngClass]="{ active: selectedTab === PermissionTab.ACCOUNT }">
+          <div class="wrapper">
+            <i class="fad fa-users icon-colors mr5 mb1"></i><span>Account</span>
+          </div>
+          <div class="border"></div>
+        </button>
+        <button class="tablinks" (click)="selectedTab = PermissionTab.FILE"
+          [ngClass]="{ active: selectedTab === PermissionTab.FILE }">
+          <div class="wrapper">
+            <i class="fad fa-photo-video icon-colors mr5 mb1"></i><span>File</span>
+          </div>
+          <div class="border"></div>
+        </button>
+        <button class="tablinks" (click)="selectedTab = PermissionTab.REPORTS"
+          [ngClass]="{ active: selectedTab === PermissionTab.REPORTS }">
+          <div class="wrapper">
+            <i class="fad fa-user-chart icon-colors mr5 mb1"></i><span>Reports</span>
+          </div>
+          <div class="border"></div>
+        </button>
+      </div>
+      <!-- TABS -->
+  
+      <!-- ACCOUNT TAB -->
+      <div class="tab accountTab" *ngIf="selectedTab === PermissionTab.ACCOUNT">
+        <div class="select-all ml5">
+          <button (click)="selectAllPermissions(PermissionTab.ACCOUNT)">
+            {{
+              allPermissionsSelected(PermissionTab.ACCOUNT)
+                ? 'Deselect
+              All'
+                : 'Select All'
+            }}
+          </button>
+          <i class="fas fa-info-circle" nbTooltip="Permissions on this tab are applied at the account level"
+            nbTooltipStatus="info">
+          </i>
+        </div>
+  
+        <!-- CREATE PROJECT -->
+        <div class="row ml-3">
+          <div class="custom-control custom-checkbox" *ngIf="hasEditPermissionsPermission">
+            <input type="checkbox" class="custom-control-input" id="createProjectEdit"
+              [(ngModel)]="permission.createProject" name="createProject">
+            <label class="custom-control-label" for="createProjectEdit"></label>
+          </div>
+          <i *ngIf="!hasEditPermissionsPermission" [class]="
+              (permission.createProject ? 'fa-check' : 'fa-times') +
+              ' fas mr10 colorPurple pt-1'
+            "></i>
+          <span class="pt-1">Create New Project</span>
+        </div>
+        <!-- CREATE PROJECT -->
+  
+        <!-- DEPLOY TO PLATFORM -->
+        <div class="row ml-3">
+          <div class="custom-control custom-checkbox" *ngIf="hasEditPermissionsPermission">
+            <input type="checkbox" class="custom-control-input" id="deployPlatformEdit"
+              [(ngModel)]="permission.deployPlatform" name="deployPlatform">
+            <label class="custom-control-label" for="deployPlatformEdit"></label>
+          </div>
+          <i *ngIf="!hasEditPermissionsPermission" [class]="
+              (permission.deployPlatform ? 'fa-check' : 'fa-times') +
+              ' fas mr10 colorPurple pt-1'
+            "></i>
+          <span class="pt-1">Deploy to Platform</span>
+        </div>
+        <!-- DEPLOY TO PLATFORM -->
+  
+        <!-- ADD MEMBER -->
+        <div class="row ml-3">
+          <div class="custom-control custom-checkbox" *ngIf="hasEditPermissionsPermission">
+            <input type="checkbox" class="custom-control-input" id="addMemberEdit" [(ngModel)]="permission.addMember"
+              name="addMember">
+            <label class="custom-control-label" for="addMemberEdit"></label>
+          </div>
+          <i *ngIf="!hasEditPermissionsPermission" [class]="
+              (permission.addMember ? 'fa-check' : 'fa-times') +
+              ' fas mr10 colorPurple pt-1'
+            "></i>
+          <span class="pt-1">Add Team Member</span>
+        </div>
+        <!-- ADD MEMBER -->
+  
+        <!--DELETE MEMBER -->
+        <div class="row ml-3">
+          <div class="custom-control custom-checkbox" *ngIf="hasEditPermissionsPermission">
+            <input type="checkbox" class="custom-control-input" id="deleteMemberEdit"
+              [(ngModel)]="permission.deleteMember" name="deleteMember">
+            <label class="custom-control-label" for="deleteMemberEdit"></label>
+          </div>
+          <i *ngIf="!hasEditPermissionsPermission" [class]="
+              (permission.deleteMember ? 'fa-check' : 'fa-times') +
+              ' fas mr10 colorPurple pt-1'
+            "></i>
+          <span class="pt-1">Delete Team Member</span>
+        </div>
+        <!-- DELETE MEMBER -->
+  
+        <!-- CHANGE PERMISSIONS -->
+        <div class="row ml-3">
+          <div class="custom-control custom-checkbox" *ngIf="hasEditPermissionsPermission">
+            <input type="checkbox" class="custom-control-input" id="changePermissionEdit"
+              [(ngModel)]="permission.changePermission" name="changePermission">
+            <label class="custom-control-label" for="changePermissionEdit"></label>
+          </div>
+          <i *ngIf="!hasEditPermissionsPermission" [class]="
+              (permission.changePermission ? 'fa-check' : 'fa-times') +
+              ' fas mr10 colorPurple pt-1'
+            "></i>
+          <span class="pt-1">Change Permissions</span>
+        </div>
+        <!-- CHANGE PERMISSIONS -->
+  
+        <!-- CREATE CONTRACT -->
+        <div class="row ml-3">
+          <div class="custom-control custom-checkbox" *ngIf="hasEditPermissionsPermission">
+            <input type="checkbox" class="custom-control-input" id="modifyContractEdit"
+              [(ngModel)]="permission.modifyContract" name="modifyContract">
+            <label class="custom-control-label" for="modifyContractEdit"></label>
+          </div>
+          <i *ngIf="!hasEditPermissionsPermission" [class]="
+              (permission.modifyContract ? 'fa-check' : 'fa-times') +
+              ' fas mr10 colorPurple pt-1'
+            "></i>
+          <span class="pt-1">Modify Contract</span>
+        </div>
+        <!-- CREATE CONTRACT -->
+      </div>
+      <!-- ACCOUNT TAB -->
+  
+      <!-- FILE TAB -->
+      <div class="tab fileTab" *ngIf="selectedTab === PermissionTab.FILE">
+        <div class="select-all mb-2">
+          <button (click)="selectAllPermissions(PermissionTab.FILE)">
+            {{
+              allPermissionsSelected(PermissionTab.FILE)
+                ? 'Deselect
+              All'
+                : 'Select All'
+            }}
+          </button>
+        </div>
+  
+        <div class="row" *ngFor="let section of sections">
+          <div class="col-3 sectionTitle"><b>{{ section }}:</b></div>
+          <div class="sectionBody col-9">
+            <div class="wrapper row">
+              <div class="col-6 col-md-6 mb-2" *ngFor="let subPermission of subPermissions">
+                <div *ngIf="hasEditPermissionsPermission" class="custom-control custom-control-inline custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="{{section + subPermission}}Edit" [(ngModel)]="
+                    permission[section.toLowerCase()][
+                      subPermission.toLowerCase()
+                    ]" name="{{section + subPermission}}">
+                  <label class="custom-control-label" for="{{section + subPermission}}Edit"></label>
+                </div>
+                <i class="pt-1" *ngIf="!hasEditPermissionsPermission" [class]="
+                    (permission[section.toLowerCase()][
+                      subPermission.toLowerCase()
+                    ]
+                      ? 'fa-check'
+                      : 'fa-times') + ' fas mr10 colorPurple'
+                  "></i>
+                <span>{{ subPermission }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FILE TAB -->
+  
+      <!-- REPORTS TAB -->
+      <div class="tab reportsTab" *ngIf="selectedTab === PermissionTab.REPORTS">
+        <div class="select-all">
+          <button (click)="selectAllPermissions(PermissionTab.REPORTS)">
+            {{
+              allPermissionsSelected(PermissionTab.REPORTS)
+                ? 'Deselect
+              All'
+                : 'Select All'
+            }}
+          </button>
+        </div>
+  
+        <div class="row ml-1">
+          <div *ngIf="hasEditPermissionsPermission" class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="accountPaymentEdit"
+              [(ngModel)]="permission.accountPayment" name="accountPayment">
+            <label class="custom-control-label" for="accountPaymentEdit"></label>
+          </div>
+          <i *ngIf="!hasEditPermissionsPermission" [class]="
+              (permission.accountPayment ? 'fa-check' : 'fa-times') +
+              ' fas mr10 colorPurple pt-1'
+            "></i>
+          <span class="pt-1">Account Payments</span>
+        </div>
+        <div class="row ml-1">
+          <div *ngIf="hasEditPermissionsPermission" class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="auditLogEdit" [(ngModel)]="permission.auditLog"
+              name="accountPayment">
+            <label class="custom-control-label" for="auditLogEdit"></label>
+          </div>
+          <i *ngIf="!hasEditPermissionsPermission" [class]="
+              (permission.auditLog ? 'fa-check' : 'fa-times') +
+              ' fas mr10 colorPurple pt-1'
+            "></i>
+          <span class="pt-1">Audit Log</span>
+        </div>
+        <div class="row ml-1">
+          <div *ngIf="hasEditPermissionsPermission" class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="usageProjectEdit"
+              [(ngModel)]="permission.usageProject" name="usageProject">
+            <label class="custom-control-label" for="usageProjectEdit"></label>
+          </div>
+          <i *ngIf="!hasEditPermissionsPermission" [class]="
+              (permission.usageProject ? 'fa-check' : 'fa-times') +
+              ' fas mr10 colorPurple pt-1'
+            "></i>
+          <span class="pt-1">Usage (Project)</span>
+        </div>
+        <div class="row ml-1">
+          <div *ngIf="hasEditPermissionsPermission" class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="usageAccountEdit"
+              [(ngModel)]="permission.usageAccount" name="usageAccount">
+            <label class="custom-control-label" for="usageAccountEdit"></label>
+          </div>
+          <i *ngIf="!hasEditPermissionsPermission" [class]="
+          (permission.usageAccount ? 'fa-check' : 'fa-times') +
+          ' fas mr10 colorPurple pt-1'
+        "></i>
+          <span class="pt-1">Usage (Account)</span>
+        </div>
+      </div>
+      <!-- REPORTS TAB -->
+    </div>
+    <div class="p10 row">
+      <div class="col-6 offset-3">
+        <button nbButton shape="semi-round" fullWidth status="info"
+          (click)="isNewMember ? addMember() : updateMemberPermissions()">
+          <span class="gradientText">{{
+            isNewMember ? 'Submit' : 'Update'
+          }}</span>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+</div>
+<!-- MEMBER DIALOG -->
+
+<!-- PERMISSION DIALOG -->
+
+<!-- PERMISSION DIALOG -->

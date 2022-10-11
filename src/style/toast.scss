@@ -1,0 +1,84 @@
+.custom-toast-top-left {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.custom-toast-top-middle {
+  position: absolute;
+  left: calc(50vw - 200px);
+  top: 0;
+}
+.custom-toast-top-right {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.custom-toast-middle-left {
+  position: absolute;
+  left: 0;
+  top: calc(50vh - 20px);
+}
+.custom-toast-middle-middle {
+  position: absolute;
+  left: calc(50vw - 200px);
+  top: calc(50vh - 20px);
+}
+.custom-toast-middle-right {
+  position: absolute;
+  right: 0;
+  top: calc(50vh - 20px);
+}
+.custom-toast-bottom-left {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+.custom-toast-bottom-middle {
+  position: absolute;
+  left: calc(50vw - 200px);
+  bottom: 0;
+}
+.custom-toast-bottom-right {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.arena-notification-button {
+  border-color: #782c7f #782c7f #518DC9#518DC9 !important;
+  border-width: 2px !important;
+  border-style: solid !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff !important;
+  border-radius: 10px !important;
+  width: 90px;
+  font-size: 0.75rem;
+  height: 27px;
+  padding: 0;
+  margin: 0 3px;
+  &:active,
+  &:hover {
+    background: linear-gradient(90deg, #518dc9 0%, #782c7f 100%);
+    color: white !important;
+    border-width: 0 !important;
+
+    i {
+      color: white !important;
+    }
+    .arena-notification-span {
+      background: white;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+}
+
+.arena-notification-span {
+  background: linear-gradient(90deg, #518dc9 0%, #782c7f 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

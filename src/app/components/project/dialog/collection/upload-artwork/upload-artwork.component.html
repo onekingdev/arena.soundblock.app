@@ -1,0 +1,52 @@
+<ion-card [nbSpinner]="uploadLoading" class="uploadDialog">
+  <ion-card-header>
+    <span>Upload Track Artwork</span>
+    <span><i class="fas fa-close" (click)="close()"></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row class="container">
+      <ion-col class="erorrs" *ngIf="error" size="12">
+        {{ error }}
+      </ion-col>
+      <ion-col *ngIf="file" class="image-preview" size="12">
+        <img [src]="imageUrl" />
+      </ion-col>
+
+      <ion-col size="12" *ngIf="file" class="fileInfo">
+        <span [title]="file.name">{{ file.name }}</span>
+        <span>{{ file.size | fileSize }}</span>
+      </ion-col>
+      <ion-col size="12" class="inputFileZone">
+        <upload-file
+          placeholder="Click or Drop an Image"
+          imagesOnly="true"
+          (fileSelected)="fileSelected($event)"
+        ></upload-file>
+      </ion-col>
+      <!-- <ion-col size="12" class="commentWrapper">
+        <ion-textarea
+          class="form-textarea"
+          rows="6"
+          name="comment"
+          [(ngModel)]="comment"
+          placeholder="Share Comment for Team Members"
+          #fileCommentInput
+        ></ion-textarea>
+      </ion-col> -->
+    </ion-row>
+    <ion-row class="horizontalCenterRow p10">
+      <ion-col size="6">
+        <button
+          shape="semi-round"
+          fullWidth
+          status="info"
+          nbButton
+          [disabled]="!file"
+          (click)="uploadArtwork()"
+        >
+          <span class="gradientText">Submit</span>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-card-content>
+</ion-card>

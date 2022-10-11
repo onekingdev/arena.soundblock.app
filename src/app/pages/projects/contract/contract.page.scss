@@ -1,0 +1,361 @@
+.page-container {
+  .content-wrapper {
+    color: #222b45;
+    font-size: 1rem;
+    position: relative;
+    padding: 0;
+    width: 100%;
+
+    .mainContent {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      &.menuExpand {
+        margin-right: 270px;
+
+        @media screen and (max-width: 767px) {
+          margin-right: 0px;
+        }
+      }
+
+      .container {
+        padding: 30px 20px;
+        width: 100%;
+
+        @media screen and (max-width: 590px) {
+          .actions-section button span {
+            display: none;
+          }
+        }
+
+        @media screen and (max-width: 920px) {
+          .table-section {
+            flex-wrap: wrap !important;
+            justify-content: center;
+          }
+
+          .actions-section {
+            display: flex;
+            justify-content: space-evenly;
+
+            button {
+              width: fit-content;
+              margin: 0 !important;
+            }
+          }
+        }
+
+        .member-payout-table {
+          flex: unset !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+
+        .members-with-permissions {
+          padding: 15px;
+          border-radius: 10px;
+          width: fit-content;
+          cursor: pointer;
+          align-items: center;
+          display: flex;
+          max-width: 546px;
+  
+          background-image: linear-gradient(white, white),
+            linear-gradient(to right, #518dc9, #782c7f);
+          background-origin: border-box;
+          border: double 0.2em transparent;
+          background-origin: border-box;
+          background-clip: padding-box, border-box;
+          color: #525f7f;
+
+          i {
+            background: -webkit-gradient(
+              linear,
+              left top,
+              left bottom,
+              from(#518dc9),
+              to(#782c7f)
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+  
+          div {
+            font-weight: 600;
+          }
+          ul li {
+            font-size: 1.1rem;
+          }
+        }
+
+        .contract-section {
+          width: 100%;
+        }
+
+        .chart-section {
+          width: 325px;
+          height: 325px;
+          margin: 1.5rem 0;
+        }
+
+        .table-section {
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          flex-wrap: nowrap;
+        }
+
+        .section {
+          padding: 10px 0;
+        }
+
+        .member {
+          border-bottom: solid 1px #edf1f7;
+          padding: 5px 0;
+
+          .deleted {
+            font-weight: bold;
+            color: red;
+          }
+
+          ion-col {
+            display: flex;
+            align-items: center;
+          }
+
+          .reminder-button {
+            width: auto;
+            height: auto;
+            padding: 8px;
+            margin: -8px;
+            border-radius: 5px;
+            background-color: transparent;
+            transition: all 0.3s;
+            float: unset;
+
+            &:hover {
+              background-color: lightgray;
+            }
+
+            &.disabled {
+              color: gray !important;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+    }
+
+    .sidemenu {
+      position: absolute;
+      right: 0;
+      height: 100%;
+      width: 270px;
+      top: 0;
+      border-bottom-width: 1px;
+
+      @media screen and (max-width: 767px) {
+        width: 0;
+        border-width: 0;
+      }
+    }
+  }
+}
+
+::ng-deep.modify-contract-modal {
+  @media (min-width: 576px){
+    max-width: 500px;
+    margin: 1.75rem 2.85rem;
+}
+  .modal-content {
+    width: 90vw;
+  }
+  
+    @media (max-width: 767px) {
+      .member-details,
+      .payoutInput input,
+      .new-member-dropdown nb-select button {
+        font-size: 12px !important;
+        padding: 8px !important;
+        border-radius: 10px !important;
+      }
+  
+      .payoutBody > .row:not(:last-child) {
+        border-bottom-width: 2px;
+        border-bottom-style: solid;
+        border-image: 2px solid linear-gradient(white, white),
+          linear-gradient(to right, #518dc9, #782c7f);
+        padding-bottom: 1.3rem;
+      }
+  
+      ::ng-deep .select-button {
+        height: 34px !important;
+        border-radius: 10px !important;
+        font-size: 12px !important;
+      }
+    }
+  
+      .container {
+        padding: 20px;
+        font-size: 0.8rem;
+        display: flex;
+  
+        form {
+          width: 100%;
+        }
+  
+        .content {
+          height: 60vh;
+          overflow: auto;
+  
+          .new-member-dropdown {
+            width: 100%;
+            margin-bottom: 20px;
+  
+            ng-select {
+              min-width: 200px;
+              width: 100%;
+              max-width: 250px;
+  
+              ng-option:disabled {
+                color: lightgray !important;
+              }
+            }
+          }
+  
+          .left-panel {
+            .payoutBody {
+              width: 100%;
+  
+              & > .row {
+                padding: 0.5rem 0;
+              }
+  
+              .roleCol {
+                display: flex;
+                flex-direction: column;
+  
+                .member-details {
+                  margin-top: 3px;
+                }
+  
+                ::ng-deep nb-select {
+                  margin-top: 6px;
+                  width: 130px;
+  
+                  button {
+                    height: 31px;
+                    border: none !important;
+                    border-radius: 5px;
+                    width: 130px !important;
+                    padding-left: 7px !important;
+  
+                    &:hover {
+                      background-color: lightgray !important;
+                    }
+                  }
+                }
+              }
+  
+              .member-details {
+                outline: none !important;
+                display: inline-block;
+                min-height: auto;
+                background: #fff;
+                width: 100%;
+                padding: 10px 5px 10px 0;
+                color: #000;
+                outline: none;
+                font-size: 14px;
+                font-weight: bold;
+                margin: 0 auto;
+                margin-top: 0;
+                line-height: normal;
+              }
+  
+              .selectRole {
+                color: #fff !important;
+                border-radius: 15px;
+              }
+  
+              .payoutInput {
+                position: relative;
+                width: 75px;
+  
+                input {
+                  height: 31px !important;
+                  width: 75px !important;
+                  // margin-left: 5px;
+                }
+  
+                .percentage {
+                  position: absolute;
+                  color: #000000 !important;
+                  top: 9px;
+                  right: 7px;
+                  font-size: 1rem !important;
+                }
+              }
+  
+              .deleteBtn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+  
+                i {
+                  font-size: 1.2rem;
+                  color: #da2424;
+                  cursor: pointer;
+                }
+              }
+            }
+  
+            .payoutHeader {
+              .hideLabel {
+                margin-bottom: 0 !important;
+  
+                .custom-right {
+                  margin-bottom: -30px;
+                }
+              }
+            }
+  
+            .form-row {
+              border-bottom: 1.5px solid #d0d0d0;
+              padding-bottom: 25px;
+            }
+  
+            .addBtn {
+              padding: 7px 12px;
+              width: fit-content;
+              height: fit-content;
+              font-size: 0.8rem;
+              margin-right: 50px;
+              float: right;
+  
+              i {
+                margin-right: 5px;
+              }
+            }
+          }
+  
+          .right-panel {
+            padding: 20px;
+  
+            .imageDiv {
+              max-width: 325px;
+              margin: 15px auto;
+            }
+          }
+        }
+  
+        .buttons {
+          max-width: 700px;
+          margin: 0 auto;
+        }
+      }
+  
+   
+}

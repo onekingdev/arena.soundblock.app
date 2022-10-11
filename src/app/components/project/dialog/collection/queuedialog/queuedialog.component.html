@@ -1,0 +1,31 @@
+<ion-card class="queueDialog">
+  <ion-card-header>
+    <span>Processing Changes</span>
+    <span><i class="fas fa-close" (click)="close()"></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <div class="container">
+      <ion-row class="message">
+        You're {{ position }}{{ getSuffix(position) }} in line with estimate of
+        {{ time | duration }}.
+      </ion-row>
+      <div class="progressBar">
+        <div class="current success" [style.width.%]="progress">
+          <span *ngIf="progress != 0">{{ progress }}%</span>
+        </div>
+      </div>
+    </div>
+    <ion-row class="horizontalCenterRow p10">
+      <button
+        nbButton
+        shape="semi-round"
+        fullWidth
+        status="info"
+        type="button"
+        (click)="close()"
+      >
+        <span class="gradientText">Alert Me</span>
+      </button>
+    </ion-row>
+  </ion-card-content>
+</ion-card>

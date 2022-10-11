@@ -1,0 +1,116 @@
+<div class="page-wrapper setWrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <service-type></service-type>
+      <div
+        [nbSpinner]="paymentLoading"
+        nbSpinnerSize="giant"
+        class="form-container"
+      >
+        <ion-row class="p10">
+          <ion-col size="12" class="sectionTitle">
+            <h6>Service Account Name</h6>
+          </ion-col>
+          <ion-col size="12" class="sectionSubtitle">
+            <span
+              >For most Soundblock accounts, this should be the Artist or Band
+              Name.
+            </span>
+            <br />
+            <span
+              >For enterprise users, who manage multiple artists, this may be
+              your Company Name.</span
+            >
+          </ion-col>
+          <ion-col size="12" sizeMd="6" class="p10">
+            <input
+              autocomplete="off"
+              class="form-input"
+              name="title"
+              [(ngModel)]="serviceName"
+              placeholder="Service name"
+              minlength="3"
+              required
+            />
+          </ion-col>
+        </ion-row>
+        <ion-row class="selectStorage">
+          <ion-col size="12" class="sectionTitle">
+            <h6>Storage Type</h6>
+          </ion-col>
+          <ion-radio-group class="p10" [ngModel]="storage?.dataUUID">
+            <div
+              *ngFor="let accountType of planTypes"
+              class="verticalCenterRow mb10"
+            >
+              <ion-radio [value]="accountType.dataUUID" class="mr10" (click)="onSelectStorage(accountType)"></ion-radio
+
+              ><span (click)="onSelectStorage(accountType)"
+                >{{ accountType?.planName }}</span
+              >
+            </div>
+          </ion-radio-group>
+        </ion-row>
+
+        <ion-row *ngIf="storage?.planName === 'Simple Distribution'" class="p20">
+          <ion-col size="12" class="errors" *ngFor="let err of errors">
+            <i>{{ err }}</i>
+          </ion-col>
+          <ion-col
+            class="buttonSection mb20 mt30"
+          >
+            <button
+              [disabled]="paymentLoading"
+              (click)="onSubmit()"
+              nbButton
+              status="info"
+              shape="semi-round"
+              type="submit"
+            >
+              <div class="gradientText verticalCenterRow">
+                <span>Save & Next Step</span>
+                <i class="ml10 mt1 fas fa-arrow-right"></i>
+              </div>
+            </button>
+          </ion-col>
+        </ion-row>
+        
+
+        <form
+          *ngIf="storage?.planName !== 'Simple Distribution'"
+          (ngSubmit)="onSubmit()"
+        >
+          <ion-row class="p10">
+            <ion-col size="12" class="sectionTitle">
+              <h6>Credit Card</h6>
+            </ion-col>
+            <ion-col size="12" sizeMd="6" class="p10">
+              <div id="card-info form-input" #cardInfo></div>
+              <div id="card-errors" role="alert">{{error}}</div>
+            </ion-col>
+          </ion-row>
+          <ion-row class="errors pl20" *ngFor="let err of errors">
+            <i>{{ err }}</i>
+          </ion-row>
+          <ion-row class="buttonSection mb20 mt30">
+            <button
+              [disabled]="paymentLoading"
+              nbButton
+              status="info"
+              shape="semi-round"
+              type="submit"
+            >
+              <div class="gradientText verticalCenterRow">
+                <span>Save & Next Step</span
+                ><i class="ml10 mt1 fas fa-arrow-right"></i>
+              </div>
+            </button>
+          </ion-row>
+        </form>
+      </div>
+    </div>
+    <div class="page-footer">
+      <app-page-footer></app-page-footer>
+    </div>
+  </div>
+</div>

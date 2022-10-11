@@ -1,0 +1,278 @@
+<div class="example-list">
+  <div class="card example-box" *ngFor="let file of filesForm.controls; let index = index">
+    <div class="card-body" [formGroup]="file">
+      <div class="row" [attr.aria-expanded]="!isCollapsed[index]" aria-controls="collapseBasic">
+        <div class='reorderIconHeader col-1  d-flex flex-column justify-content-between' style="cursor: move;">
+          <i role="button" style="font-size: 33px;" [ngStyle]="{'color': index-1===-1?'gray':'','cursor':index-1===-1?'auto':''}" class="fal fa-long-arrow-up" (click)="onArrowClick(index,index-1, 'top')" ></i>
+          <div>
+            <div class="column table-col">
+              <label class="track-check" for="deployPlatform{{index}}">
+                <input type="checkbox" (click)="onCheckboxClick($event)"
+                id="deployPlatform{{index}}" formControlName="isChecked"
+                (change)="clickCheckbox($event,file.get('isChecked').value, index)">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </div>
+          <i role="button" style="font-size: 33px;" [ngStyle]="{'color': index+1===_files.length?'gray':'','cursor':index+1===_files.length?'auto':''}" class="fal fa-long-arrow-down" (click)="onArrowClick(index, index+1===_files.length?-1:index+1, 'bottom')"></i>
+        </div>
+        <div class="col-3 m-auto">
+          <div class="number-box">
+            <div class="text-black track-number"><span *ngIf="multipleVolumes">{{_files[index]?.track?.track_volume_number}}.</span><span *ngIf="_files.length > 0 && _files[index]?.track?.track_number < 10">0</span>{{_files[index]?.track?.track_number}}</div>
+          </div>
+        </div>
+        <div class="col-md-5 col-lg-5 col-vl-5 col-xl-5 col-9">
+          <div class="track-detail-box">
+            <h5 class="gradientText">
+              <span>{{_files[index]?.file_title}} <span *ngIf="_files[index]?.track?.track_version">({{_files[index]?.track?.track_version}})</span></span></h5>
+            <p>{{_files[index]?.track?.track_artist}}
+              ( <span *ngFor="let artist of _files[index]?.track?.artists; let i = index">
+                {{artist.artist_name}} <span *ngIf="_files[index]?.track?.artists.length -1 !==i">,</span>
+              </span>)
+              <button status="info" style="height: 25px;" (click)="onManageArtists(index, _files[index]?.file_uuid)"
+              class="appearance-filled size-medium shape-rectangle status-info">
+              <div class="gradientText">
+                <span>
+                  Manage
+                </span>
+              </div>
+            </button>
+            </p>
+            <div class="play-section mb-2 gradientText"><i title='Play' style="font-size: 30px;" class=' fas fa-play mr-2'
+                *ngIf='trackUUIDLoading !== _files[index]?.file_uuid'
+                [hidden]='trackUUIDPlaying === _files[index]?.file_uuid'
+                [class.disabled]='trackUUIDLoading && trackUUIDLoading !== _files[index]?.file_uuid'
+                (click)='playTrack(_files[index])'></i>
+              <i *ngIf='trackUUIDPlaying === _files[index]?.file_uuid' (click)='stopPlayingTrack()' title='Stop'
+                class='fas fa-stop icon-colors' style="font-size: 30px;"></i>
+              <div class='download-progress'
+                *ngIf='downloadTrackProgress && trackUUIDLoading === _files[index]?.file_uuid'>
+                {{ downloadTrackProgress }}</div>
+              <ion-spinner *ngIf='trackUUIDLoading === _files[index]?.file_uuid' name='crescent'></ion-spinner>
+              {{_files[index]?.track?.track_duration | duration}} ({{_files[index]?.track?.preview_start}}:
+              {{_files[index]?.track?.preview_stop}} seconds)
+            </div>
+            <p>{{_files[index]?.track?.primary_genre?.dataGenre}}  <span *ngIf="_files[index]?.track?.secondary_genre?.dataGenre">/ {{_files[index]?.track?.secondary_genre?.dataGenre}}</span></p>
+            <p>{{_files[index]?.track?.track_isrc}}</p>
+          </div>
+
+          <div class="d-flex justify-content-around hide-md hide-vl hide-lg hide-xl">
+            <div role="button" [attr.disabled]="!trackEditPermission?true:null" class="text-black track-edit mb-2"
+              (click)="updateFile($event, _files[index])">
+              <span>
+                Edit
+              </span>
+            </div>
+            <div role="button" class="text-black mb-2 track-edit"
+              (click)="updateLyrics($event,_files[index]?.track.lyrics, _files[index]?.file_uuid)">
+              <span>
+                Lyrics
+              </span>
+            </div>
+            <div role="button" class="text-black mb-2 track-edit"
+              (click)="updateNotes($event,_files[index]?.track.notes, _files[index])">
+              <span>
+                Notes
+              </span>
+            </div>
+          </div>
+          <p role="button" class="btn-link mt-3"   (click)="isCollapsed[index] = !isCollapsed[index]">
+            More Details...
+          </p>
+          <div class="text-right mt-2 hide-md hide-vl hide-lg hide-xl">
+            <i role="button" class="fas fa-dice-d6 actionIcon mr10"
+              (click)="showBlockchainViewer($event, _files[index]?.track.ledger_uuid)" nbTooltip="Blockchain Record"
+              nbTooltipPlacement="top" nbTooltipStatus="info"></i>
+            <i role="button" class='mr10 fas fa-clipboard-list actionIcon' (click)="onHistory($event, _files[index])"
+              nbTooltip='History' nbTooltipPlacement='top' nbTooltipStatus='info'></i>
+            <i role="button" class='mr10 fas fa-download actionIcon' (click)="onDownloadFile($event, _files[index])"
+              *ngIf="trackDownloadPermission"></i>
+            <!-- <i role="button" *ngIf="trackEditPermission" (click)="updateFile($event, _files[index])"
+              class='mr10 fas fa-edit actionIcon'></i> -->
+            <i role="button" tooltip="Restore" *ngIf="trackRestorePermission && _files[index]?.restorable && !isRecentCollection"
+              (click)="onRestoreFile($event, _files[index])" class='mr10 fas fa-trash-undo actionIcon'></i>
+            <i role="button" tooltip="Delete" *ngIf="trackDeletePermission && !_files[index]?.restorable "
+              (click)="onDeleteFile($event, _files[index])" class='mr10 fas fa-trash-alt  actionIcon'></i>
+          </div>
+        </div>
+        <div class="col-3 hide-vs hide-xs hide-sm d-flex justify-content-between">
+          <div class=" d-flex align-items-center flex-column justify-content-around pt-3">
+            <div role="button" [attr.disabled]="!trackEditPermission?true:null" class="text-black mb-2 mr-2 track-edit"
+              (click)="updateFile($event, _files[index])">
+              <span>
+                Edit
+              </span>
+            </div>
+            <div role="button" class="text-black mb-2 mr-2 track-edit"
+              (click)="updateLyrics($event,_files[index]?.track?.lyrics, _files[index]?.file_uuid)">
+              <span>
+                Lyrics
+              </span>
+            </div>
+            <div role="button" class="text-black mb-2 track-edit"
+              (click)="updateNotes($event,_files[index]?.track?.notes, _files[index]?.file_uuid)">
+              <span>
+                Notes
+              </span>
+            </div>
+          </div>
+          <div class="hide-vs hide-xs d-flex flex-column justify-content-between">
+            <i role="button" class="track-icon fas fa-dice-d6 actionIcon mr10"
+              (click)="showBlockchainViewer($event, _files[index]?.track.ledger_uuid)" nbTooltip="Blockchain Record"
+              nbTooltipPlacement="right" nbTooltipStatus="info"></i>
+            <i role="button" class='track-icon mr10 fas fa-clipboard-list actionIcon'
+              (click)="onHistory($event, _files[index])" nbTooltip='History' nbTooltipPlacement='right'
+              nbTooltipStatus='info'></i>
+            <i role="button" tooltip="Download" tooltip="Download" placement="right"
+              class='mr10 track-icon fas fa-download actionIcon' (click)="onDownloadFile($event, _files[index])"
+              *ngIf="trackDownloadPermission"></i>
+            <!-- <i role="button" *ngIf="trackEditPermission" (click)="updateFile($event, _files[index])"
+              class='track-icon mr10 fas fa-edit actionIcon'></i> -->
+            <i role="button" tooltip="Restore" *ngIf="trackRestorePermission && _files[index]?.restorable && !isRecentCollection"
+              (click)="onRestoreFile($event, _files[index])" class='track-icon mr10 fas fa-trash-undo actionIcon'></i>
+            <i role="button" tooltip="Delete" placement="right" *ngIf="trackDeletePermission && !_files[index]?.restorable "
+              (click)="onDeleteFile($event, _files[index])" class='track-icon mr10 fas fa-trash-alt actionIcon'></i>
+          </div>
+        </div>
+      </div>
+      <div [collapse]="!isCollapsed[index]" [isAnimated]="true">
+        <hr class="divider" />
+        <div class="row">
+          <h6 class="col-12 col-md-2 col-lg-2 col-vl-2 col-xl-2">
+            Recording
+          </h6>
+          <div class="col-6 col-md-2 col-lg-2 col-vl-2 col-xl-2 pl-0">
+            <input class="form-input-track" style="width: 70px;"
+            [ngStyle]="{'color':file.get('recordingYear').value==='...'?'gray':'black'}"
+            tooltip="Recording Year"
+              (blur)="updateTrack({recording_year:file.get('recordingYear').value}, _files[index])"
+              formControlName="recordingYear">
+          </div>
+          <div class="col-6 col-md-8 col-lg-8 col-vl-8 col-xl-8">
+            <input class="form-input-track"
+            [ngStyle]="{'color':file.get('recordingLocation').value==='...'?'gray':'black'}"
+            tooltip="Recording Location"
+              (blur)="updateTrack({recording_location:file.get('recordingLocation').value}, _files[index])"
+              formControlName="recordingLocation">
+          </div>
+        </div>
+        <div class="row">
+        <h6 class="col-12 col-md-2 col-lg-2 col-vl-2 col-xl-2">
+            Copyright
+          </h6>
+          <div class="col-6 col-md-2 col-lg-2 col-vl-2 col-xl-2 pl-0">
+            <input class="form-input-track" style="width: 70px;"
+            [ngStyle]="{'color':file.get('copyrightYear').value==='...'?'gray':'black'}"
+            tooltip="Copyright Year"
+              (blur)="updateTrack({copyright_year:file.get('copyrightYear').value}, _files[index])"
+              formControlName="copyrightYear">
+          </div>
+          <div class="col-6 col-md-8 col-lg-8 col-vl-8 col-xl-8 ">
+            <input class="form-input-track"
+            tooltip="Copyright Name"
+            [ngStyle]="{'color':file.get('copyrightName').value==='...'?'gray':'black'}"
+              (blur)="updateTrack({copyright_name:file.get('copyrightName').value}, _files[index])"
+              formControlName="copyrightName">
+          </div>
+        </div>
+        <div class="row">
+          <h6 class="col-12 col-md-2 col-lg-2 col-vl-2 col-xl-2">
+            Rights
+          </h6>
+          <div class="col-4 col-md-2 col-lg-2 col-vl-2 col-xl-2 pl-0">
+            <input type="text" tooltip="Rights Contract" 
+            [ngStyle]="{'color':file.get('rightsContract').value==='...'?'gray':'black'}"
+            (bsValueChange)="updateContract(file.get('rightsContract').value, index)"
+              placeholder="Release Contract Date" class="form-input-track" formControlName="rightsContract"
+              [bsConfig]="{ adaptivePosition: true, showWeekNumbers:false }" bsDatepicker>
+          </div>
+          <div class="col-8 col-md-7 col-lg-7 col-vl-7 col-xl-7">
+            <div class="row">
+              <div class="col-4 col-md-3 col-lg-3 col-vl-3 col-xl-3">
+                <input class="form-input-track"
+                tooltip="Rights Owner"
+                [ngStyle]="{'color':file.get('rightsOwner').value==='...'?'gray':'black'}"
+                  (blur)="updateTrack({rights_owner:file.get('rightsOwner').value}, _files[index])"
+                  formControlName="rightsOwner">
+              </div>
+              <div class="col-4 col-md-4 col-lg-4 col-vl-4 col-xl-4">
+                <input 
+                tooltip="Rights Holder"
+                [ngStyle]="{'color':file.get('rightsHolder').value==='...'?'gray':'black'}"
+                (blur)="updateTrack({rights_holder:file.get('rightsHolder').value}, _files[index])"
+                  class="form-input-track" formControlName="rightsHolder">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <h6 class="col-12 col-md-2 col-lg-2 col-vl-2 col-xl-2">
+            Country
+          </h6>
+          <div class="col-6 pl-0 col-md-2 col-lg-2 col-vl-2 col-xl-2">
+            <input class="form-input-track"
+            tooltip="Country Commissioning"
+            [ngStyle]="{'color':file.get('countryComissioning').value==='...'?'gray':'black'}"
+              (blur)="updateTrack({country_commissioning:file.get('countryComissioning').value}, _files[index])"
+              formControlName="countryComissioning">
+          </div>
+          <div class="col-6 col-md-8 col-lg-8 col-vl-8 col-xl-8">
+            <input class="form-input-track"
+            tooltip="Country Recording"
+            [ngStyle]="{'color':file.get('countryRecording').value==='...'?'gray':'black'}"
+              (blur)="updateTrack({country_recording:file.get('countryRecording').value}, _files[index])"
+              formControlName="countryRecording">
+          </div>
+        </div>
+        <div class="row">
+          <h6 class="col-12 col-sm-2 col-md-2 col-lg-2 col-vl-2 col-xl-2 mt-3">
+            Contributor(s)
+          </h6>
+          <div class="col-12 mt-3 col-sm-10 col-md-10 col-lg-10 col-vl-10 col-xl-10">
+            <ng-container *ngIf="_files[index]?.track?.contributors?.length">
+              <span *ngFor="let item of _files[index]?.track?.contributors | slice:0:3; let i = index">
+                {{item.contributor_name}} <span class="text-gray" *ngIf="_files[index]?.track?.contributors.length -1 !== i">,</span>
+              </span>
+              <span>...</span>
+            </ng-container>
+            <div *ngIf="!_files[index]?.track?.contributors?.length" class="text-gray" #npPublisher>
+             ...
+            </div>
+            <button status="info" style="height: 25px;" (click)="onManageContributors(index, _files[index]?.file_uuid)"
+            class="ml-3 appearance-filled size-medium shape-rectangle status-info">
+            <div class="gradientText">
+              <span>
+                Manage
+              </span>
+            </div>
+          </button>
+          </div>
+        </div>
+        <div class="row">
+          <h6 class="col-12 col-sm-2 col-md-2 col-lg-2 col-vl-2 col-xl-2 mt-3">
+            Publisher(s)
+          </h6>
+          <div class="col-12 mt-3 col-sm-10 col-md-10 col-lg-10 col-vl-10 col-xl-10">
+            <ng-container *ngIf="_files[index]?.track?.publisher?.length">
+              <span *ngFor="let item of _files[index]?.track?.publisher | slice:0:3; let i = index">
+                {{item.publisher_name}} <span class="text-gray" *ngIf="_files[index]?.track?.publisher.length -1 !== i">,</span>
+              </span>
+              <span>...</span>
+            </ng-container>
+            <div *ngIf="!_files[index]?.track?.publisher?.length" class="text-gray" #npContributor>
+             ...
+            </div>
+            <button status="info" style="height: 25px;" (click)="onManagePublishers(index, _files[index]?.file_uuid)"
+            class="ml-3 appearance-filled size-medium shape-rectangle status-info">
+            <div class="gradientText">
+              <span>
+                Manage
+              </span>
+            </div>
+          </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

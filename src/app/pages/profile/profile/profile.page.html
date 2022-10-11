@@ -1,0 +1,238 @@
+<div class="page-wrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <app-profile-header tab="1"></app-profile-header>
+      <ion-row class="ion-margin-bottom" *ngIf="profile; else loading;">
+        <ion-col size="12" class="mobileAvatar hide-md hide-vl hide-xl hide-lg">
+          <div class="avatar">
+            <div [nbSpinner]="uploadingAvatar" class="avatarImg">
+              <img [src]="profile.avatar" />
+              <div class="editAvatar" (click)="avatarInput.click()">
+                <input
+                  #avatarInput
+                  type="file"
+                  name="file"
+                  id="avatar"
+                  class="inputfile"
+                  (change)="uploadAvatar($event)"
+                />
+                <i
+                  class="far fa-pen"
+                  nbTooltip="Edit"
+                  nbTooltipPlacement="top"
+                  nbTooltipStatus="info"
+                ></i>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeMd="8" class="left-panel ion-margin-top">
+          <ion-row class="nameSection ion-margin-bottom">
+            <span>{{profile.name}}<i
+              class="fad fa-edit icon-colors"
+              (click)="showDialog(editNameDialog)"
+            ></i></span>
+            
+          </ion-row>
+          <ion-row class="addressSection">
+            <ion-col size="12" class="ion-no-padding">
+              <ion-row>
+                <span class="sectionTitle">Address</span>
+              </ion-row>
+              <ion-row
+                class="item"
+                *ngFor="let address of profile.postals; let i = index"
+              >
+                <div class="address">
+                  <span class="mr10"><b>{{address.postal_type}}:</b></span>
+                  <span
+                    >{{address.postal_street}}, {{address.postal_city}},
+                    {{address.postal_country}}, {{address.postal_zipcode}}</span
+                  >
+                </div>
+              </ion-row>
+            </ion-col>
+            <ion-col size="12" class="verticalCenterRow">
+              <button
+                nbButton
+                status="info"
+                class="editButton"
+                (click)="navigate('profile/address')"
+              >
+                <div class="verticalCenterRow">
+                  <i class="fas fa-edit mr5 gradientText"></i><span class="iconText">Edit</span>
+                </div>
+              </button>
+            </ion-col>
+          </ion-row>
+          <div class="divider"></div>
+          <ion-row class="contactSection">
+            <ion-col size="12" class="ion-no-padding">
+              <ion-row>
+                <span class="sectionTitle">Contact</span>
+              </ion-row>
+              <ion-row
+                class="item"
+                *ngFor="let phone of profile.phones; let i = index"
+              >
+                <div class="verticalCenterRow">
+                  <span class="mr10"><b>{{phone.phone_type}}:</b></span>
+                  <span>{{phone.phone_number}}</span>
+                </div>
+              </ion-row>
+              <ion-row
+                class="item"
+                *ngFor="let email of profile.emails; let i = index"
+              >
+                <div class="email">
+                  <span>{{email.user_auth_email}}</span>
+                </div>
+              </ion-row>
+            </ion-col>
+            <ion-col size="12" class="verticalCenterRow">
+              <button
+                nbButton
+                status="info"
+                class="editButton"
+                (click)="navigate('profile/contact')"
+              >
+                <div class="verticalCenterRow">
+                  <i class="fas fa-edit mr5 gradientText"></i><span class=" iconText">Edit</span>
+                </div>
+              </button>
+            </ion-col>
+          </ion-row>
+          <div class="divider"></div>
+          <ion-row class="sectionTitle">Payment</ion-row>
+          <ion-row>
+            <ion-col
+              size="12"
+              sizeMd="10"
+              class="gradientTable paymentTable ion-no-padding"
+            >
+              <div class="border-bottom ion-padding-horizontal tableHeader">
+                <ion-row class="rowWrapper">
+                  <ion-col size="1" class="verticalCenterRow"></ion-col>
+                  <ion-col size="4" class="verticalCenterRow"
+                    >Bank Name</ion-col
+                  >
+                  <ion-col size="3" class="verticalCenterRow"
+                    >Account Type</ion-col
+                  >
+                  <ion-col size="4" class="verticalCenterRow"
+                    >Bank Account</ion-col
+                  >
+                </ion-row>
+              </div>
+              <div
+                class="tableBody"
+                *ngFor="let payment of profile.bankings; let index = index"
+              >
+                <ion-row class="rowWrapper">
+                  <ion-col size="1" class="verticalCenterRow icon">
+                    <i class="fas fa-money-check-alt"></i>
+                  </ion-col>
+                  <ion-col size="4" class="verticalCenterRow"
+                    >{{ payment.bank_name }}</ion-col
+                  >
+                  <ion-col size="3" class="verticalCenterRow"
+                    >{{ payment.account_type }}</ion-col
+                  >
+                  <ion-col size="4" class="verticalCenterRow"
+                    >{{ payment.account_number | accountNumber }}</ion-col
+                  >
+                </ion-row>
+              </div>
+              <div
+                class="tableBody"
+                *ngFor="let payment of profile.paypals; let index = index"
+              >
+                <ion-row class="rowWrapper">
+                  <ion-col size="1" class="verticalCenterRow icon">
+                    <i class="fab fa-cc-paypal"></i>
+                  </ion-col>
+                  <ion-col size="10" class="verticalCenterRow"
+                    >{{ payment.paypal }}</ion-col
+                  >
+                </ion-row>
+              </div>
+            </ion-col>
+            <ion-col size="12" sizeMd="2" class="verticalCenterRow">
+              <button
+                nbButton
+                status="info"
+                class="editButton"
+                (click)="navigate('profile/payment')"
+              >
+                <div class="verticalCenterRow">
+                  <i class="fas fa-edit mr5 gradientText"></i><span class="iconText">Edit</span>
+                </div>
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col
+          size="0"
+          sizeMd="4"
+          class="desktopAvatar hide-vs hide-xs hide-sm"
+        >
+          <div class="avatar mt50">
+            <div [nbSpinner]="uploadingAvatar" class="avatarImg">
+              <img [src]="profile.avatar" class="avatar-fit" />
+            </div>
+            <div class="avatarDiv">
+              <button
+                [disabled]="uploadingAvatar"
+                nbButton
+                status="primary"
+                (click)="avatarInput.click()"
+              >
+                Upload Image
+              </button>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>
+<ng-template #editNameDialog let-data let-ref="dialogRef">
+  <ion-card class="nameDialog">
+    <ion-card-header>
+      <span>Edit Name</span>
+      <span><i class="fas fa-close" (click)="closeDialog(ref)"></i></span>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row class="container p10">
+        <ion-col size="12">
+          <input
+            autocomplete="off"
+            class="form-input"
+            [(ngModel)]="name"
+            placeholder="Name"
+          />
+        </ion-col>
+      </ion-row>
+      <ion-row class="horizontalCenterRow p10">
+        <ion-col size="6">
+          <button
+            nbButton
+            shape="semi-round"
+            fullWidth
+            status="primary"
+            (click)="saveEditName(ref)"
+          >
+            <span style="margin-top: 4px;">Save</span>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ng-template>

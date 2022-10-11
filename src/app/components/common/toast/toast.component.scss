@@ -1,0 +1,17 @@
+.notificationToast { width: 360px; background: white; z-index: 999; opacity: 1; transition: opacity 1s ease;
+    ion-card-header { color: white !important; background: linear-gradient(90deg, #518DC9 0%, #782c7f 100%); font-weight: bold; padding: 8px;
+        span { text-transform: uppercase;}
+    }
+    ion-card-content { font-size: 0.95rem; padding: 15px 10px !important; display: flex; flex-direction: column; padding: 0 !important;
+        .content { padding: 5px 8px;
+            .bellIcon { padding: 10px; display: flex; justify-content: center; align-items: center;
+                i { font-size: 2rem; }
+            }
+            .message { flex: 1; font-weight: bold; display: flex; align-items: center; }
+        }
+        .actions { padding: 5px 0; display: flex; justify-content: space-around;
+            button { width: 100px; font-size: 0.75rem; height: 30px; padding: 0; }
+        }
+    }
+    
+}

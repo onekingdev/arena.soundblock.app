@@ -1,0 +1,231 @@
+.track-edit {
+  font-size: 20px;
+}
+.form-input-track {
+    border: none ;
+    align-self: flex-end;
+    width: 140px;
+    color: purple;
+    &:hover {
+      border-bottom: 2px solid gray ;
+    }
+    outline: none;
+    cursor: pointer;
+    background: none !important;
+    padding: 9px !important;
+    margin-top: 11px;
+    //max-width: 69px;
+    &:focus  {
+      border-bottom: 2px solid purple !important;
+    }
+  }
+h6 {
+  color: #3B7DAD;
+}
+
+.track-icon {
+  padding: 9px;
+  border-radius: 50%;
+  height: 32px;
+  font-size: 20px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+p {
+  color: black;
+}
+
+.track-check {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.track-check input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.track-check:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.track-check input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.track-check input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.track-check .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.number-box {
+  width: 100%;
+  margin: auto;
+  height: 50px;
+  text-align: center;
+  align-self: center;
+  .track-number {
+    font-size: 45px;
+    padding-top: 19px;
+    // &:hover {
+    //   border-bottom: solid 2px white;
+    // }
+  }
+}
+hr.divider {
+    border-top: 1px dashed gray;
+}
+  
+  ng-select::ng-deep.ng-select-container {
+    border: 2px solid gray !important;
+    padding: 7px;
+    .ng-value-container{
+      .ng-placeholder {
+        position: static;
+      }
+    }
+    
+  }
+  button.appearance-filled.status-info {
+    width: 100px;
+  }
+
+
+  .reorderWrapper {
+    display: table;
+    width: 100%;
+    .reorderIcon {
+      display: table-cell;
+      width: 40px;
+      vertical-align: middle;
+    }
+    .reorderContent {
+      display: table-cell;
+      width: calc(100% - 40px);
+    }
+  }
+
+  .reorderHeader {
+    display: table;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(90deg, #518dc9 0%, #782c7f 100%);
+    padding-top: 15px;
+    .reorderIconHeader {
+      display: table-cell;
+      width: 40px;
+    }
+    .reorderContentHeader {
+      display: table-cell;
+      width: calc(100% - 40px);
+      height: 100%;
+    }
+  }
+
+  
+  .example-box {
+    padding: 0;
+    border:2px solid purple;
+    border-radius: 10px;
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    background: white;
+    font-size: 14px;
+  }
+  
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .example-custom-placeholder {
+    background: #ccc;
+    border: dotted 3px #999;
+    min-height: 250px;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .play-section {
+    height: 30px;
+    i {
+      cursor: pointer;
+      color: linear-gradient(90deg,#518dc9,#782c7f) !important;
+
+      &.disabled {
+        cursor: not-allowed;
+        color: lightgray;
+      }
+    }
+
+    ion-spinner {
+      width: 29px;
+      height: 29px;
+    }
+
+    .download-progress {
+      position: absolute;
+      font-size: 0.8rem;
+    }
+  }

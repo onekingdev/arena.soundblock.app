@@ -1,0 +1,362 @@
+<div>
+  <form class="track-content" [formGroup]="form">
+    <app-stepper-component [selectedIndex]="1" [showStepper]="true">
+      <cdk-step [editable]="false" [completed]="true" label="Upload Files"></cdk-step>
+
+      <div *ngFor="let file of form.get('files')['controls']  ; let i = index" formArrayName="files">
+        <ng-container *ngIf="!submitted[i]">
+          <cdk-step label="Track Data">
+            <form [formGroupName]="i">
+              <div>
+                  <div class="verticalCenterRow pt-2 pl-1">
+                    <div class="name">
+                      <span [title]="files[i].file_name"><b>{{ files[i].file_name }}</b> <span> ({{ files[i].file_size | fileSize }})</span></span>
+                    </div>
+                  </div>
+              </div>
+              <accordion [isAnimated]="true">
+                <accordion-group #group1 [isOpen]="true">
+                  <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                    <div class="color-black pull-left float-left">
+                      <i class="track-info-icon fa-list-music fas mr-2"></i>
+                      Track Detail</div>
+                    <span class="badge mt-2 color-black float-right pull-right">
+                      <i class="fa" [ngClass]="{'fa-chevron-up': group1.isOpen, 'fa-chevron-down': !group1.isOpen}"></i>
+                    </span>
+                  </button>
+                  <div class="row">
+                    <div class="col-12 col-md-3 col-lg-3 col-vl-3 col-xl-3 mb-2">
+                      <label>Volume Number*</label>
+                      <ng-select class="customSelect" formControlName="track_volume_number" >
+                        <ng-option [value]="i+1" *ngFor="let item of [].constructor(project.project_volumes); let i = index">{{i+1}}</ng-option>
+                      </ng-select>
+                    </div>
+                    <div  class="col-12 col-md-9 col-vl-9 col-lg-9 col-xl-9 mb-2">
+                      <label>Title*
+                        <i class="fas fa-info-circle"
+                        tooltip='This is how the track title will appear on the music platforms; please ensure this field matches your preferences.'>
+                      </i>
+                      </label>
+                      <input autocomplete="off" class="form-input" type="text" formControlName="file_title" />
+                    </div>
+                    <div class="col-12 col-md-8 col-lg-8 col-vl-8 col-xl-8 mb-2">
+                      <div class="title">
+                        <label>Track Version
+                          <i class="fas fa-info-circle"
+                        tooltip='Use this field if there are several versions of your track; examples include "Mix 1" or "Live at Studio X." '></i>
+                        </label>
+                        <input formControlName="track_version" type="text"
+                          class="form-input" />
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-lg-4 col-vl-4 col-xl-4 mb-2">
+                      <label>Release Date*</label>
+                      <input type="text" class="form-input"
+                        [bsConfig]="{showWeekNumbers: false, dateInputFormat: 'MM/DD/YYYY'}" formControlName="track_release_date" bsDatepicker>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-4 col-lg-4 col-vl-4 col-xl-4 mb-2">
+                      <label>Recording Year</label>
+                      <input formControlName="recording_year" type="text"
+                      maxlength="4" pattern="\d{4}"
+                        class="form-input" />
+                    </div>
+                    <div class="col-12 col-md-8 col-lg-8 col-vl-8 col-xl-8 mb-2">
+                      <label>Recording Location</label>
+                      <input formControlName="recording_location" type="text"
+                        class="form-input" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-6 col-xs-12 col-vs-6 col-md-2 col-vl-2 col-xl-2 col-lg-2 mb-2">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" formControlName="flag_track_explicit" class="custom-control-input"
+                          [id]="'customSwitch2'+ i">
+                        <label class="custom-control-label pt-2" [for]="'customSwitch2'+ i ">Explicit</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12 col-vs-6 col-md-3 col-vl-3 col-xl-3 col-lg-3 mb-2">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" formControlName="flag_track_instrumental"
+                          [id]="'customSwitch3'+i">
+                        <label class="custom-control-label pt-2" [for]="'customSwitch3'+i">Instrumental</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12 col-vs-6 col-md-3 col-vl-3 col-xl-3 col-lg-3 mb-2">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" formControlName="flag_allow_preorder"
+                          [id]="'customSwitch5'+i">
+                        <label class="custom-control-label pt-2" [for]="'customSwitch5'+i">Pre Order</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-6 col-xs-12 col-vs-6 col-md-4 col-vl-4 col-xl-4 col-lg-4 mb-2">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" formControlName="flag_allow_preorder_preview"
+                          class="custom-control-input" [id]="'customSwitch4'+i">
+                        <label class="custom-control-label pt-2" [for]="'customSwitch4'+i">Pre Order Preview</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                      <label class="text-bold">Primary Genre*</label>
+                      <ng-select [items]="primaryGenres" [searchable]="false"
+                        [dropdownPosition]="'top'" [bindLabel]="'dataGenre'" formControlName="genre_primary"
+                        [bindValue]="'dataUUID'">
+                      </ng-select>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                      <label class="text-bold">Secondary Genre</label>
+                      <ng-select [items]="secondaryGenres" [searchable]="false" [dropdownPosition]="'top'"
+                        [bindLabel]="'dataGenre'" [bindValue]="'dataUUID'"
+                        formControlName="genre_secondary">
+                      </ng-select>
+                    </div>
+                  </div>
+                </accordion-group>
+                <accordion-group #group2>
+                  <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                    <div style="color: black;" class="pull-left float-left">
+                      <i class="fas fa-user-music track-info-icon  mr-2"></i>
+                      Artist Info</div>
+                    <span class="badge mt-2 color-black float-right pull-right">
+                      <i class="fa" [ngClass]="{'fa-chevron-up': group2.isOpen, 'fa-chevron-down': !group2.isOpen}"></i>
+                    </span>
+                  </button>
+                  <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                      <label>Artist Display Name*</label>
+                      <input  formControlName="track_artist" type="text" class="form-input" />
+                    </div>
+                  </div>
+                  <hr>
+                  <!-- <div class="row">
+                    <div class="col-12 mb-2">
+                      <label>Artists*</label>
+                      <ng-select [(ngModel)]="selectedArtists" [ngModelOptions]="{standalone: true}"  (keydown)="onArtistAdd($event)"
+                        [items]="artists" [bindLabel]="'artist_name'" [multiple]="true"></ng-select>
+                    </div>
+                  </div> -->
+                  <div class="d-flex justify-content-between">
+                    <label class="mb-3">Artists*
+                      <i class="fas fa-info-circle" tooltip="This field is used to indicate which artist profiles your project should appear on. This information can also be entered on a per-track basis; if an artist only appears on one track, you may wish to enter it there instead.
+                          "></i>
+                     
+                    </label>
+                  </div>
+                  <div class="d-flex">
+                    <button class="btn-gradient mb-3" (click)="openAddArtistModal()">
+                      <span>Add Artist</span>
+                    </button>
+                  </div>
+                  <div *ngIf="artistsLoading" class="d-flex justify-content-center">
+                    <div class="spinner-border"  role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                  <div class="mb-3 row" *ngIf="selectedArtists?.length">
+                    <div class="mt-2 col-md-6 col-lg-6 col-vl-6 col-xl-6 col-12 col-sm-6" *ngFor="let artist of selectedArtists;let i = index">
+                    
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                              <img class="artist-img" [src]="artist.avatar_url || 'https://cloud.develop.account.arena.com/assets/static/avatar_v2.jpg'">
+                              <div><p>
+                                {{artist.artist_name}}
+                              </p>
+                              <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" (change)="artist.artist_type==='primary'?artist.artist_type='featuring':artist.artist_type='primary'" [id]="'customSwitch5' + i"
+                                [checked]="artist.artist_type==='primary'? true: false">
+                                <label class="custom-control-label pt-2" [for]="'customSwitch5' + i">{{artist.artist_type}}</label>
+                              </div>
+                              </div>
+                              <i class="fal fa-trash-alt" (click)="deleteSelectedArtist(artist)"></i>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </accordion-group>
+                <accordion-group #group3>
+                  <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                    <div style="color: black;" class="pull-left float-left">
+                      <i class="track-info-icon mr-2 far fa-globe-europe"></i>
+                      Language</div>
+                    <span class="badge mt-2 color-black float-right pull-right">
+                      <i class="fa" [ngClass]="{'fa-chevron-up': group3.isOpen, 'fa-chevron-down': !group3.isOpen}"></i>
+                    </span>
+                  </button>
+                  <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                      <label>Track Language*</label>
+                      <ng-select [items]="profileService.languages | async"
+                        [bindLabel]="'dataLanguage'" [bindValue]="'dataUUID'" formControlName="track_language"
+                        [searchable]="false"></ng-select>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                      <div *ngIf="!file.controls['flag_track_instrumental'].value">
+                        <label>Track Vocals Language</label>
+                        <ng-select [items]="profileService.languages | async"
+                          [disabled]="true" [bindLabel]="'dataLanguage'" [bindValue]="'dataUUID'"
+                          formControlName="track_language_vocals" [searchable]="false"></ng-select>
+                      </div>
+                      <div *ngIf="file.controls['flag_track_instrumental'].value">
+                        <label>Track Vocals Language</label>
+                        <input class="form-input" type="text" readonly>
+                      </div>
+                    </div>
+                  </div>
+                </accordion-group>
+                <accordion-group #group4>
+                  <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                    <div style="color: black;" class="pull-left float-left">
+                      <i class="track-info-icon mr-2 fad fa-users"></i>
+                      Publishers</div>
+
+                    <span class="badge mt-2 color-black float-right pull-right">
+                      <i class="fa" [ngClass]="{'fa-chevron-up': group4.isOpen, 'fa-chevron-down': !group4.isOpen}"></i>
+                    </span>
+                  </button>
+                  <div class="row">
+                    <div class="col-12 mb-2">
+                      <ng-select [items]="publishers?.data" [bindLabel]="'publisher_name'"
+                        (change)="onPublisherSelect($event, i)" [multiple]="true" [searchable]="false"></ng-select>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    <button status="info" style="height: 25px;" (click)="onManagePublishers(i)"
+                      class=" appearance-filled size-medium shape-rectangle status-info">
+                      <div class="gradientText">
+                        <span>
+                          Manage
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+
+                </accordion-group>
+                <accordion-group #group5>
+                  <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                    <div style="color: black;" class="pull-left float-left">
+                      <i class="track-info-icon mr-2 fad fa-users"></i>
+                      Contributors</div>
+                    <span class="badge mt-2 color-black float-right pull-right">
+                      <i class="fa" [ngClass]="{'fa-chevron-up': group5.isOpen, 'fa-chevron-down': !group5.isOpen}"></i>
+                    </span>
+                  </button>
+                  <div class="d-flex justify-content-end">
+                    <i *ngIf="!filess.at(i).get('contributors').value.length" style="font-size: 21px;" (click)="addContributors(i)"
+                          class="fal fa-plus-square"></i>
+                  </div>
+                  <div *ngIf="filess.at(i).get('contributors').value.length" class="row">
+                    <div class="col-md-5 col-lg-5 col-vl-5 col-xl-5 col-12 mb-2">
+                      Contributor Name
+                    </div>
+                    <div class="col-md-5 col-lg-5 col-vl-5 col-xl-5 col-12 mb-2">
+                      Contributor Type
+                    </div>
+                  </div>
+                  <ng-container *ngFor="let contributor of contributors(i)?.controls; let contributorIndex=index"
+                    formArrayName="contributors">
+                    <div class="row" [formGroupName]="contributorIndex">
+                      <div class="col-md-5 col-lg-5 col-vl-5 col-xl-5 col-12 mb-2">
+                        <input class="form-input" type="text"formControlName="contributor" />
+                      </div>
+                      <div class="col-md-5 col-lg-5 col-vl-5 col-xl-5 col-12 mb-2">
+                        <ng-select [items]="profileService.contributorTypes | async"
+                          formControlName="type" [bindLabel]="'dataContributor'" [bindValue]="'dataUUID'"
+                          [searchable]="false">
+                        </ng-select>
+                      </div>
+
+                      <div role="button" class="delete  pt-2 col-md-1 col-lg-1 col-vl-1 col-xl-1 col-12 mb-2">
+                        <i *ngIf="contributorIndex === 0 || contributorIndex > 0" (click)="removeContributor(i,contributorIndex)"
+                          class="text-danger fad fa-trash-alt"></i>
+                      </div>
+
+                      <div role="button" class="delete  pt-2 col-md-1 col-lg-1 col-vl-1 col-xl-1 col-12 mb-2">
+                        <i *ngIf="contributorIndex === 0" style="font-size: 21px;" (click)="addContributors(i)"
+                          class="fal fa-plus-square"></i>
+                      </div>
+                    </div>
+                  </ng-container>
+                </accordion-group>
+                <accordion-group #group6>
+                  <button class="btn btn-link btn-block clearfix" accordion-heading type="button">
+                    <div style="color: black;" class="pull-left float-left">
+                      <i class="track-info-icon mr-2 fad fa-user-crown"></i>
+                      Rights</div>
+                    <span class="badge mt-2 color-black float-right pull-right">
+                      <i class="fa" [ngClass]="{'fa-chevron-up': group6.isOpen, 'fa-chevron-down': !group6.isOpen}"></i>
+                    </span>
+                  </button>
+                  <div class="row">
+                    <div class="col-12 col-md-8 col-lg-8 col-vl-8 col-xl-8 mb-2">
+                      <label class="text-bold">Copyright Name*</label>
+                      <input formControlName="copyright_name" type="text"
+                        class="form-input" />
+                    </div>
+                    <div class="col-12 col-md-4 col-lg-4 col-vl-4 col-xl-4 mb-2">
+                      <label class="text-bold">Copyright Year*</label>
+                      <input formControlName="copyright_year" type="text"
+                      maxlength="4" pattern="\d{4}"
+                        class="form-input" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                      <label>Country Recording</label>
+                      <input formControlName="country_recording" type="text"
+                        class="form-input" />
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-vl-6 col-xl-6 mb-2">
+                      <label>Country Comissioning</label>
+                      <input formControlName="country_commissioning" type="text"
+                        name="title" class="form-input" />
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-xs-12 col-sm-12 col-vs-12 col-md-4 col-vl-4 col-xl-4 mb-2">
+                      <label>Rights Holder</label>
+                      <input formControlName="rights_holder" type="text"
+                        class="form-input" />
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-vs-12 col-md-4 col-vl-4 col-xl-4 mb-2">
+                      <label>Rights Owner</label>
+                      <input formControlName="rights_owner" type="text"
+                        class="form-input" />
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-vs-12 col-md-4 col-vl-4 col-xl-4 mb-2">
+                      <label class="text-bold">Contract Release Date</label>
+                      <input type="text" class="form-input"
+                        formControlName="rights_contract" [bsConfig]="{ adaptivePosition: true,showWeekNumbers: false,dateInputFormat: 'YYYY-MM-DD'}"
+                        bsDatepicker>
+                    </div>
+                  </div>
+                </accordion-group>
+              </accordion>
+            </form>
+          </cdk-step>
+        </ng-container>
+      </div>
+      <cdk-step *ngIf="this.data.files.length || this.data.merch.length || this.data.video.length" [editable]="false" label="File Info"></cdk-step>
+      <cdk-step [editable]="false" label="Done"></cdk-step>
+    </app-stepper-component>
+  </form>
+  <p class="text-danger pt-3 text-center" *ngIf="uploadTrackError">{{uploadTrackError}}</p>
+  <div class="p10 full-width" *ngIf="filess?.value?.length">
+    <ion-row *ngIf="action === 'Add'">
+      <ion-col size="6" class="horizontalCenterRow">
+        <button nbButton fullWidth status="info" (click)="discard()">
+          <span class="gradientText">Discard</span>
+        </button>
+      </ion-col>
+      <ion-col size="6" class="horizontalCenterRow">
+        <button nbButton shape="semi-round" [disabled]="form.invalid || !selectedArtists.length" fullWidth status="primary" (click)="saveNext()">
+          Save & Next
+        </button>
+      </ion-col>
+    </ion-row>
+  </div>
+</div>

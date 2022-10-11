@@ -1,0 +1,163 @@
+.readyWrapper {
+  .content-wrapper {
+    .passInput {
+      position: relative;
+      .eyeWrapper {
+        position: absolute;
+        height: 100%;
+        top: 0;
+        right: 0;
+        width: 10%;
+        display: flex;
+        align-content: center;
+        margin-right: 10px;
+        .toggle-password {
+          color: #303030 !important;
+        }
+        i {
+          position: relative;
+          margin: auto;
+        }
+      }
+    }
+    .pass {
+      padding-right: 5px;
+      @media screen and (max-width: 767px) {
+       padding-right: 0;
+       margin-bottom: 10px;
+      }
+    }
+    .confirm {
+      padding-left: 5px;
+      @media screen and (max-width: 767px) {
+        padding-left: 15px;
+      }
+    }
+    
+    .title {
+      font-size: 2rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      line-height: normal;
+      padding: 20px;
+    }
+    .projectInfo {
+      display: flex;
+      .artwork {
+        width: 200px;
+        display: flex;
+        padding: 10px;
+        justify-content: center;
+        img {
+          width: auto;
+          object-fit: contain;
+          border-radius: 2px;
+          box-shadow: 0px 5px 10px 0 #00000050;
+          max-height: 225px;
+          height: 100%;
+        }
+      }
+      .metaInfo {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 15px;
+        justify-content: space-around;
+        font-size: 1rem;
+        .albumTitle {
+          font-size: 1.2rem;
+          font-weight: bold;
+          font-family: 'Roboto', sans-serif;
+          color: #782c7f;
+          padding: 10px 5px;
+        }
+        .section {
+          p {
+            padding: 2px 0;
+            margin: 0;
+          }
+        }
+      }
+    }
+    .panel {
+      padding: 10px;
+      .panelContainer {
+        padding: 1rem;
+        border-radius: 5px;
+        height: 100%;
+        &.bluePane {
+          border: solid 2px #518dc9;
+          box-shadow: 5px 5px 5px 0 #518dc950;
+        }
+        &.purplePane {
+          border: solid 2px #8c6eab;
+          box-shadow: 5px 5px 5px 0 #8c6eab50;
+        }
+        .description {
+          padding: 0 10px;
+          display: flex;
+          justify-content: center;
+          p {
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            span {
+              color: #518dc9;
+            }
+          }
+        }
+        .moreActions {
+          margin-top: 15px;
+          padding: 0 10px;
+          .forgotPassword {
+            width: 100%;
+            cursor: pointer;
+            a {
+              color: #518dc9;
+            }
+            @media screen and (max-width: 767px) {
+              display: flex;
+              justify-content: center;
+            }
+          }
+        }
+        .policyCheckError {
+          background: #ffe0e0a1;
+          border-radius: 5px;
+        }
+        .privacy-policy {
+          display: flex;
+          padding: 10px;
+          font-size: 1rem;
+          align-items: center;
+          ion-checkbox {
+            margin-right: 8px;
+            @media (max-width: 767px) {
+              width: 20px;
+              height: 20px;
+            }
+          }
+          a {
+            &.policy-link {
+              color: #518dc9;
+              cursor: pointer;
+              text-decoration: none;
+              &:hover {
+                color: #782c7f;
+              }
+            }
+          }
+        }
+        .createAccountBtn {
+          display: flex;
+          justify-content: center;
+          margin: 10px 0;
+          button {
+            width: 50%;
+          }
+        }
+      }
+    }
+  }
+}

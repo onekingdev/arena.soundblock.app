@@ -1,0 +1,9 @@
+<div class="modal-header">
+  <div id="addMemberModal" class="modal-title pull-left">Artist Management</div>
+    <button type="button" class="close pull-right text-white" (click)="bsModalRef.hide()" aria-label="Close">
+        <span aria-hidden="true"><i class="fal fa-times"></i></span>
+    </button>
+</div>
+<div class="modal-body">
+  <app-manage-artists-modal [artistAdding]="artistAdding" [artistAdded]="artistAdded" [artistAddedError]="artistAddedError" [artists]="artists" (editArtist)="onEditArtist($event)" (addArtist)="onAddArtist($event)" (deleteArtist)="onDeleteArtist($event)" (selectArtist)="onSelectArtist($event)"></app-manage-artists-modal>
+</div>

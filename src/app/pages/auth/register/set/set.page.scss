@@ -1,0 +1,47 @@
+.setWrapper .content-wrapper {
+  .sectionTitle {
+    padding: 10px;
+    border: none !important;
+
+    h6 {
+      font-weight: bold !important;
+      margin-bottom: 0;
+    }
+  }
+
+  .sectionSubtitle {
+    font-size: 12px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+  }
+
+  .selectStorage {
+    font-size: 1rem;
+    padding: 10px;
+
+    span {
+      cursor: pointer;
+    }
+  }
+
+  .buttonSection {
+    display: flex;
+    justify-content: center;
+
+    button {
+      margin-right: 10px;
+      width: 250px;
+    }
+  }
+
+  #card-errors {
+    color: #525252;
+    font-size: 1rem;
+    padding: 10px 0;
+  }
+  .errors {
+    font-size: 1.2rem;
+    color: red;
+    margin: 0.5rem 0;
+  }
+}

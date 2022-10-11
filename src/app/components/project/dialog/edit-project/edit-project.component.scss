@@ -1,0 +1,37 @@
+.customSelect { min-width: 100%; border-radius: 15px; }
+.content {
+  padding: 1rem;
+}
+.modifyContractDialog{
+ .card-body {
+    padding: 0.4rem !important;
+    .artist-img {
+      width: 60px !important; height: 60px !important;
+    }
+    .artist-detail {
+      p {
+        font-size: 0.8rem !important;
+      }
+      .custom-control label { font-size: 0.8rem !important; }
+    }
+  }
+}
+label{
+  color: #000;
+  font-size: 1rem!important;
+}
+.card-body{
+  form {
+    height: calc(100vh - 223px);
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+.card-header{
+  color: #fff!important;
+  background: linear-gradient(90deg,#518dc9,#782c7f);
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}

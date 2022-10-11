@@ -1,0 +1,29 @@
+.service-type {
+    display: flex;
+
+    @media (max-width: 767px) {
+        flex-direction: column;
+    }
+
+    .section {
+        padding: 0 15px;
+        border-top: 2px solid #782c7f;
+        border-right: 2px solid #782c7f;
+        flex: 1;
+        margin: 10px 5px;
+        border-bottom: 2px solid #518dc9;
+        border-left: 2px solid #518dc9;
+        margin-bottom: 10px;
+        border-radius: 15px;
+
+        h6 {
+            color: #782c7f;
+            font-weight: bold !important;
+            text-align: center;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+    }
+}

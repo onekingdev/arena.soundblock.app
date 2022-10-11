@@ -1,0 +1,53 @@
+<div class="page-wrapper goWrapper">
+  <div class="page-container">
+    <div *ngIf="authState" class="content-wrapper">
+      <ion-row class="header">
+        <span class="gradientText">Welcome to Soundblock. You're all set.</span>
+      </ion-row>
+      <ion-row class="content">
+        <div class="leftPane">
+          <ion-row class="mt20">
+            <span class="title">Name:</span>
+            <span>{{ authState.username }}</span>
+          </ion-row>
+          <ion-row class="mt20">
+            <span class="title">Email:</span>
+            <span>{{ authState.email }}</span>
+          </ion-row>
+          <ion-row class="mt20">
+            <span class="title">Account Type:</span>
+            <span>{{ authState.plan }}</span>
+          </ion-row>
+        </div>
+        <div class="rightPane">
+          <img src="{{cloudUrl}}/images/signup.jpg" />
+        </div>
+      </ion-row>
+      <ion-row class="buttonGroup">
+        <button
+          nbButton
+          type="button"
+          class="m5"
+          status="info"
+          (click)="onFinish()"
+        >
+          <span class="gradientText verticalCenterRow"
+            >Continue to Dashboard</span
+          >
+        </button>
+        <button
+          nbButton
+          routerDirection="forward"
+          status="primary"
+          class="m5"
+          (click)="createProject()"
+        >
+          Create Project
+        </button>
+      </ion-row>
+    </div>
+    <div class="page-footer">
+      <app-page-footer></app-page-footer>
+    </div>
+  </div>
+</div>

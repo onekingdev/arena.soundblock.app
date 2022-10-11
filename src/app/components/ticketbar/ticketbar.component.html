@@ -1,0 +1,216 @@
+<div (click)="showTicketbar()" class="tickets-backdrop"></div>
+<div class="ticketWrapper">
+  <div class="container">
+    <div class="row ticketHeader">
+      <span>Support Tickets</span>
+      <i class="fas fa-long-arrow-left" nbTooltip="Back to Tickets" nbTooltipPlacement="left" nbTooltipStatus="info"
+        (click)="backToTicket()" *ngIf="pageStatus"></i>
+      <i class="fas fa-close" (click)="showTicketbar()" *ngIf="!pageStatus"></i>
+    </div>
+    <div class="row ticketList" *ngIf="pageStatus == 0">
+      <div class="listHeader mb10">
+        <button nbButton shape="semi-round" fullWidth status="info" (click)="showTicketPage()">
+          <div class="wrapper">
+            <span class="gradientText"> New Ticket </span>
+          </div>
+        </button>
+
+        <ng-select *ngIf="tickets.length || ticketFilter" (change)="filterTickets($event)" size="medium"
+          placeholder="Filter By"
+          [searchable]="false"
+          >
+          <ng-option *ngFor="let filter of TicketFilters | keyvalue: originalOrder" [value]="filter.value">
+            {{ filter.key }}</ng-option>
+        </ng-select>
+      </div>
+      <!-- TICKETS LIST START -->
+      <ion-content #ticketsIonContent>
+        <h6 *ngIf="!tickets.length && ticketsLoaded">
+          <i>Nothing to display here.</i>
+        </h6>
+        <div class="listWrapper" *ngIf="tickets.length; else loading">
+          <div *ngFor="let ticket of tickets; let index = index" class="ticket">
+            <div class="p20 card m-2" (click)="openTicket(ticket)">
+              <div class="header row">
+                <div>
+                  <i class="fas fa-envelope"></i>
+                  <span>{{ ticket.support.support_category }}</span>
+                </div>
+                <div class="alert" *ngIf="
+                  ticket.flag_status == 'Awating User' ||
+                  ticket.flag_status == 'Awating Support'"
+                  [ngClass]="{'pink-gradient': ticket.flag_status == 'Awating User' || ticket.flag_status == 'Awating Support'}"
+                  status="success">
+                  {{ ticket.flag_status }}
+                </div>
+                <div class="alert" *ngIf="ticket.flag_status == 'Open'"
+                  [ngClass]="{'purple':ticket.flag_status=='Open'}" status="info">{{ ticket.flag_status }}</div>
+                <div class="alert" *ngIf="ticket.flag_status == 'Closed'"
+                  [ngClass]="{'blue':ticket.flag_status=='Closed'}" status="warning">{{ ticket.flag_status }}</div>
+              </div>
+              <div class="body row">
+                <div class="col-12">
+                  <span>{{ ticket.ticket_title }}</span>
+                </div>
+                <div class="contact col-12">
+                  <!-- <span *ngFor="let user of ticket.support_user">{{
+        user.name
+      }}</span> -->
+                  <span>{{
+        ticket.stamp_created | timestamp: 'MMMM d, y'
+      }}</span>
+    </div>
+              </div>
+            </div>
+          </div>
+
+          <ion-infinite-scroll threshold="100px" (ionInfinite)="loadNextTicketsPage($event)">
+            <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading tickets...">
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+        </div>
+      </ion-content>
+      <!-- TICKETS LIST END -->
+    </div>
+    <div class="msgList" *ngIf="pageStatus == 1">
+      <div class="title">
+        <span>{{ ticket.ticket_title }}</span>
+      </div>
+      <div class="metainfo">
+        <span>Type: {{ ticket.support.support_category }}</span>
+        <span>Created At: {{ ticket.stamp_created | timestamp: 'MMMM d, y' }}</span>
+        <!-- <span>ID: {{ticket.uuid}}</span> -->
+      </div>
+      <div class="body">
+        <ion-content #ticketMessagesIonContent>
+          <div class="messages">
+            <div *ngIf="ticketMessages.length; else loading">
+              <ion-infinite-scroll position="top" threshold="100px" (ionInfinite)="loadNextTicketMessagesPage($event)">
+                <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading messages...">
+                </ion-infinite-scroll-content>
+              </ion-infinite-scroll>
+
+              <div *ngFor="let message of ticketMessages; let index = index" class="message">
+                <div class="wrapper card">
+                  <div class="messageHeader row">
+                    <img [src]="message?.user?.avatar_url" />
+                    <div class="name">
+                      <span class="name">
+                        <span>{{ message.user?.name_first }} </span>
+                        <span>{{ message.user?.name_last }}</span>
+                      </span>
+                      <span class="date">{{
+                        message?.stamp_created | timestamp: 'MMMM d, y'
+                      }}</span>
+                    </div>
+                  </div>
+                  <div class="messageBody row">
+                    <div>
+                      <span [innerHTML]="message.message_text"></span>
+                    </div>
+                    <div class="fileCard" *ngFor="let attachment of message.attachments" nbTooltip="Download"
+                      nbTooltipPlacement="top" nbTooltipStatus="info" (click)="download(attachment)">
+                      <div class="fileImg">
+                        <i class="fas fa-download"></i>
+                      </div>
+                      <div class="fileInfo">
+                        <span>{{ attachment.attachment_name }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-content>
+
+        <div class="messageInput">
+          <div class="input">
+            <textarea placeholder="Please enter a message" autoGrow="true" style="white-space: no-wrap"
+              (keydown.enter)="$event.preventDefault(); sendMessage()" [(ngModel)]="message"></textarea>
+          </div>
+          <div class="control">
+            <div class="attachSection">
+              <input #attachFileRef type="file" name="attachFile" id="attachFile" class="inputfile"
+                (change)="attachFile($event.target.files)" />
+              <div class="icon" nbTooltip="Attach File" nbTooltipPlacement="top" nbTooltipStatus="info"
+                (click)="attachFileRef.click()">
+                <i class="fas fa-paperclip"></i>
+              </div>
+              <div class="fileInfo" *ngIf="file">
+                <span>Attached File: </span>
+                <span class="filename"> {{ file.name }} </span>
+                <span class="filesize"> {{ file.size | fileSize }}</span>
+              </div>
+            </div>
+            <button nbButton shape="semi-round" fullWidth status="info" (click)="sendMessage()">
+              <span class="gradientText">Send</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="newTicket" *ngIf="pageStatus == 2">
+      <form #form="ngForm">
+        <div class="p10 row">
+          <div class="col-6">
+            <div class="p5">Type:</div>
+            <ng-select name="type" class="type" required [(ngModel)]="support_type"
+              placeholder="Type" #type="ngModel" [ngClass]="{
+                'is-invalid': (type.touched || form.submitted) && !type.valid
+              }">
+              <ng-option *ngFor="let type of ticketTypes" [value]="type">
+                {{ type }}</ng-option>
+            </ng-select>
+          </div>
+          <div class="col-12">
+            <div class="p5">Subject:</div>
+            <div>
+              <input type="text" name="subject" [(ngModel)]="ticket_title" required class="form-input"
+                placeholder="Subject" #subject="ngModel" [ngClass]="{
+                  'is-invalid':
+                    (subject.touched || form.submitted) && !subject.valid
+                }" />
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="p5">Message:</div>
+            <div class="messageWrapper">
+              <textarea name="message" required class="form-textarea" placeholder="Please input message"
+                [(ngModel)]="message" #ticketMessage="ngModel" [ngClass]="{
+                  'is-invalid':
+                    (ticketMessage.touched || form.submitted) &&
+                    !ticketMessage.valid
+                }"></textarea>
+            </div>
+          </div>
+          <div class="col-12 mt-3">
+            <div class="fileWrapper">
+              <input type="file" name="attachFile" id="attachFile" class="inputfile"
+                (change)="attachFile($event.target.files)" />
+              <div class="attach" onclick="document.getElementById('attachFile').click()">
+                <i class="fas fa-paperclip"></i><span>Attach File</span>
+              </div>
+              <div class="fileInfo" *ngIf="file">
+                <span>{{ file.name }}</span>
+                <span class="filesize">{{ file.size | fileSize }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="horizontalCenterRow pb20 row">
+          <button shape="semi-round" status="primary" (click)="createTicket(form)" class="gradient-button">
+            Create Ticket
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div [hidden]="totalTickets === 0" class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

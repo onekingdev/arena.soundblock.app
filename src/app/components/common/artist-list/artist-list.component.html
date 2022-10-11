@@ -1,0 +1,26 @@
+<div class="shadow">
+  <div class="modal-header">
+    <div class="modal-title pull-left">Add Artist</div>
+    <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+      <span aria-hidden="true"><i class="fal fa-times"></i></span>
+    </button>
+  </div>
+  <div class="modal-body artist-list">
+    <ng-container>
+      <ul class="artist_content">
+        <li role="menuitem">
+          <a class="dropdown-item" href="javascript:void(0)">
+            <input placeholder="Artist Name" class="form-input artist-form-input" [ngModelOptions]="{standalone: true}" [(ngModel)]="artistName" (keyup)="onArtistSearch()">
+          </a>
+        <li class="divider dropdown-divider"></li>
+        <div class="artist-list">
+          <li *ngFor="let artist of artists" role="menuitem"><a class="dropdown-item" href="javascript:void(0)" (click)="onArtistSelect(artist);bsModalRef.hide()">{{artist.artist_name}}</a></li>
+        </div>
+        <li class="divider dropdown-divider"></li>
+      </ul>
+      <div class="d-flex justify-content-end action_div pt-3 pb-3">
+        <button role="button" class="no-borders mr-3 btn-gradient" style="background-color:transparent" (click)="onArtistAdd($event);bsModalRef.hide()">Add New Artist</button>
+      </div>
+    </ng-container>
+  </div>
+</div>

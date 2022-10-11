@@ -1,0 +1,139 @@
+.left-panel {
+  font-size: 1rem;
+  padding: 15px;
+  input {
+    outline: none;
+    border-width: 0;
+  }
+  .iconText { margin-top: 4.5px; }
+  .sectionTitle {
+    color: #518dc9;
+    font-weight: bold;
+    padding: 1rem 0;
+  }
+  .nameSection {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    color: #782c7f;
+    font-weight: bold;
+    i {
+      cursor: pointer;
+      margin-left: 20px;
+      &:hover {
+        transform: scale(1.1) !important;
+      }
+    }
+  }
+  .paymentTable {
+    padding-right: 10px;
+    .tableHeader {
+      color: #222b45;
+    }
+    ion-col {
+      padding: 1rem 0.5rem;
+    }
+    .icon {
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      @media (max-width: 767px) {
+        padding: 0;
+      }
+      i {
+        font-size: 1.5rem;
+        width: auto;
+        &.fa-cc-paypal {
+          font-size: 1.7rem;
+        }
+      }
+    }
+  }
+  .editButton {
+    width: 100px;
+    height: 34px;
+    padding: 0;
+    color: #000;
+    :hover {
+     
+        color: #fff !important;
+      
+    }
+  }
+  .item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+}
+.mobileAvatar {
+  margin-top: 10px;
+  cursor: pointer;
+  .avatarImg {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
+    position: relative;
+    img {
+      border-radius: 50%;
+      object-fit: cover;
+      height: inherit;
+      width: inherit;
+    }
+  }
+  .inputfile {
+    height: 100%;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+  .editAvatar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 140px;
+    height: 140px;
+    background: gray;
+    opacity: 0.3;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    i {
+      font-size: 2rem;
+      color: white;
+    }
+  }
+}
+.desktopAvatar {
+  padding: 10px;
+  .avatarImg {
+    margin: 0 auto;
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      border-radius: 50%;
+      object-fit: cover;
+      height: inherit;
+      width: inherit;
+    }
+  }
+  .avatarDiv {
+    max-width: 300px !important;
+    margin: 20px auto;
+    width: 100%;
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.nameDialog {
+  width: 400px;
+}

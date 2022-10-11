@@ -1,0 +1,167 @@
+<div
+  #uploadProgress
+  cdkDrag
+  [@fadeOutOnLeave]
+  [@fadeInOnEnter]
+  [cdkDragDisabled]='!minimized'
+  [cdkDragFreeDragPosition]='dragPosition'
+  [class.minimized]='minimized'
+  (cdkDragEnded)='onDragEnd($event)'
+  (mousedown)='setMouseCoords($event)'
+  (click)='minimized ? toggleMinimize($event) : null'
+  class='uploadProgress'
+  *ngIf="type === 'summary' && minimized"
+>
+  <ion-row class='progressStatus'>
+    <div *ngIf='uploadService.progress !== 100 && !uploadService.uploadFailed'>
+      {{ uploadService.progress }}% Uploaded
+    </div>
+    <div *ngIf='uploadService.progress === 100 && !uploadService.uploadFailed'>
+      Processing Files <br/> <span *ngIf='job'>(position {{job.position}})</span>
+    </div>
+    <div *ngIf='uploadService.progress === 100 && !uploadService.uploadFailed && job'>
+      est. {{ jobTimer * 1000 | date:'HH:mm:ss':'UTC'}}
+    </div>
+    <div *ngIf='uploadService.progress !== 100 && !uploadService.uploadFailed'>
+      {{ uploadService.speed }}
+    </div>
+    <div
+      *ngIf='uploadService.uploadFailed'
+      class='retryButton'
+      (click)='uploadAgain()'
+    >
+      <i class='fas fa-redo'></i><span class='ml5'>Upload Again</span>
+    </div>
+  </ion-row>
+  <div class='progressBar'>
+    <div *ngIf='!job' class='current' [style.width.%]='uploadService.progress'></div>
+    <div *ngIf='job' class='current' [style.width.%]='100 - (jobTimer / initJobTimer * 100)'></div>
+  </div>
+</div>
+
+<ion-card [@fadeOutOnLeave] [@fadeInOnEnter] *ngIf='!minimized' class='summaryDialog'>
+  <ion-card-header>
+    <span>{{ title }}</span>
+    <span><i class='fas fa-close' (click)='close()'></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <div class='uploadProgress' *ngIf="type === 'summary'">
+      <ion-row class='progressStatus'>
+        <div *ngIf='uploadService.progress !== 100 && !uploadService.uploadFailed'>
+          {{ uploadService.progress }}% Uploaded
+        </div>
+        <div *ngIf='uploadService.progress === 100 && !uploadService.uploadFailed'>
+          Processing Files <span *ngIf='job'>(position {{job.position}})</span>
+        </div>
+        <div *ngIf='uploadService.progress === 100 && !uploadService.uploadFailed && job'>
+          est. {{ jobTimer * 1000 | date:'HH:mm:ss':'UTC'}}
+        </div>
+        <div *ngIf='uploadService.progress !== 100 && !uploadService.uploadFailed'>
+          {{ uploadService.speed }}
+        </div>
+        <div
+          *ngIf='uploadService.uploadFailed'
+          class='retryButton'
+          (click)='uploadAgain()'
+        >
+          <i class='fas fa-redo'></i><span class='ml5'>Upload Again</span>
+        </div>
+      </ion-row>
+      <div class='progressBar'>
+        <div *ngIf='!job' class='current' [style.width.%]='uploadService.progress'></div>
+        <div *ngIf='job' class='current' [style.width.%]='100 - (jobTimer / initJobTimer * 100)'></div>
+      </div>
+    </div>
+    <div class='container'>
+      <ion-row class='sectionTitle' *ngIf="title === 'Summary'"> Added Files</ion-row>
+      <div *ngFor='let section of sections' class='full-width file-list'>
+        <ion-row *ngIf='list && list[section]?.length > 0'>
+<!--          <ion-col size='2' class='icon'>-->
+<!--            <i class='fad fa-list-music icon-colors' *ngIf="section === 'music'"></i>-->
+<!--            <i class='fad fa-photo-video icon-colors' *ngIf="section === 'video'"></i>-->
+<!--            <i class='fad fa-tags icon-colors-2' *ngIf="section === 'merch'"></i>-->
+<!--            <i class='fad fa-folder-tree icon-colors' *ngIf="section === 'other'"></i>-->
+<!--          </ion-col>-->
+          <ion-col size='12'>
+            <div *ngFor='let file of list[section]' class='item'>
+              <div class='name'>{{ file.file_title }}</div>
+              <div class='size'>{{ file.file_size | fileSize }}</div>
+            </div>
+          </ion-col>
+          <div class='divider'></div>
+        </ion-row>
+      </div>
+      <div *ngIf="title === 'Summary'">
+        <ion-row
+          class='sectionTitle'
+          *ngIf='
+            discards.music.length +
+              discards.video.length +
+              discards.merch.length +
+              discards.files.length >
+            0
+          '
+        >
+          Discarded Files
+        </ion-row>
+        <div *ngFor='let section of sections' class='full-width'>
+          <ion-row *ngIf='discards[section]?.length > 0'>
+            <ion-col size='2' class='icon'>
+              <i class='fad fa-list-music icon-colors' *ngIf="section === 'music'"></i>
+              <i class='fad fa-photo-video icon-colors' *ngIf="section === 'video'"></i>
+              <i class='fad fa-tags icon-colors-2' *ngIf="section === 'merch'"></i>
+              <i class='fad fa-folder-tree icon-colors' *ngIf="section === 'files'"></i>
+            </ion-col>
+            <ion-col size='10'>
+              <div *ngFor='let file of discards[section]' class='item'>
+                <div class='name'>{{ file.file_name }}</div>
+                <div class='size'>{{ file.file_size | fileSize }}</div>
+              </div>
+            </ion-col>
+            <div class='divider'></div>
+          </ion-row>
+        </div>
+      </div>
+    </div>
+    <ion-row class='horizontalCenterRow p10'>
+      <ion-col size='6'>
+        <button
+          nbButton
+          shape='semi-round'
+          fullWidth
+          status='info'
+          type='button'
+          (click)='toggleMinimize($event)'
+          *ngIf="type === 'summary'"
+        >
+          <span class='gradientText'>Minimize</span>
+        </button>
+
+        <button
+          nbButton
+          shape='semi-round'
+          fullWidth
+          status='info'
+          type='button'
+          (click)='clear()'
+          *ngIf="type === 'view'"
+        >
+          <span class='gradientText'>Clear</span>
+        </button>
+        <button
+          nbButton
+          shape='semi-round'
+          fullWidth
+          status='info'
+          type='button'
+          (click)='download()'
+          *ngIf="type === 'download'"
+        >
+          <span class='gradientText verticalCenterRow'>
+            <i class='fas fa-download mr10 mb2'></i><span>Download</span>
+          </span>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-card-content>
+</ion-card>

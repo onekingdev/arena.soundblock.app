@@ -1,0 +1,168 @@
+<div class="page-wrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <app-profile-header tab="5"></app-profile-header>
+      <div class="feature-body">
+        <ion-row class="full-width">
+          <!-- CHANGE PASSWORD START -->
+          <ion-col size="12" sizeMd="6" class="panel">
+            <form #form="ngForm" (ngSubmit)="changePassword()" class="full-height">
+              <div class="panelContainer bluePane">
+                <div class="heading">
+                  <span>Change Password</span>
+                </div>
+                <div class="password-wrapper">
+                  <div class="mb10 mt10">
+                    <span> Current Password </span>
+                  </div>
+                  <div [nbSpinner]="checkPasswordLoading" class="passwordField">
+                    <input
+                      autocomplete="off"
+                      (focusout)="checkCurrentPassword()"
+                      [(ngModel)]="curPassword"
+                      #password="ngModel"
+                      type="password"
+                      class="form-input"
+                      required
+                      name="password"
+                      placeholder="Current Password"
+                      [ngClass]="{ 'is-invalid': validCurrentPassword === 0 }"
+                    />
+                  </div>
+                  <div
+                    class="passwordCheckWrapper verticalCenterRow"
+                    *ngIf="validCurrentPassword == 0"
+                  >
+                    Password is incorrect
+                  </div>
+                  <div class="mb10 mt10">
+                    <span> New Password </span>
+                  </div>
+                  <div class="passwordField">
+                    <input
+                      autocomplete="off"
+                      (keyup)="changeNewPassword()"
+                      [(ngModel)]="newPassword"
+                      #newPasswordInput="ngModel"
+                      type="password"
+                      class="form-input"
+                      required
+                      name="newPassword"
+                      [disabled]="validCurrentPassword != 1"
+                      placeholder="New Password"
+                      [ngClass]="{
+                        'is-invalid':
+                          (passwordStrength !== 'Strong' &&
+                            !newPasswordInput.pristine &&
+                            passwordStrength !== 'Medium') ||
+                          !validCurrentPassword
+                      }"
+                    />
+                  </div>
+                  <div
+                    class="p10 verticalCenterRow"
+                    *ngIf="newPassword && newPassword.length"
+                  >
+                    <ion-text class="password-strength">
+                      Password Strength:
+                      <ion-text
+                        class="strength-level"
+                        [color]="
+                          passwordStrength === 'Strong'
+                            ? 'success'
+                            : passwordStrength === 'Medium'
+                            ? 'warning'
+                            : 'danger'
+                        "
+                      >
+                        {{ passwordStrength }}
+                      </ion-text>
+                    </ion-text>
+                  </div>
+                  <div class="mb10 mt10">
+                    <span> Confirm Password </span>
+                  </div>
+                  <div class="mb50 passwordField">
+                    <input
+                      autocomplete="off"
+                      [(ngModel)]="confirmPassword"
+                      type="password"
+                      #confirmPasswordInput="ngModel"
+                      name="confirmPassword"
+                      class="form-input"
+                      placeholder="Confirm Password"
+                      required
+                      [disabled]="validCurrentPassword != 1"
+                      [ngClass]="{
+                        'is-invalid':
+                          (!confirmPasswordInput.pristine &&
+                            confirmPassword !== newPassword) ||
+                          !validCurrentPassword
+                      }"
+                    />
+                  </div>
+                </div>
+                <div class="mt30 mb30 horizontalCenterRow">
+                  <button
+                    nbButton
+                    status="primary"
+                    type="submit"
+                    [disabled]="
+                      !form.valid ||
+                      confirmPassword != newPassword ||
+                      !validCurrentPassword
+                    "
+                  >
+                    <i class="icon-rig fad fa-user-cog mr5"></i>Change Password
+                  </button>
+                </div>
+              </div>
+            </form>
+          </ion-col>
+          <!-- CHANGE PASSWORD START -->
+      
+          <!-- 2FA SETUP START -->
+          <!-- <ion-col size="12" sizeMd="6" class="panel">
+            <div class="panelContainer purplePane">
+              <div class="heading">2FA Setup</div>
+              <div class="mb20" *ngIf="!twoFactorAuthEnabled">
+                <p>
+                  Scan the QR code or enter the secret key in Google Authenticator.
+                </p>
+              </div>
+              <div class="qr-container">
+                <img [src]="qrData.qrCode" *ngIf="qrData" />
+              </div>
+              <div class="secret-key">
+                <span *ngIf="qrData">Secret Key - {{ qrData.secret }}</span>
+              </div>
+              <div class="auth-code" *ngIf="!twoFactorAuthEnabled">
+                <span>Auth Code:</span>
+                <input
+                  autocomplete="off"
+                  (focusout)="checkCurrentPassword()"
+                  [(ngModel)]="authCode"
+                  type="text"
+                  class="form-input"
+                  placeholder="Auth Code"
+                />
+              </div>
+              <div class="mb30 mt30 horizontalCenterRow">
+                <button
+                  nbButton
+                  status="primary"
+                  (click)="twoFactorAuthEnabled ? disable2fa() : enable2fa()"
+                  class="tfa-btn"
+                  [ngClass]="{ disable: twoFactorAuthEnabled }"
+                >
+                  {{ twoFactorAuthEnabled ? 'Disable 2FA' : 'Enable 2FA' }}
+                </button>
+              </div>
+            </div>
+          </ion-col> -->
+          <!-- 2FA SETUP START -->
+        </ion-row>
+      </div>      
+    </div>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+.profileTab {
+  overflow: hidden;
+}
+.page-wrapper .content-wrapper .settingsTab {
+  // border-bottom: solid 1px #edf1f7;
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 3px;
+
+  .tablinks {
+    outline: none;
+    box-sizing: content-box;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.9rem;
+    width: 25%;
+    max-width: 150px;
+    padding: 0;
+
+    .projects-icon {
+      --fa-primary-color: #518dc9 !important;
+      --fa-secondary-color: #782c7f !important;
+    }
+
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      padding: 15px 0 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span { margin-top: 4px; }
+    }
+
+    .border {
+      width: 100%;
+      height: 3px;
+      background-color: white;
+    }
+
+    &:hover .border {
+      background: lightgray;
+    }
+
+    &.active .border {
+      background: linear-gradient(270deg, #518dc9 0%, #782c7f 100%);
+    }
+
+    i {
+      font-size: 1.1rem;
+      margin-right: 10px;
+      @media screen and (max-width: 767px) {
+        display: none;
+      }
+    }
+
+    span {
+      color: black;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+  }
+}

@@ -1,0 +1,72 @@
+<div class="service-type">
+  <div class="section" *ngFor="let planType of planTypes">
+    <h6 class="gradientText">{{planType.planName | uppercase}}</h6>
+    <ul>
+      <li *ngIf="planType.planName ==='Blockchain Reporting'">
+        <strong>Single, EP, Ringtone, Full Album</strong>
+      </li>
+      <li *ngIf="planType.planName !='Blockchain Reporting'">
+        <strong>Unlimited Singles, EP’s, Ringtones, Full Albums</strong>
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        ${{planType.planRate}} yearly per project
+      </li>
+      <li *ngIf="planType.planName === 'Simple Distribution'">
+        <strong>100% Free. No Hidden Fees – For Life</strong>
+      </li>
+      <li *ngIf="planType.planName === 'Simple Distribution'">
+        <strong>100% Net Royalty Payout (digital streams + physical sales) </strong>
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        100% Net Royalty Payout (digital streams + physical sales)
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        <strong>Smart Contract Security</strong>({{planType.planUsers}} User Accounts / ${{planType.planAdditionalUser}}
+        monthly per each additional user account)
+      </li>
+      <li *ngIf="planType.planName === 'Simple Distribution'">
+        Requires Free On-Demand Merch set up with Arena Merchandising
+      </li>
+      <li>
+        Placement on 40+ of the worlds most relevant digital services
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        <strong>Dedicated Blockchain</strong>
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        <strong>Digital Wallet Management</strong>
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        <strong>Automated Payment Splits</strong>
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        On-demand Merchandise Support
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        Real-time Blockchain Reporting / Daily Payments
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        Same Day Delivery/ Instant Placement
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        Spotify Verified Checkmark
+      </li>
+      <li *ngIf="planType.planName != 'Simple Distribution'">
+        Daily Trend Reports for Apple Music, Spotify, Amazon Music
+      </li>
+      <li>Standard Monthly Reporting / Payments</li>
+      <li>Free ISRC & UPC Codes</li>
+      <li *ngIf="planType.planName != 'Blockchain Enterprise'">
+        <strong>{{planType.planDiskspace}} of Blockdrive Storage</strong> (${{planType.planAdditionalDiskspace}} per
+        each additional GB)
+      </li>
+      <li *ngIf="planType.planName === 'Blockchain Enterprise'">
+        <strong>Unlimited Blockdrive Storage</strong>
+      </li>
+      <li>
+        <strong>{{planType.planBandwidth}} of Data Transfer</strong> (${{planType.planAdditionalBandwidth}} per each
+        additional GB)
+      </li>
+    </ul>
+  </div>
+</div>

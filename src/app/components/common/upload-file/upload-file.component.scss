@@ -1,0 +1,71 @@
+.uploadfilecontainer { height: 100%; width: 100%; margin: 0 auto; border-top: 2px dashed #782c7f !important; border-right: 2px dashed #782c7f !important;
+  border-bottom: 2px dashed #518DC9 !important; border-left: 2px dashed #518DC9 !important; border-radius: 10px;
+}
+.dragAndDrop {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  margin: 0px auto 0;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.uploadfilecontainer:hover {
+  cursor: pointer;
+  background-color: #e8f0fe !important;
+  // opacity: 0.8;
+}
+
+.delete-icon {
+  color: rgb(243, 41, 41);
+  margin-right: 5px;
+}
+
+.fileP {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.uploadfilecontainer-2 {
+  background-size: 50px;
+  background-position: center;
+  height: 100px;
+  width: 100%;
+  margin: 0 auto;
+  border-top: 2px dashed #782c7f !important;
+  border-right: 2px dashed #782c7f !important;
+  border-bottom: 2px dashed #518DC9 !important;
+  border-left: 2px dashed #518DC9 !important;
+  border-radius: 10px;
+}
+
+.uploadfilecontainer-2:hover {
+  cursor: pointer;
+  background-color: #e8f0fe !important;
+  // opacity: 0.8;
+}
+
+.files-list {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 10px auto;
+  background: #ffffff;
+  border: 1px dashed;
+  border-radius: 12px;
+  padding: 5px;
+  color: #1c8adb;
+}
+
+.files-list .delete-file {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.files-list .delete-file img {
+  width: 30px;
+}

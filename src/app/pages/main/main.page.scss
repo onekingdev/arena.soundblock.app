@@ -1,0 +1,75 @@
+.page-wrapper {
+    section { 
+        &.grayBack { background-color: #fafafa; }
+        .container { max-width: 1375px; margin: 0 auto; position: relative; padding: 50px 80px;
+            @media screen and (max-width: 767px) { padding: 30px 15px; }
+            .background { position: absolute; top: 0; left: 0; }
+            .uppercase { text-transform: uppercase; }
+            .alignCenter { text-align: center; }
+            .mobileAlignCenter {
+                @media screen and (max-width: 767px) { text-align: center; }
+            }
+            h1, h2, h3, h4 { letter-spacing: 0; text-shadow: 0 22px 53px rgba(0,0,0,.08); line-height: 1.1; }
+            h1 { font-size: 54px; font-weight: 300; 
+                @media screen and (max-width: 767px) { font-size: 38px; }
+            }
+            h2 { font-weight: 700; font-size: 32px;
+                @media screen and (max-width: 767px) { font-size: 24px; }
+            }
+            h3 { font-size: 30px; font-weight: 500; 
+                @media screen and (max-width: 767px) { font-size: 22px; }
+                &.large { font-weight: 300; font-size: 36px; line-height: 1.25; 
+                    @media screen and (max-width: 767px) { font-size: 24px; }
+                }
+            }
+            h4 { font-size: 12px; letter-spacing: 1.8px; font-weight: 700; 
+                &.large { font-size: 18px; letter-spacing: 0; }
+            }
+            p { font-size: 16px; line-height: 1.5;
+                &.small { font-size: 14px; }
+            }
+            ul.logos { display: table; padding: 0; margin: 0 -10px;
+                li { width: 16.67%; padding: 10px; display: inline-table; }
+            }
+            .whyImg { display: flex; justify-content: center;
+                img { height: 310px; padding: 10px; margin-bottom: 30px; }
+            }
+            .storageInfo {
+                h4 { font-weight: 700; font-size: 18px; letter-spacing: 0; }
+                ul { padding-left: 20px; }
+            }
+            img.guaranteed { max-width: 95px; margin-right: 10px; margin-bottom: 0 !important; }
+            .gettingStarted {
+                ion-col { display: flex; }
+                span { font-size: 72px; line-height: .8; font-weight: 700; padding-right: 15px; }
+                p { font-size: 14px; }
+            }
+            .learnMoreBtn { font-size: 16px; color: #fff !important; font-weight: 900; border-radius: 0; border: none; padding: 20px 40px; margin-bottom: 0; 
+                background: linear-gradient(180deg,#31fff6 0%,#2ddbc3 100%); margin: 5px;
+                i { font-size: 16px; font-weight: bold;}
+            }
+            ol.comment { font-size: 13px; 
+                li { font-size: 13px; line-height: 1.5; }
+            }
+            .youtubeBox { height: 220px; background-position: center; background-size: cover; display: flex; flex-direction: column; justify-content: center; align-items: center;
+                position: relative; overflow: hidden;
+                @media (max-width: 767px) { height: 280px; }
+                @media (max-width: 991px) { height: 140px; }
+                @media (max-width: 1199px) { height: 190px; }
+                &::before { position: absolute; top: 0; bottom: 0; left: 0; right: 0; background: linear-gradient(90deg,#518dc9 0%,#782c7f 100%); content: ''; opacity: .5;  }
+                .playBtn { cursor: pointer; border: 4px solid; border-radius: 50%; padding: 6px 11px; background: 0 0; font-size: 24px; color: #fff; border-color: #fff;
+                    height: 56px; width: 56px; display: inline-block; vertical-align: middle; line-height: 1.5; text-align: center; position: relative; transition: all 0.3s ease-in-out;
+                    &:hover { height: 58px; width: 58px; }
+                    i { color: white; }
+                }
+            }
+            ion-slide {
+                h3 { text-align: left; }
+                p { text-align: left; }
+            }
+        }
+    }
+}
+.videoDialog { 
+    iframe { width: 80vw !important; height: 50vw !important;}
+}

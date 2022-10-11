@@ -1,0 +1,43 @@
+<div class="modal-header">
+  <div class="modal-title pull-left">Track Contributors</div>
+  <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row p-2" [formGroup]="form">
+    <input class="col-4 form-input" formControlName="contributor" placeholder="Contributor Name">
+    <ng-select class="col-4 form-select-input" placeholder="Contributor Type" formControlName="type" [items]="contributorTypes | async" bindLabel="dataContributor" bindValue="dataUUID">
+    </ng-select>
+    <button style="height: 40px;" status="info" (click)="addContributors()"
+      class="col-4 appearance-filled size-medium shape-rectangle status-info">
+      <div class="gradientText">
+        <span>
+          <i *ngIf="!isAdding" class='fas fa-plus-circle gradientText mr-1'></i>
+          <i *ngIf="isAdding" class="fas fa-circle-notch fa-spin mr-1"></i>
+
+          Track Contributors
+        </span>
+      </div>
+    </button>
+  </div>
+  <div class="text-center text-danger" *ngIf="addError">{{addError}}</div>
+  <div class="container mt-3">
+    <table *ngIf="contributors?.length" class="table table-fixed">
+      <thead class="table-header">
+        <tr>
+          <th>Contributors</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let contributor of contributors">
+          <td>{{contributor.contributor_name}}</td>
+          <td>
+            <i role="button" (click)="onDeleteContributor(contributor)" class="fas fa-trash-alt"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

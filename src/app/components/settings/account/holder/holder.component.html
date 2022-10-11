@@ -1,0 +1,136 @@
+<div>
+  <div class="mt20 mb20">
+    <button nbButton shape="semi-round" status="primary" routerLink="../account/create">
+      CREATE SOUNDBLOCK ACCOUNT
+    </button>
+  </div>
+  <div *ngFor="let service of services; let index = index;" class="service-card mb20">
+    <ion-row class="section">
+      <div class="title">
+        <span>Soundblock Account: </span>
+      </div>
+
+      <div *ngIf="showServiceNameInput == service.account_uuid" class="data service-input">
+        <input [nbSpinner]="changeServiceNameLoading" (keydown.enter)="updateServiceName(service)" class="form-input"
+          [(ngModel)]="service.account_name" type="text" />
+
+        <div [hidden]="changeServiceNameLoading">
+          <a (click)="updateServiceName(service)" class="action transition-action mr5">Save</a>
+          <a (click)="showServiceNameInput = ''" class="action transition-action mr5">Cancel</a>
+        </div>
+      </div>
+
+      <div [hidden]="showServiceNameInput == service.account_uuid" class="data">
+        <div>
+          <span class="mr20">{{ service?.account_name }}</span>
+        </div>
+
+        <div>
+          <a (click)="showServiceNameInput = service.account_uuid" class="action transition-action mr5">Change</a>
+        </div>
+      </div>
+    </ion-row>
+
+    <!-- <ion-row *ngIf="changeServiceNameSuccessMessage" class="section">
+      <nb-alert status="success">
+        {{ changeServiceNameSuccessMessage }}
+      </nb-alert>
+    </ion-row>
+
+    <ion-row *ngIf="changeServiceNameErrorMessage" class="section">
+      <nb-alert status="danger">
+        {{ changeServiceNameErrorMessage }}
+      </nb-alert>
+    </ion-row> -->
+
+    <ion-row class="section">
+      <div class="title">
+        <span>Service ID: </span>
+      </div>
+      <div class="data">
+        <div>
+          <span class="mr20">{{ service?.account_uuid }}
+            <span *ngIf="!service.ledger_uuid" class="asyncLoading">
+              <ion-spinner name="lines"></ion-spinner>
+            </span>
+            <i 
+              *ngIf="service.ledger_uuid"
+              class="fad fa-dice-d6 ml10" (click)="showBlockchainViewer(service.ledger_uuid)"
+              [style.cursor]="'pointer'" [style.font-size]="'1rem'" nbTooltip="Blockchain Record"
+              nbTooltipPlacement="top" nbTooltipStatus="info"></i>
+          </span>
+        </div>
+      </div>
+    </ion-row>
+
+    <ion-row class="section">
+      <div class="title">
+        <span>Service Plan: </span>
+      </div>
+      <div class="data">
+        <div>
+          <span class="mr20">{{ service?.active_plan ? service?.active_plan?.plan_type?.plan_name : 'Simple Distribution' }}</span>
+        </div>
+        <div>
+          <a class="action transition-action mr5" *ngIf="service?.active_plan?.plan_type?.plan_name != 'Blockchain Enterprise'"
+            [routerLink]="'../account/upgrade/'+service?.account_uuid">Upgrade</a>
+          <a class="action transition-action mr5" *ngIf="service?.active_plan?.plan_type.plan_name!= 'Simple Distribution'"
+            (click)="onCancelService(confirmDialog, service.account_uuid)">Cancel</a>
+        </div>
+      </div>
+    </ion-row>
+    <ion-row class="section" *ngIf="service?.active_plan?.plan_type != 'Simple Distribution'">
+      <div class="title">
+        <span>Billing Date: </span>
+      </div>
+      <div class="data">
+        <div>
+          <span class="mr20">{{
+            getBillingDate(service?.active_plan?.service_date) | date: 'longDate'
+            }}</span>
+        </div>
+        <!-- <div>
+          <a class="action transition-action mr5" [routerLink]="['/reports']"
+            >Reports</a
+          >
+        </div> -->
+      </div>
+    </ion-row>
+  </div>
+</div>
+
+
+<ng-template #confirmDialog let-data let-ref="dialogRef">
+  <ion-card class="confirmDialogBody">
+    <ion-card-header>
+      <span>Cancel Service</span>
+      <span><i class="fas fa-close" (click)="closeDialog(ref)"></i></span>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row class="container">
+        <ion-col size="12" class="message">
+          {{ cancelMsg }}
+        </ion-col>
+        <ion-col size="12">
+          {{ cancelDesc }}
+        </ion-col>
+      </ion-row>
+      <ion-row class="horizontalCenterRow p10">
+        <ion-col size="3"></ion-col>
+        <ion-col size="6">
+          <button nbButton shape="semi-round" fullWidth status="primary" (click)="cancelService(ref)">
+            {{ confirmButtonText }}
+          </button>
+        </ion-col>
+        <ion-col size="3"></ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ng-template>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

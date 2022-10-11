@@ -1,0 +1,87 @@
+<div class="modal-header blockchain-header d-flex justify-content-between">
+    <span class= "text-white font-weight-bold modal-title">Blockchain Record</span>
+    <button type="button" class="text-white close" aria-label="Close" (click)="BsModalRef.hide()">
+      <i class="fal fa-times"></i>
+  </button>
+</div>
+<div class="text-center sk-fading-circle" *ngIf='isLoading'>
+  <div class="spinner-border text-primary" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+<div *ngIf='records && !isLoading' class="modal-body">
+  <div style="word-wrap: break-word;" *ngIf="!selectItem">
+    <div class="content">
+      <div class="sectionHeading">
+        <span class='gradientText font-weight-bold mb-3'>Sorry</span>
+      </div>
+      <div class="sectionContent">
+        We're having trouble displaying this record right now. If this problem persists, please <a (click)="openTicketBar()">contact the support desk</a> and reference the Id below.
+        {{ledgerUuid}}
+      </div>
+    </div>
+  </div>
+  <div style="word-wrap: break-word;" *ngIf="selectItem">
+    <div class="content">
+      <div class='sectionHeading'>
+        <span class='gradientText font-weight-bold mb-3'>Blockchain Data</span>
+      </div>
+      <div class='sectionContent'>
+        <div class="row mb-2">
+          <div class="col-12 col-md-3 font-weight-bold"><b>ID</b></div>
+          <div class="col-12 col-md-9">{{selectItem?.metadata?.id}} <b
+              class='colorBlue'>(v{{selectItem?.metadata?.version}})</b></div>
+          </div>
+        <div class="row mb-2">
+          <div class="col-12 col-md-3 font-weight-bold"><b>Sequence</b></div>
+          <div class="col-12 col-md-9">{{selectItem?.blockAddress?.strandId}} <b
+              class='colorBlue'>({{selectItem?.blockAddress?.sequenceNo}})</b></div>
+          </div>
+        <div class="row mb-2">
+          <div class="col-12 col-md-3 font-weight-bold"><b>Transaction</b></div>
+          <div class="col-12 col-md-9">{{selectItem?.metadata?.txTime | date: 'MM/dd/yyyy hh:mm:ss'}}
+            ({{selectItem?.metadata?.txId}})
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-12 col-md-3 font-weight-bold"><b>Hash</b></div>
+          <div class="col-12 col-md-9">{{selectItem?.hash}}</div>
+        </div>
+      </div>
+      <div class='sectionHeading'>
+        <span class='gradientText font-weight-bold mb-3'>Blockchain Record</span>
+      </div>
+      <div class='sectionContent'>
+        <div class="row mb-2" *ngFor='let item of selectItem?.data | keyvalue'>
+          <div class="col-12 col-md-3 font-weight-bold font-weight-bold"><b>{{item.key}}</b></div>
+          <div class="col-12 col-md-9">
+            <span *ngIf="checkObject(selectItem?.data[item.key])">
+              <span *ngFor="let i of item?.value | keyvalue;let isLast=last">
+                <span *ngIf="!checkObject(i.value)">
+                  {{i.key}} : {{i.value}} {{isLast?'':','}}
+                </span>
+
+                <span *ngIf="checkObject(i.value)">
+                  <span *ngFor="let j of i.value | keyvalue;">
+                    {{(j.key | json)==='"Filename"'?j.value:''}}
+                  </span>{{isLast?'':','}}
+                </span>
+              </span>
+            </span>
+            <span *ngIf="!checkObject(selectItem?.data[item.key])">{{item.value }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer blockchain-footer" *ngIf="selectItem">
+  <div *ngIf="records" class='text-center'>
+    <div class="block-pagination">
+      <app-pagination [curPage]="meta?.current_page" [lastPage]="meta?.last_page" (onPageNext)="onPageChange($event)"
+        (onPagePrev)="onPageChange($event)" (onPageSelected)="onPageChange($event)" [isBlockChainPage]="true">
+      </app-pagination>
+    </div>
+    <p *ngIf="records" class="recordsinfo">{{meta?.current_page}} of {{meta?.total}} Blockchain Records</p>
+  </div>
+</div>

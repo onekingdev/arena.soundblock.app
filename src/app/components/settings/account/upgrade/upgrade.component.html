@@ -1,0 +1,94 @@
+<service-type></service-type>
+<div [nbSpinner]='paymentLoading'>
+  <ion-row class='p10'>
+    <ion-col size='12' class='sectionTitle'>
+      <h6>Service Account Name</h6>
+    </ion-col>
+    <ion-col size='12' class='sectionSubtitle'>
+      <span>For most Soundblock accounts, this should be the Artist or Band
+        Name.
+      </span>
+      <br />
+      <span>For enterprise users, who manage multiple artists, this may be
+        your Company Name.</span>
+    </ion-col>
+    <ion-col size='12' sizeMd='6' class='p10'>
+      <input autocomplete='off' class='form-input' name='title' [(ngModel)]='serviceName' placeholder='Service name'
+        minlength='3' [attr.disabled]="mode == 'Upgrade' ? true : null" required />
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size='12' sizeMd='5'>
+      <ion-row class='selectStorage'>
+        <ion-col size='12' class='sectionTitle'>
+          <h6>Storage Type</h6>
+        </ion-col>
+        <ion-radio-group class='p10' [ngModel]='storage?.dataUUID'>
+          <div *ngFor='let accountType of planTypes'>
+            <div *ngIf='accountType?.planRate >= curServiceType?.planRate' class='verticalCenterRow mb10'>
+              <ion-radio [value]='accountType?.dataUUID' class='mr10' (click)='onSelectStorage(accountType)'>
+              </ion-radio>
+              <span (click)='onSelectStorage(accountType)'>
+                {{ accountType?.planName }}
+              </span>
+            </div>
+          </div>
+        </ion-radio-group>
+      </ion-row>
+    </ion-col>
+    <ion-col size='12' sizeMd='7'>
+      <ion-row class='p10' *ngIf="storage?.planName !== 'Simple Distribution'">
+        <ion-col size='12' class='sectionTitle'>
+          <h6>Credit Card</h6>
+        </ion-col>
+        <ion-col [nbSpinner]="!service && mode == 'Upgrade'" size='12' sizeMd='9' class='p10'>
+          <div id='card-info' #cardInfo></div>
+          <div id='card-errors' role='alert'>{{ error }}</div>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+  <div class='upgrading-price'
+    *ngIf="storage?.planRate > curServiceType?.planRate && curServiceType?.planName != 'Simple Distribution'">
+    <span *ngIf="mode === 'Upgrade'">
+      Upgrading will cost <b [style.color]="'#518dc9'">${{ storage?.planRate - curServiceType?.planRate }}</b>
+      now and
+      <b [style.color]="'#518dc9'">${{storage.planRate}}</b> on your anniversary date.
+    </span>
+    <span *ngIf="mode === 'Create'">
+      SERVICE PLAN WILL COST <b [style.color]="'#518dc9'">${{ storage?.planRate - curServiceType?.planRate }}</b>
+      now and
+      <b [style.color]="'#518dc9'">${{storage?.planRate}}</b> on your anniversary date.
+    </span>
+  </div>
+  <div class='upgrading-price'
+    *ngIf="storage?.planRate > curServiceType?.planRate && curServiceType?.planName == 'Simple Distribution'">
+    <span *ngIf="mode === 'Upgrade'">Upgrading will cost <b
+        [style.color]="'#518dc9'">${{ storage?.planRate }}</b>.</span>
+    <span *ngIf="mode === 'Create'">SERVICE PLAN WILL COST <b [style.color]="'#518dc9'">${{ storage?.planRate }}</b> PER
+      YEAR.</span>
+  </div>
+  <ion-row class='errors pl20' *ngFor='let err of errors'>
+    <i>{{ err }}</i>
+  </ion-row>
+  <ion-row class='buttonSection mb20'>
+    <button [disabled]='paymentLoading' nbButton status='info' shape='semi-round' routerLink='/settings/accounts'>
+      <span class='gradientText'>Cancel</span>
+    </button>
+    <button [disabled]='paymentLoading || !service' nbButton status='primary' shape='semi-round'
+      *ngIf="mode == 'Upgrade'" (click)='onUpgrade()'>
+      Upgrade
+    </button>
+    <button [disabled]='paymentLoading' nbButton status='primary' shape='semi-round' *ngIf="mode == 'Create'"
+      (click)='onCreate()'>
+      Create
+    </button>
+  </ion-row>
+</div>
+
+<ng-template #loading>
+  <div class='asyncLoading'>
+    <ion-spinner name='lines'></ion-spinner>
+    <span class='ml10'>Loading...</span>
+  </div>
+</ng-template>

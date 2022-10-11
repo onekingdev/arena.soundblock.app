@@ -1,0 +1,93 @@
+::ng-deep .infinite-loading {
+  margin: 0 !important;
+  height: 59px;
+}
+
+@media (max-width: 767px) {
+  .collection-history {
+    width: 60% !important;
+  }
+}
+
+ion-card {
+  width: 700px;
+
+  .collections-wrapper {
+    display: flex;
+
+    .collection-history {
+      width: 50%;
+      padding: 8px;
+
+      .collection-uuid {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
+    }
+
+    ion-content {
+      height: 350px;
+      width: 350px;
+
+      ion-infinite-scroll,
+      ion-infinite-scroll-content {
+        height: 59px;
+      }
+
+      .colletion-list .item {
+        --padding-start: 0 !important;
+        --padding-bottom: 0 !important;
+        --padding-top: 0 !important;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        cursor: pointer;
+        font-size: 0.8rem;
+        background-color: white;
+
+        &:hover,
+        &.selected {
+          --background: lightgrey;
+        }
+
+        .sectionIconWrapper {
+          width: 60px;
+          justify-content: center;
+          display: flex;
+        }
+
+        .info {
+          flex: 1;
+          margin: 5px;
+
+          .author {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding-right: 10px;
+          }
+
+          .comment {
+            max-width: 262px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+
+        .actions {
+          cursor: pointer;
+          display: flex;
+
+          i {
+            color: black;
+          }
+        }
+      }
+    }
+  }
+}

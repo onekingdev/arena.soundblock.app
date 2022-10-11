@@ -1,0 +1,49 @@
+<div [nbSpinner]="getServicesLoading">
+  <div class="invite-wrapper" *ngIf="projectInvites && !projectInvites.length">
+    <h6 style="text-align: center; width: 100%;">
+      <i>Nothing to display here.</i>
+    </h6>
+  </div>
+  <div class="invite-wrapper" *ngFor="let invite of projectInvites">
+    <div class="service-info service-buttons">
+      <div class="info-property">
+        <b class="property">Name: </b>
+        <span class="property-value">{{ invite.account_name }}</span>
+      </div>
+
+      <div class="info-property">
+        <b class="property">Status: </b>
+        <span class="property-value">{{ invite.flag_status | titlecase }}</span>
+      </div>
+
+      <div class="info-property">
+        <b class="property">Holder: </b>
+        <span class="property-value">{{ invite.account_holder }}</span>
+      </div>
+    </div>
+
+    <div class="projects-info">
+      <b>Projects:</b>
+      <div *ngFor="let project of invite.projects" class="project">
+        <span>{{ project.project_title }}</span>
+      </div>
+    </div>
+
+    <div class="service-buttons">
+      <button
+        nbButton
+        status="primary"
+        (click)="acceptService(invite.account_uuid)"
+      >
+        Accept
+      </button>
+      <button
+        nbButton
+        status="info"
+        (click)="rejectService(invite.account_uuid)"
+      >
+        <div class="wrapper"><span class="gradientText">Reject</span></div>
+      </button>
+    </div>
+  </div>
+</div>

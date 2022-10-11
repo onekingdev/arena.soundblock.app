@@ -1,0 +1,90 @@
+<ion-card class="historyDialog">
+  <ion-card-header>
+    <span>Collections History</span>
+    <span><i class="fas fa-close" (click)="close()"></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <div class="container" *ngIf="collectionsObs | async as collections; else loading">
+      <ion-row class="versionSelector">
+        <nb-select [(ngModel)]="selColUuid">
+          <nb-option
+            *ngFor="let item of collections.data.data; let index = index"
+            value="{{ item.collection_uuid }}"
+            (click)="onSelectOption(item)"
+          >
+            <span>{{ item.collection_uuid }}</span>
+          </nb-option>
+        </nb-select>
+      </ion-row>
+      <ion-row class="versionDetail" *ngIf="curCollection">
+        <ion-col size="12" class="author">
+          <span class="gradientText"
+            ><b>{{ curCollection.stamp_created_by.name }}</b></span
+          >
+          <nb-alert *ngIf="isRecentCollection(curCollection)" status="info"
+            >Current</nb-alert
+          >
+          <nb-alert *ngIf="!isRecentCollection(curCollection)" class="backgroundPurple"
+            >Historical</nb-alert
+          >
+        </ion-col>
+        <ion-col size="12">
+          {{ curCollection.collection_comment }}
+        </ion-col>
+        <ion-col size="12" class="changes">
+          <ion-row *ngFor="let item of changes">
+            <ion-col
+              size="1"
+              class="verticalCenterRow horizontalCenterRow"
+              *ngIf="curCollection.history.file_action as file_action"
+            >
+              <i
+                class="fad fa-plus"
+                *ngIf="file_action == 'Created'"
+                style="color: #3dca3d"
+              ></i>
+              <i
+                class="fad fa-minus"
+                *ngIf="file_action == 'Deleted'"
+                style="color: red"
+              ></i>
+              <i
+                class="fad fa-wrench"
+                *ngIf="file_action == 'Modified'"
+                style="color: #3d4bca"
+              ></i>
+              <i
+                class="fad fa-wrench"
+                *ngIf="file_action == 'Reverted'"
+                style="color: #3d4bca"
+              ></i>
+              <i
+                class="fad fa-reply-all"
+                *ngIf="file_action == 'Restored'"
+                style="color: #3dca3d"
+              ></i>
+            </ion-col>
+            <ion-col size="5">
+              <p>{{ item.file_name }}</p>
+            </ion-col>
+            <ion-col size="6">
+              <p>{{ item.file_path }}</p>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+      <ion-row class="horizontalCenterRow p10">
+        <button nbButton status="info" (click)="selectVersion()">
+          <span class="gradientText">Browse Collection</span>
+        </button>
+      </ion-row>
+    </div>
+  </ion-card-content>
+</ion-card>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading ...</span>
+  </div>
+</ng-template>

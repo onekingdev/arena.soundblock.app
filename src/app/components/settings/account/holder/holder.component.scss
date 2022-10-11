@@ -1,0 +1,157 @@
+.service-card {
+  border-color: #782c7f #782c7f #518DC9#518DC9 !important;
+  border-width: 2px !important;
+  border-style: solid !important;
+  background-color: #fff !important;
+  border-radius: 10px !important;
+  padding: 10px;
+  max-width: 800px;
+  box-shadow: 1px 1px 5px 1px rgba(31, 31, 31, 0.36) !important;
+
+  .section {
+    padding: 10px; display: flex; align-items: center;
+  
+    nb-alert {
+      padding: 0.3rem 1.125rem;
+      margin-bottom: 0;
+    }
+  
+    .title {
+      width: 200px;
+  
+      span {
+        font-size: 1.1rem;
+        color: #782c7f;
+      }
+    }
+  
+    .service-input {
+      flex-wrap: unset !important;
+      flex: unset !important;
+      align-items: center;
+  
+      input {
+        width: 200px;
+        height: 34px;
+        margin-right: 20px;
+      }
+    }
+  
+    .data {
+      font-size: 1rem;
+      color: #222b45;
+      display: flex;
+      flex-wrap: wrap;
+      flex: 1;
+  
+      i {
+        margin-left: 10px;
+        font-size: 1.1rem;
+        cursor: pointer;
+  
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+  
+      .action {
+        cursor: pointer;
+      }
+  
+      .creditNumber {
+        font-family: serif;
+      }
+    }
+  }
+  
+  .chartWrapper {
+    position: relative;
+    width: 80%;
+    margin: auto;
+  
+    @media screen and (max-width: 767px) {
+      width: 100%;
+    }
+  }
+  
+  .editDialogBody {
+    .container {
+      padding: 15px !important;
+  
+      input {
+        outline: none;
+        border: none;
+        padding: 0;
+        background: transparent;
+        flex: 1;
+      }
+  
+      ion-col {
+        padding: 0 5px;
+        display: flex;
+      }
+  
+      .wrapper {
+        border-top: 2px solid #782c7f;
+        border-right: 2px solid #782c7f;
+        border-bottom: 2px solid #518dc9;
+        border-left: 2px solid #518dc9;
+        margin-bottom: 10px;
+        border-radius: 15px;
+        padding: 15px 10px;
+        display: flex;
+        width: 100%;
+      }
+  
+      .expires {
+        .datepickerInput {
+          width: 0 !important;
+          height: 0;
+          opacity: 0;
+          overflow: hidden;
+          position: absolute;
+          z-index: -1;
+        }
+  
+        i {
+          cursor: pointer;
+        }
+      }
+  
+      .smallInput {
+        width: 50px;
+      }
+    }
+  }
+}
+
+.confirmDialogBody {
+  ion-card-header {
+    padding-top: 13px;
+    padding-bottom: 8px;
+  }
+  ion-card-content {
+    .container {
+      padding: 20px;
+      font-size: 1rem;
+      color: gray;
+
+      ion-col {
+        padding: 10px 0;
+      }
+
+      .message {
+        font-size: 1.1rem;
+        color: #222b45;
+        font-weight: bold;
+      }
+
+      span {
+        color: #222b45;
+      }
+    }
+  }
+}
+button.appearance-filled.status-primary{
+  width: 256px;
+}

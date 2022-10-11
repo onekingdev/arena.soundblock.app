@@ -1,0 +1,17 @@
+.image-preview {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+
+  @media (max-height: 668px) {
+  }
+
+  img {
+    border-radius: 10px;
+    max-height: 200px;
+
+    // @media (max-height: 668px) {
+    //   max-height: 150px;
+    // }
+  }
+}

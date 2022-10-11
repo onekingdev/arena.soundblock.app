@@ -1,0 +1,327 @@
+<div class="page-wrapper deploymentsPageWrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <div class="mainContent" id="mainContent">
+        <app-infoheader></app-infoheader>
+        <app-tabheader tab="deployments"></app-tabheader>
+        <ion-row *ngIf="deployments; else loading;">
+          <ion-col *ngIf="!projectHasActiveContract" size="12" class="p20">
+            <div [routerLink]="['../contract']" class="noActiveContract mt20">
+              <i class="fas fa-exclamation fa-3x mr15"></i>
+              <div>
+                Deployments cannot be made without an active contract. Please
+                click here to check the status of this project's contract.
+              </div>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" class="p20 deploy-button">
+            <div class="addBtn">
+              <button nbButton routerDirection="forward" class="ion-margin-left-start transition-action iconBtn"
+                nbTooltip="You have no deploy permissions" nbTooltipStatus="info"
+                [nbTooltipTrigger]="hasDeploymentPermission ? 'noop' : 'hover'" fullWidth shape="semi-round"
+                status="primary" [class.disabled]="!projectHasActiveContract || !hasDeploymentPermission"
+                (click)="showDeployDialog()">
+                Deploy to Platform
+              </button>
+            </div>
+          </ion-col>
+
+          <ion-col size="12" *ngIf="deployments.length > 0">
+            <!-- MOBILE TABLE -->
+            <div class="mobile-table">
+              <div *ngFor="let deploy of deployments; let i = index" class="table-item">
+                <div class="item-left">
+                  <div class="property">
+                    <span class="property-name"> Platform: </span>
+                    <span> {{ deploy.platform.data.platform_name }} </span>
+                  </div>
+
+                  <div class="property collection-id">
+                    <span class="property-name"> Collection ID: </span>
+                    <span (click)="collectionIndexForPreview = i">
+                      {{ deploy.collection.data.collection_uuid }}
+                    </span>
+                    <i (click)="collectionIndexForPreview = i" class="fas fa-info-circle"></i>
+
+                    <div *ngIf="collectionIndexForPreview === i" class="collection-info-preview">
+                      <div class="info-header">
+                        <span>Collection info</span>
+                        <i (click)="collectionIndexForPreview = null" class="fas fa-times"></i>
+                      </div>
+
+                      <div class="property">
+                        <span class="prop-name"> Comment: </span>
+                        <span class="prop-value">
+                          {{ deploy.collection.data.collection_comment }}
+                        </span>
+                      </div>
+
+                      <div class="property">
+                        <span class="prop-name"> ID: </span>
+                        <span class="prop-value">
+                          {{ deploy.collection.data.collection_uuid }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="property">
+                    <span class="property-name"> Status: </span>
+                    <span> {{ deploy.status.data.deployment_status }}
+                      <span *ngIf="!deploy.ledger_uuid" >
+                        <ion-spinner name="lines"></ion-spinner>
+                      </span>
+                      <i *ngIf="deploy.ledger_uuid" nbTooltipTrigger="noop" class="fad fa-dice-d6 ml10" (click)="showBlockchainViewer(deploy.ledger_uuid)"
+                        [style.cursor]="'pointer'" nbTooltip="Blockchain Record" nbTooltipPlacement="top"
+                        nbTooltipStatus="info"></i>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="item-right">
+                  <div>
+                    <div class="property">
+                      <span class="property-name">
+                        {{ deploy.stamp_created | timestamp }}
+                      </span>
+                    </div>
+
+                    <div class="property">
+                      <span class="property-name">
+                        {{ deploy.distribution }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="item-actions">
+                    <!-- <button
+                      [class.disabled]="!hasDeploymentPermission || !deploy.collection.data.is_old"
+                      [nbTooltip]="!hasDeploymentPermission
+                        ? 'You have no permission to redeploy a collection'
+                        : !deploy.collection.data.is_old
+                          ? 'This deployment is using the latest collection'
+                        : null"
+                      nbTooltipStatus="info"
+                      [nbTooltipTrigger]="!hasDeploymentPermission || !deploy.collection.data.is_old ? 'hover' : 'noop'"
+                      nbButton
+                      class="ion-margin-left-start transition-action iconBtn mb5"
+                      fullWidth
+                      shape="semi-round"
+                      status="primary"
+                      (click)="redeployPlatform(deploy)"
+                    >
+                      Redeploy
+                    </button> -->
+
+
+                    <button [nbSpinner]="takedownIndexLoading === i"
+                      [class.disabled]="!hasDeploymentPermission || deploy.status.data.deployment_status === 'Pending takedown'"
+                      [nbTooltip]="!hasDeploymentPermission
+                        ? 'You have no permission to takedown a deployment'
+                        : deploy.status.data.deployment_status === 'Pending takedown'
+                          ? 'Pending takedown in progress'
+                        : null" nbTooltipStatus="info"
+                      [nbTooltipTrigger]="!hasDeploymentPermission || deploy.status.data.deployment_status === 'Pending takedown' ? 'hover' : 'noop'"
+                      nbButton class="ion-margin-left-start transition-action iconBtn" fullWidth shape="semi-round"
+                      status="primary" (click)="takedownDeployment(deploy, i)">
+                      Takedown
+                    </button>
+                  </div>
+                </div>
+
+                <!-- <div class="property">
+                  <span> Distribution: </span>
+                  <span> {{ deploy.distribution }} </span>
+                </div> -->
+              </div>
+            </div>
+            <!-- MOBILE TABLE -->
+
+            <!-- DESKTOP TABLE -->
+            <div class="gradientTable">
+              <div class="border-bottom ion-padding-horizontal tableHeader">
+                <ion-row class="rowWrapper">
+                  <ion-col size="1.5">Platform</ion-col>
+                  <ion-col size="4">Collection ID</ion-col>
+                  <ion-col size="2">Status</ion-col>
+                  <ion-col size="1">Release Date</ion-col>
+                  <ion-col size="1.5">Distribution</ion-col>
+                  <ion-col size="0.5"></ion-col>
+                </ion-row>
+              </div>
+
+              <div class="row-highlight transition-action-2 tableBody"
+                *ngFor="let deploy of deployments; let index = index;">
+                <ion-row class="rowWrapper">
+                  <ion-col class="column" size="1.5">{{deploy.platform.data.platform_name}}
+                  </ion-col>
+                  <ion-col class="column collection" size="4">
+                    <div (mouseenter)="collectionIndexForPreview = index"
+                      (mouseleave)="collectionIndexForPreview = null" class="collection-info">
+                      <span>{{ deploy.collection.data.collection_uuid }}</span>
+                      <i class="fas fa-info-circle" *ngIf="deploy.collection.data.is_old"
+                        [nbTooltip]="'You can upload a newer collection to this platform.'" nbTooltipStatus="info"></i>
+                    </div>
+                  </ion-col>
+                  <ion-col class="column" size="2">{{deploy.status.data.deployment_status}}
+                    <span *ngIf="!deploy.ledger_uuid" >
+                      <ion-spinner name="lines"></ion-spinner>
+                    </span>
+                    <i class="fad fa-dice-d6 ml10"  nbTooltipTrigger="hover" *ngIf="deploy.ledger_uuid" (click)="showBlockchainViewer(deploy.ledger_uuid)"
+                      [style.cursor]="'pointer'" [style.font-size]="'1rem'" nbTooltip="Blockchain Record"
+                      nbTooltipPlacement="top" nbTooltipStatus="info"></i>
+                  </ion-col>
+                  <ion-col class="column" size="1">{{deploy.stamp_created | timestamp}}</ion-col>
+                  <ion-col class="column" size="1.5">{{deploy.distribution}}</ion-col>
+                  <ion-col class="column deploy-actions" size="2">
+                    <!-- <button
+                      [class.disabled]="!hasDeploymentPermission || !deploy.collection.data.is_old"
+                      [nbTooltip]="!hasDeploymentPermission
+                        ? 'You have no permission to redeploy a collection'
+                        : !deploy.collection.data.is_old
+                          ? 'This deployment is using the latest collection'
+                        : null"
+                      nbTooltipStatus="info"
+                      [nbTooltipTrigger]="!hasDeploymentPermission || !deploy.collection.data.is_old ? 'hover' : 'noop'"
+                      nbButton
+                      class="ion-margin-left-start transition-action iconBtn"
+                      fullWidth
+                      shape="semi-round"
+                      status="primary"
+                      (click)="redeployPlatform(deploy)"
+                    >
+                      Redeploy
+                    </button> -->
+
+                    <button [nbSpinner]="takedownIndexLoading === index"
+                      [class.disabled]="!hasDeploymentPermission || deploy.status.data.deployment_status === 'Pending takedown'"
+                      [nbTooltip]="!hasDeploymentPermission
+                        ? 'You have no permission to takedown a deployment'
+                        : deploy.status.data.deployment_status === 'Pending takedown'
+                          ? 'Pending takedown in progress'
+                        : null" nbTooltipStatus="info"
+                      [nbTooltipTrigger]="!hasDeploymentPermission || deploy.status.data.deployment_status === 'Pending takedown' ? 'hover' : 'noop'"
+                      nbButton class="ion-margin-left-start transition-action iconBtn" fullWidth shape="semi-round"
+                      status="primary" (click)="takedownDeployment(deploy, index)">
+                      Takedown
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
+            <!-- DESKTOP TABLE -->
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Deploy dialog -->
+<ng-template #deployDialog let-data let-ref="dialogRef">
+  <form #form="ngForm" (ngSubmit)="deployProject(ref)" class="dialogForm">
+    <ion-card>
+      <ion-card-header>
+        <span>Deploy to Platform(s)</span>
+        <span><i (click)="closeDialog(ref)" class="fas fa-close"></i></span>
+      </ion-card-header>
+
+      <ion-card-content>
+        <!-- ERRORS START -->
+        <ion-row class="ion-padding content is-invalid" *ngIf="errors.length > 0">
+          <ion-col size="12">
+            <div *ngFor="let error of errors" class="error-wrapper">
+              <p>{{error.message}}</p>
+              <button *ngIf="error.uploadLink" nbButton (click)="goToProjects()" status="info" class="uploadButton">
+                <span class="gradientText">Upload File</span>
+              </button>
+            </div>
+          </ion-col>
+        </ion-row>
+        <!-- ERRORS END -->
+
+        <!-- PLATFORM TYPE START -->
+        <ion-row class="ion-padding content">
+          <ion-col class="flex-center" size="6">
+            <span>Select Platform Category:</span>
+          </ion-col>
+          <ion-col size="6">
+            <nb-select [selected]="PlatformCategory.MUSIC" (selectedChange)="selectPlatformCategory($event)">
+              <nb-option [value]="item.value" *ngFor="let item of PlatformCategory | keyvalue">
+                {{ item.value }}
+              </nb-option>
+            </nb-select>
+          </ion-col>
+        </ion-row>
+        <!-- PLATFORM TYPE END -->
+
+        <!-- SELECT PLATFORMS START -->
+        <ion-row class="ion-padding content">
+          <div *ngIf="!getPlatformsLoading; else loading" class="gradientTable platformsTable">
+            <!-- TABLE HEADER START -->
+            <div class="border-bottom ion-padding-horizontal tableHeader">
+              <ion-row class="rowWrapper">
+                <ion-col class="flex-center" size="2">
+                  <nb-checkbox class="select-all" [disabled]="!selectedCollection"
+                    (checkedChange)="selectAllPlatforms($event)"></nb-checkbox>
+                </ion-col>
+                <ion-col size="5">Platform</ion-col>
+                <ion-col size="5"></ion-col>
+              </ion-row>
+            </div>
+            <!-- TABLE HEADER END -->
+
+            <!-- TABLE BODY START -->
+            <div (click)="togglePlatform(platform.platform_uuid)" class="row-highlight transition-action-2 tableBody"
+              #platformRef *ngFor="let platform of availablePlatforms; let index = index;">
+              <ion-row class="rowWrapper">
+                <ion-col class="column" size="2">
+                  <nb-checkbox [disabled]="!selectedCollection" [checked]="platformChecked(platform.platform_uuid)"
+                    (click)="$event.stopPropagation(); platformRef.click()"></nb-checkbox>
+                </ion-col>
+                <ion-col class="column" size="5">{{platform.platform_name}}</ion-col>
+                <ion-col class="column" size="5">
+                  <img [src]="platform?.platform_image">
+                </ion-col>
+              </ion-row>
+            </div>
+            <!-- TABLE BODY END -->
+
+            <!-- NO DATA START -->
+            <div class="mt20" *ngIf="!availablePlatforms.length">
+              <h6>
+                <strong><i>No platforms available</i></strong>
+              </h6>
+            </div>
+            <!-- NO DATA END -->
+          </div>
+        </ion-row>
+        <!-- SELECT PLATFORMS END -->
+
+        <!-- DIALOG BUTTONS START -->
+        <ion-row class="p10">
+          <ion-col size="6">
+            <button nbButton shape="semi-round" fullWidth status="info" (click)="closeDialog(ref)">
+              <span class="gradientText">Cancel</span>
+            </button>
+          </ion-col>
+          <ion-col size="6">
+            <button nbButton shape="semi-round" fullWidth status="primary" type="submit"
+              [disabled]="!selectedPlatforms.length || !selectedCollection">
+              Start Deployment
+            </button>
+          </ion-col>
+        </ion-row>
+        <!-- DIALOG BUTTONS END -->
+      </ion-card-content>
+    </ion-card>
+  </form>
+</ng-template>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

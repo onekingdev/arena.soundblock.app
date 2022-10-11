@@ -1,0 +1,34 @@
+<div class="modal-header">
+  <div class="modal-title pull-left">Add Artist Publisher</div>
+  <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+      <span aria-hidden="true"><i class="fal fa-times"></i></span>
+  </button>
+</div>
+<div class="modal-body" [formGroup]="form">
+  <ng-select class="mb-3" [items]="artists" [bindLabel]="'artist_name'" [bindValue]="'artist_uuid'"
+  [searchable]="false"
+  formControlName="artist" placeholder="Select Artist"
+  ></ng-select>
+  <input class="form-input" formControlName="publisher_name" placeholder="Publisher Name">
+</div>
+<div class="modal-footer">
+  <span *ngIf="artistPublisherAddedError" class="text-danger text-right">
+      {{artistPublisherAddedError?.error.status.message}}
+  </span>
+  <span *ngIf="artistPublisherAdded" class="text-success text-right">
+      <span >Artist Publisher Added</span>
+  </span>
+  <button (click)="bsModalRef.hide()" class="btn btn-secondary">
+    <span class="gradientText">
+      Cancel
+    </span>
+  </button>
+  <button
+          (click)="confirm()"
+          [disabled]="artistPublisherAdding || artistPublisherAdded" class="btn btn-round btn-primary">
+      <i  *ngIf="artistPublisherAdding" class="gradientText fas fa-circle-notch fa-spin"></i>
+      <i *ngIf="artistPublisherAdded && !artistPublisherAdding" class="gradientText fas fa-check"></i> <span class="gradientText">
+        Save
+      </span>
+  </button>
+</div>

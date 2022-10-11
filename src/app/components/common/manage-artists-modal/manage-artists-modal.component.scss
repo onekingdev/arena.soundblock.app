@@ -1,0 +1,84 @@
+.table-header {
+  height: 54px;
+  border: 1px solid purple;
+  color: purple;
+  margin-bottom: 10px;
+  th {
+      border: none;
+  }
+}
+
+tr {
+  width: 100%;
+  display: inline-table;
+  table-layout: fixed;
+  }
+  
+  table{
+   height:300px;              // <-- Select the height of the table
+   display: -moz-groupbox;    // Firefox Bad Effect
+  }
+  
+
+  .container {
+    overflow: auto;
+    height: calc(100vh - 200px);
+    @media (max-width: 770px) {
+      height: calc(100vh - 147px);
+    }
+  }
+
+  .card {
+    cursor: pointer;
+    // min-height: 6rem;
+    border-top: 2px solid #782c7f !important;
+    border-right: 2px solid #782c7f !important;
+    border-bottom: 2px solid #518dc9 !important;
+    border-left: 2px solid #518dc9 !important;
+    .card-body {
+      padding: 0.4rem !important;
+      .artist-img {
+        width: 60px !important; height: 60px !important;
+      }
+      .artist-detail {
+        p {
+          font-size: 0.8rem !important;
+        }
+        .custom-control label { font-size: 0.8rem !important; }
+      }
+    }
+  }
+  .artist-btn {
+    border-color: #782c7f #782c7f #518dc9 #518dc9;
+    border-style: solid!important;
+    border-width: 2px!important;
+    background-color: #fff;
+    border-radius: 10px!important;
+    height: 40px;
+    width: 200px;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    &:hover {
+        background: linear-gradient(90deg,#518dc9,#782c7f);
+        color: #fff!important;
+        border-width: 0!important;
+        .gradientText {
+            color: #fff !important;
+        }
+    }
+}
+.btn-danger {
+  background-color: #fff;
+  color: #dc3545;
+  border: none;
+  &:hover {
+    color: #fff;
+    background-color: #bd2130;
+    border-color: #b21f2d;
+
+  }
+
+}
+.artist-detail {
+  margin-top: auto;
+  margin-bottom: auto;
+}

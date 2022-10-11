@@ -1,0 +1,124 @@
+
+.passInput {
+  position: relative; 
+  .eyeWrapper {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    right: 0;
+    width: 10%;
+    display: flex;
+    align-content: center;
+    margin-right: 10px;
+
+    .toggle-password {
+      color: #303030 !important;
+    }
+
+    i {
+      position: relative;
+      margin: auto;
+    }
+  }
+}
+
+.pass {
+  padding-right: 5px;
+  @media screen and (max-width: 767px) {
+   padding-right: 0;
+   margin-bottom: 10px;
+  }
+}
+.confirm {
+  padding-left: 5px;
+  @media screen and (max-width: 767px) {
+    padding-left: 15px;
+  }
+}
+
+.leftPane {
+  padding: 10px 30px;
+
+  .password-wrapper {
+    position: relative;
+
+    .eyeWrapper {
+      position: absolute;
+      height: 100%;
+      top: 0;
+      right: 0;
+      width: 10%;
+      display: flex;
+      align-content: center;
+
+      .toggle-password {
+        color: #303030 !important;
+      }
+
+      i {
+        position: relative;
+        margin: auto;
+      }
+    }
+  }
+
+  .moreActions {
+    margin-top: 15px;
+    padding: 0 10px;
+
+    .forgotPassword {
+      width: 100%;
+
+      @media screen and (max-width: 767px) {
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+.rightPane {
+  padding: 10px 30px;
+
+  .privacy-policy {
+    display: flex;
+    padding: 0 0 0 10px;
+    color: #575f7f;
+    font-size: 0.9rem;
+    // align-items: center;
+
+    ion-checkbox {
+      margin-right: 8px;
+
+      @media (max-width: 767px) {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    a.policy-link {
+      color: #518dc9;
+      cursor: pointer;
+      text-decoration: none;
+      &:hover {
+        color: #782c7f;
+      }
+    }
+  }
+
+  .errors {
+    font-size: 1.2rem;
+    color: red;
+    margin: 0.5rem 0;
+  }
+
+  .createAccountBtn {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+
+    button {
+      width: 50%;
+    }
+  }
+}

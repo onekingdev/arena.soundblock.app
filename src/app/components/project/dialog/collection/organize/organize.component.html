@@ -1,0 +1,60 @@
+<ion-card class="organizeDialogBody">
+  <ion-card-header>
+    <span> Arrange Tracks </span>
+    <span><i class="fas fa-close" (click)="close()"></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <div class="container" *ngIf="!tracksLoading; else loading">
+      <ion-reorder-group (ionItemReorder)="doReorder($event)" disabled="false">
+        <div *ngFor="let track of tracks; let i = index" class="trackItem">
+          <ion-reorder slot="start" class="reorder"></ion-reorder>
+          <div class="track">{{ i + 1 }}.</div>
+          <div class="contentWrapper">
+            <div class="title">
+              <div class="mr5">Title:</div>
+              <div [title]="track.file_title" class="value">
+                {{ track.file_title }}
+              </div>
+            </div>
+            <div class="name">
+              <div class="mr5">File:</div>
+              <div [title]="track.file_name" class="value">
+                {{ track.file_name }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ion-reorder-group>
+    </div>
+    <ion-row class="horizontalCenterRow p10">
+      <ion-col size="12">
+        <ion-textarea
+          class="form-textarea"
+          rows="6"
+          name="comment"
+          [(ngModel)]="comment"
+          placeholder="Share Comment for Team Members"
+          #commentInput
+        ></ion-textarea>
+      </ion-col>
+      <ion-col size="6">
+        <button
+          nbButton
+          shape="semi-round"
+          fullWidth
+          status="info"
+          (click)="submit()"
+        >
+          <span class="gradientText">Save Changes</span>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-card-content>
+</ion-card>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

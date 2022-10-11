@@ -1,0 +1,63 @@
+<div class="pr-2 mb-3">
+  <div>
+    <div class="d-flex justify-content-end">
+      <div class="btn-group " dropdown [insideClick]="true" #dropdown="bs-dropdown">
+        <button class="btn-gradient mb-3" (click)="openAddArtistModal()">
+          <span>Add Artist</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="alert alert-info" *ngIf="addedArtist">
+  <div class="d-flex">
+    <img class="artist-img" [src]="addedArtist.avatar_url" (error)="this.addedArtist.avatar_url = 'https://cloud.develop.account.arena.com/assets/static/avatar_v2.jpg'" />
+    <div class="artist-detail ml-3">
+      <p>
+        {{addedArtist.artist_name}}
+      </p>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input"
+          (change)="addedArtist.type==='primary'?addedArtist.type='featuring':addedArtist.type='primary'"
+          [id]="'customSwitch5 kjk'" [checked]="addedArtist.type==='primary'? true: false">
+        <label class="custom-control-label pt-2" [for]="'customSwitch5 kjk'">{{addedArtist.type}}</label>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end mt-3">
+    <button class="artist-btn" (click)="onAddArtist()">
+      <i *ngIf="artistAdding" class="fas fa-circle-notch fa-spin"></i>
+      <span class="gradientText text-center"> 
+       Add</span></button>
+        <button class="artist-btn ml-2 " (click)="this.addedArtist = null">
+          <span class="gradientText text-center">
+            Cancel
+          </span> 
+        </button>
+  </div>
+  <hr>
+</div>
+<div class="container">
+  <div class="mb-3 row" *ngIf="_artists?.length">
+    <div class="mt-2 col-md-6 col-lg-6 col-vl-6 col-xl-6 col-12 col-sm-6" *ngFor="let artist of _artists;let i = index">
+
+      <div class="card artist-card" role="button">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <img class="artist-img" [src]="artist.avatar_url" (error)="this.artist.avatar_url = 'https://cloud.develop.account.arena.com/assets/static/avatar_v2.jpg'" />
+            <div class="artist-detail">
+              <p>
+                {{artist.artist_name}}
+              </p>
+              <div>
+                {{artist.artist_type}}
+
+              </div>
+            </div>
+            <i class="fal fa-trash-alt" (click)="onDeleteArtist(artist.artist_uuid)"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

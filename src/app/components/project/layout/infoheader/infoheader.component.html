@@ -1,0 +1,71 @@
+<div class="infoHeader" (click)="openDialog(artworkDialog)">
+    <div class="container">
+        <div class="artwork">
+            <img [src]="project?.artwork"/>
+        </div>
+        <div class="metaInfo">
+            <div class="top">
+                <div class="gradientText"><b>{{project?.account?.account_name}}</b></div>
+                <div><b>{{project?.project_title}}</b>
+                </div>    
+            </div>
+            <div class="bottom">
+                <div>{{project?.stamp_created | timestamp:'MM/dd/yyyy'}}</div>
+                <div>{{project?.project_upc}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #artworkDialog let-data let-ref="dialogRef">
+    <ion-card class="artworkDialog">
+        <ion-card-header>
+        <span>Project Info</span>
+        <span><i class="fas fa-close" (click)="closeDialog(ref)"></i></span>
+        </ion-card-header>
+        <ion-card-content>
+            <div class="container">
+                <div class="artwork">
+                    <img [src]="project?.artwork"/>
+                    <p class="pt-2 text-danger text-center" *ngIf="imageError">{{imageError}}</p>
+                    <button nbButton status="info" (click)="editArtwork.click()">
+                        <div class="gradientText">
+                            Edit
+                        </div>
+                    </button>
+                    <input #editArtwork type="file" name="file" id="editArtwork" class="inputfile" (change)="updateArtwork($event)" />
+                </div>
+                <div class="metaInfo">
+                    <div class="row">
+                        Artist: <div class="gradientText ml10"><b>{{project?.account?.account_name}}</b></div>
+                    </div>
+                    <div class="row">
+                        Title: <div class="ml10"><b>{{project?.project_title}}</b>
+                            <div *ngIf="!project.ledger_uuid" class="asyncLoading">
+                                <ion-spinner name="lines"></ion-spinner>
+                              </div>
+                            <i 
+                                *ngIf="project?.ledger_uuid"
+                                class="fad fa-dice-d6 ml10" 
+                                [style.cursor]="'pointer'" 
+                                (click)="showBlockchainViewer(project.ledger_uuid, ref)"
+                                nbTooltip="Blockchain Record"
+                                nbTooltipPlacement="top"
+                                nbTooltipStatus="info"
+                            ></i>
+                        </div>    
+                    </div>
+                    <!-- <div class="row">
+                        Genre: <div class="ml10">{{project?.genre}}</div>
+                        
+                    </div> -->
+                    <div class="row">
+                        UPC: <div class="ml10">{{project?.project_upc}}</div>
+                    </div>
+                    <div class="row">
+                        Released at: <div class="ml10">{{project?.stamp_created | timestamp:'MMMM d, y'}}</div>
+                    </div>
+                </div>
+            </div>
+        </ion-card-content>
+    </ion-card>
+</ng-template>

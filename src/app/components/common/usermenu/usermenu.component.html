@@ -1,0 +1,27 @@
+<ion-card class="userMenu">
+  <ion-card-header
+    ><span>{{ user.name }}</span></ion-card-header
+  >
+  <ion-card-content>
+    <div
+      *ngIf="authService.isAuthorized && userHasService"
+      class="menuItem"
+      (click)="navigatePage('profile')"
+    >
+      <i class="icon-colors fad fa-user-crown"></i><span>Profile</span>
+    </div>
+    <!-- <div
+      *ngIf="authService.isAuthorized && userHasService"
+      class="menuItem"
+      (click)="showNotification()"
+    >
+      <i class="icon-colors fad fa-bells"></i><span>Notifications</span>
+      <div class="badge" *ngIf="user.unread_notifications_count > 0">
+        <span>{{ user.unread_notifications_count }}</span>
+      </div>
+    </div> -->
+    <div *ngIf="authService.isAuthorized" class="menuItem" (click)="signOut()">
+      <i class="icon-colors fad fa-sign-out-alt"></i><span>Sign Out</span>
+    </div>
+  </ion-card-content>
+</ion-card>

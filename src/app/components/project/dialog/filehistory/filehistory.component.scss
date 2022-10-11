@@ -1,0 +1,8 @@
+.fileHistoryDialog {
+    width: 800px !important;
+    .container { padding: 10px; max-height: 300px; overflow: auto;
+        .fileUuid {
+            font-size: 0.8rem;
+        }
+    }
+}

@@ -1,0 +1,32 @@
+<div class="profileTab">
+  <button class="tablinks" [ngClass]="{'active': tab == 1}" (click)="navigate('/profile')">
+    <div class="wrapper">
+      <i class="fad fa-user-crown icon-colors"></i><span>Profile</span>
+    </div>
+    <div class="border"></div>
+  </button>
+  <button class="tablinks" [ngClass]="{'active': tab == 2}" (click)="navigate('/profile/address')">
+    <div class="wrapper">
+      <i class="fad fa-map-marked icon-colors-2"></i><span>Address</span>
+    </div>
+    <div class="border"></div>
+  </button>
+  <button class="tablinks" [ngClass]="{'active': tab == 3}" (click)="navigate('/profile/contact')">
+    <div class="wrapper">
+      <i class="fad fa-handshake icon-colors"></i><span>Contact</span>
+    </div>
+    <div class="border"></div>
+  </button>
+  <button class="tablinks" [ngClass]="{'active': tab == 4}" (click)="navigate('/profile/payment')">
+    <div class="wrapper">
+      <i class="fad fa-money-check-edit icon-colors-2"></i><span>Payment</span>
+    </div>
+    <div class="border"></div>
+  </button>
+  <button class="tablinks" [ngClass]="{'active': tab == 5}" (click)="navigate('/profile/security')">
+    <div class="wrapper">
+      <i class="fad fa-user-lock icon-colors-2"></i><span>Security</span>
+    </div>
+    <div class="border"></div>
+  </button>
+</div>

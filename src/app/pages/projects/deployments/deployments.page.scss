@@ -1,0 +1,347 @@
+.page-container {
+  .content-wrapper {
+    color: #525f7f;
+    font-size: 1rem;
+    position: relative;
+    padding: 0;
+    width: 100%;
+
+    button.disabled {
+      background-color: rgba(143, 155, 179, 0.24);
+      border-color: rgba(143, 155, 179, 0.24);
+      color: rgba(143, 155, 179, 0.48);
+      cursor: not-allowed;
+    }
+
+    .mainContent {
+      position: relative;
+
+      .noActiveContract {
+        padding: 15px;
+        border-radius: 10px;
+        width: fit-content;
+        cursor: pointer;
+        align-items: center;
+        display: flex;
+        max-width: 546px;
+
+        background-image: linear-gradient(white, white),
+          linear-gradient(to right, #518dc9, #782c7f);
+        background-origin: border-box;
+        border: double 0.2em transparent;
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+
+        i {
+          background: -webkit-gradient(
+            linear,
+            left top,
+            left bottom,
+            from(#518dc9),
+            to(#782c7f)
+          );
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        div {
+          font-weight: 600;
+        }
+      }
+
+      &.menuExpand {
+        margin-right: 270px;
+
+        @media screen and (max-width: 767px) {
+          margin-right: 0px;
+        }
+      }
+
+      .addBtn {
+        width: 200px;
+        position: relative;
+        margin: 5px 5px;
+      }
+
+      .mobile-table {
+        display: none;
+        flex-direction: column;
+        font-size: 0.9rem;
+
+        .table-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 5px;
+          border-bottom: 2px solid #518dc9;
+
+          &:first-child {
+            border-top: 2px solid #518dc9;
+          }
+
+          .property {
+            margin-bottom: 5px;
+
+            .property-name {
+              font-weight: bold;
+            }
+          }
+
+          .item-left {
+            display: flex;
+            flex-direction: column;
+            max-width: 65%;
+            justify-content: space-evenly;
+
+            .collection-id {
+              position: relative;
+            }
+          }
+
+          .item-right {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+
+            .property {
+              display: flex;
+              justify-content: flex-end;
+            }
+
+            .item-actions {
+              display: flex;
+              flex-direction: column;
+
+              button {
+                height: 25px;
+                font-size: 0.8rem;
+              }
+            }
+          }
+        }
+      }
+
+      .collection-info-preview {
+        width: 320px;
+        padding: 15px;
+        position: absolute;
+        background-color: white;
+        z-index: 3;
+        box-shadow: 0 1px 6px 0 rgba(9, 30, 66, 0.25);
+        border-radius: 10px;
+        top: 20px;
+        border: 1px solid lightgray;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 5px;
+
+        .property {
+          margin-bottom: 10px;
+
+          .prop-name {
+            font-weight: bold;
+          }
+        }
+      }
+
+      .info-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+
+        span {
+          width: 100%;
+          font-size: 1.1rem !important;
+          font-weight: bold;
+        }
+
+        i {
+          width: 20px;
+          margin-right: -10px;
+          margin-top: -10px;
+        }
+      }
+
+      @media screen and (max-width: 767px) {
+        .mobile-table {
+          display: flex;
+        }
+
+        .gradientTable {
+          display: none !important;
+          padding: 5px;
+        }
+
+        .deploy-button {
+          display: flex;
+          justify-content: center;
+        }
+      }
+
+      .gradientTable {
+        padding: 10px 30px;
+
+        ion-col {
+          display: flex;
+          align-items: center;
+
+          &.collection {
+            span {
+              cursor: default;
+            }
+
+            i {
+              cursor: pointer;
+            }
+
+            .collection-info {
+              position: relative;
+            }
+
+            i {
+              font-size: 1rem;
+              margin-left: 5px;
+            }
+
+            span {
+              font-size: 0.8rem;
+            }
+          }
+
+          &.deploy-actions {
+            button {
+              height: 30px;
+              width: 130px;
+              font-size: 0.8rem;
+
+              &:first-child {
+                margin-right: 5px;
+              }
+            }
+          }
+        }
+
+        i {
+          font-size: 2rem;
+        }
+      }
+    }
+
+    .sidemenu {
+      position: absolute;
+      right: 0;
+      height: 100%;
+      width: 270px;
+      top: 0;
+      border-bottom-width: 1px;
+
+      @media screen and (max-width: 767px) {
+        width: 0;
+        border-width: 0;
+      }
+    }
+  }
+}
+
+.platformsTable {
+  width: 100%;
+  max-height: 360px;
+  overflow-y: scroll;
+
+  ion-col {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  img {
+    width: 100px;
+    height: 30px;
+    object-fit: contain;
+  }
+  .select-all {
+    margin-right: 10px;
+    transform: translateY(3px);
+  }
+}
+
+.selected-collection {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .selected-collection-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .collection-uuid {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    span {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.asyncLoading {
+  height: 350px;
+  width: 350px;
+}
+
+.dialogForm {
+  nb-select {
+    width: 100%;
+  }
+
+  .privacy-policy {
+    display: flex;
+    color: #8898aa;
+    font-size: 1rem;
+    align-items: center;
+
+    ion-checkbox {
+      margin-right: 8px;
+
+      @media (max-width: 767px) {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    a {
+      &.policy-link {
+        color: #5e72e4;
+        cursor: pointer;
+        text-decoration: none;
+
+        &:hover {
+          color: #7ca0ff;
+        }
+      }
+    }
+  }
+
+  button:disabled,
+  button[disabled] {
+    opacity: 1;
+    cursor: not-allowed;
+  }
+}
+
+.error-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

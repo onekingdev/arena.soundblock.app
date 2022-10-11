@@ -1,0 +1,34 @@
+<div class="page-wrapper accountWrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <div class="settingsTab">
+        <!-- ACCOUNT TAB -->
+        <button
+          class="tablinks"
+          (click)="navigate('settings/accounts')"
+          [class.active]="url === '/settings/accounts' || url === '/settings/account/create'"
+        >
+          <div class="wrapper">
+            <i class="fad fa-handshake icon-colors"></i><span>Accounts</span>
+          </div>
+          <div class="border"></div>
+        </button>
+        <!-- ACCOUNT TAB -->
+
+        <!-- PROJECTS TAB -->
+        <button
+          class="tablinks"
+          (click)="navigate('settings/projects')"
+          [class.active]="url === '/settings/projects'"
+        >
+          <div class="wrapper">
+            <i class="fad fa-user-music icon-colors projects-icon"></i><span>Projects</span>
+          </div>
+          <div class="border"></div>
+        </button>
+        <!-- PROJECTS TAB -->
+      </div>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

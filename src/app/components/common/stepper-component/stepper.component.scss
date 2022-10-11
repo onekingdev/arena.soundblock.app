@@ -1,0 +1,8 @@
+.pure-button {
+    background: none;
+}
+button {
+    &:focus {
+        outline: none !important;
+    }
+}

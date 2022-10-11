@@ -1,0 +1,31 @@
+.infoHeader { display: flex;  color: #222b45; padding-bottom: 3px; background: linear-gradient(90deg, #518DC9 0%, #782c7f 100%);
+    margin: 0 5px;
+    @media (min-width: 768px) {
+        display: none;
+    }
+    .container { background: white; display: flex; flex: 1; }
+    .artwork { padding: 10px 10px; display: flex; align-items: center;
+        img { width: 50px; border-radius: 7px; margin: auto; }
+    }
+    .metaInfo { flex: 1; display: flex; flex-direction: column; justify-content: space-around; padding: 10px;
+        .top { width: 100%; display: flex; justify-content: space-between;
+            .gradientText { font-size: 1rem; }
+        }
+        .bottom { width: 100%; display: flex; justify-content: space-between;
+        }
+    }
+}
+.artworkDialog { 
+    ion-card-header { display: flex; justify-content: space-between; }
+    ion-card-content { padding: 0; 
+        .container { display: flex;
+            .artwork { padding: 10px 10px; display: flex; flex-direction: column; align-items: center;
+                img { width: 100px; border-radius: 7px; margin: auto; }
+                button { padding: 0; width: 60px; height: 25px; border-radius: 7px !important; margin-top: 5px; }
+            }
+            .metaInfo { flex: 1; display: flex; flex-direction: column; justify-content: space-around; padding: 10px;
+                .row { display: flex; }    
+            }
+        }
+    }
+}

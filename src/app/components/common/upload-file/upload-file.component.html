@@ -1,0 +1,17 @@
+<div
+  class="uploadfilecontainer"
+  (click)="fileInput.click()"
+  appDragDrop
+  (onFileDropped)="uploadFile($event)"
+>
+  <input
+    hidden
+    type="file"
+    #fileInput
+    [multiple]="multiple"
+    [accept]="imagesOnly ? 'image/*' : '*'"
+    class="transition-action"
+    (change)="uploadFile($event.target.files)"
+  />
+  <div class="dragAndDrop">{{ placeholder }}</div>
+</div>

@@ -1,0 +1,68 @@
+<div class="shadow d-flex flex-column justify-content-between">
+  <div class="modal-header">
+    <div class="modal-title pull-left">Upload Project Artwork</div>
+    <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+      <span aria-hidden="true"><i class="fal fa-times"></i></span>
+    </button>
+  </div>
+  <div class="modal-body" [ngClass] = "{'height-200': !imageSource, 'height-auto': imageSource}">
+    <ng-container>
+      <upload-file placeholder="Click or Drop Files" multiple="true" (fileSelected)="fileSelected($event)" *ngIf="!imageSource">
+      </upload-file>
+      <div class="image_cropper text-center" *ngIf="imageSource">
+        <div class="artwork_header hide-sm hide-xs hide-vs">
+          <button class="tablinks">
+            <div class="wrapper">
+              <i class="fad fa-crop icon-colors"></i><span>Image</span>
+            </div>
+            <div class="border"></div>
+          </button>
+          <button class="tablinks">
+            <div class="wrapper">
+              <i class="fad fa-eye icon-colors"></i><span>Preview</span>
+            </div>
+            <div class="border"></div>
+          </button>
+        </div>
+        <div class="artwork_header_mobile hide-lg hide-vl hide-xl hide-md">
+          <button class="tablinks" [ngClass] = "{'active': tab == 1}" (click)="tab = 1">
+            <div class="wrapper">
+              <i class="fad fa-crop icon-colors"></i><span>Image</span>
+            </div>
+            <div class="border"></div>
+          </button>
+          <button class="tablinks" [ngClass] = "{'active': tab == 2}" (click)="tab = 2">
+            <div class="wrapper">
+              <i class="fad fa-eye icon-colors"></i><span>Preview</span>
+            </div>
+            <div class="border"></div>
+          </button>
+        </div>
+        <div class="artwork_body">
+          <div
+            class="artwork_crop"
+            [ngClass]="{'active_tab': tab === 1, 'passive_tab': tab !== 1}"
+          >
+            <angular-cropper
+              style="width: 100%; height: 100%;"
+              #angularCropper
+              [cropperOptions]="config"
+              [imageUrl]="imageSource"
+            ></angular-cropper>
+          </div>
+          <div class="separator"></div>
+          <div
+            class="artwork_preview"
+            [ngClass]="{'active_tab': tab === 2, 'passive_tab': tab !== 2}"
+          >
+            <img [src]="imageDestination" />
+          </div>
+        </div>      
+        <div class="artwork_footer d-flex justify-content-end" *ngIf="imageSource">
+          <button class="btn-gradient mr-3" (click)="resetUploadPhoto()"><span>Reset</span></button>
+          <button class="btn-gradient" (click)="applyUpload()"><span>Apply</span></button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

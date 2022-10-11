@@ -1,0 +1,150 @@
+<div class='page-wrapper' #entireArea>
+  <div class='page-container'>
+    <div class='content-wrapper p-3'>
+      <app-report-header tab="1"></app-report-header>
+      <!-- <tabset class="soundblock-tabs"> -->
+        <!--        <mat-tab label='Billing'>-->
+        <!--          <div *ngIf='accountObservable | async; else loading;'>-->
+        <!--            <ion-row class='section mt20'>-->
+        <!--              <div class='title'>-->
+        <!--                <span>Service Type: </span>-->
+        <!--              </div>-->
+        <!--              <div class='data'>-->
+        <!--                <div>-->
+        <!--                  <span class='mr20'>Paid ({{account?.plans?.data.plan_type}})</span>-->
+        <!--                </div>-->
+        <!--              </div>-->
+        <!--            </ion-row>-->
+        <!--            <ion-row class='section'>-->
+        <!--              <div class='title'>-->
+        <!--                <span>Billing Date: </span>-->
+        <!--              </div>-->
+        <!--              <div class='data'>-->
+        <!--                <span>{{getBillingDate(account?.plans?.data.plan_day) | date:'longDate'}}</span>-->
+        <!--              </div>-->
+        <!--            </ion-row>-->
+        <!--            <ion-row class='section'>-->
+        <!--              <div class='title'>-->
+        <!--                <span>Service Cost: </span>-->
+        <!--              </div>-->
+        <!--              <div class='data'>-->
+        <!--                <span>${{account?.plans?.data.plan_cost}} / Month</span>-->
+        <!--              </div>-->
+        <!--            </ion-row>-->
+        <!--            <ion-row class='mt20'>-->
+        <!--              <ion-col size='12' class='gradientTable paymentTable ion-no-padding'>-->
+        <!--                <div class='border-bottom ion-padding-horizontal tableHeader'>-->
+        <!--                  <ion-row class='rowWrapper'>-->
+        <!--                    <ion-col size='2' class='verticalCenterRow'>Date</ion-col>-->
+        <!--                    <ion-col size='2' class='verticalCenterRow'>Type</ion-col>-->
+        <!--                    <ion-col size='2' class='verticalCenterRow'>Status</ion-col>-->
+        <!--                    <ion-col size='1' class='verticalCenterRow'>Amount</ion-col>-->
+        <!--                    <ion-col size='2' class='verticalCenterRow'>Purpose</ion-col>-->
+        <!--                    <ion-col size='3' class='verticalCenterRow'>Memo</ion-col>-->
+        <!--                  </ion-row>-->
+        <!--                </div>-->
+        <!--                <div class='tableBody' *ngFor='let item of transactionData; let index = index'>-->
+        <!--                  <ion-row class='rowWrapper'>-->
+        <!--                    <ion-col size='2'-->
+        <!--                             class='verticalCenterRow'>{{item.stamp_created | timestamp: 'MMM dd, yyyy'}}</ion-col>-->
+        <!--                    <ion-col size='2' class='verticalCenterRow'>{{item.transaction_type}}</ion-col>-->
+        <!--                    <ion-col size='2' class='verticalCenterRow'>-->
+        <!--                        <span class='status'-->
+        <!--                              [ngClass]="{'purple': item.transaction_status == 'Debited', 'blue': item.transaction_status == 'paid', 'gradient': item.transaction_status == 'not paid'}">-->
+        <!--                          {{item.transaction_status}}-->
+        <!--                        </span>-->
+        <!--                    </ion-col>-->
+        <!--                    <ion-col size='1' class='verticalCenterRow amount'>-->
+        <!--                      ${{item.transaction_amount | number: '1.2-2'}}</ion-col>-->
+        <!--                    <ion-col size='2' class='verticalCenterRow'>{{item.transaction_name}}</ion-col>-->
+        <!--                    <ion-col size='3' class='verticalCenterRow'>{{item.transaction_memo}}</ion-col>-->
+        <!--                  </ion-row>-->
+        <!--                </div>-->
+        <!--              </ion-col>-->
+        <!--            </ion-row>-->
+        <!--          </div>-->
+        <!--          <div class='chartWrapper mt20'>-->
+        <!--            <canvas #billCanvas>-->
+        <!--              {{ billChart }}-->
+        <!--            </canvas>-->
+        <!--          </div>-->
+        <!--        </mat-tab>-->
+        <!-- <tab heading='Usage'> -->
+          <div class="row mt-4" #selectArea>
+            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 mt-2">
+              <span>Select Service</span>
+              <app-service-selector [errors]='null'
+                                    [touched]='null'
+                                    [services]='services'
+                                    [userUUID]='profileService.user.value.user_uuid'
+                                    (valueChanged)='selectServicePlan($event)'>
+              </app-service-selector>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 mt-2">
+              <span>Select Project</span>
+              <ng-select class='customSelect' [searchable]="false" required name='service'
+                         (change)='selectProject($event)' [(ngModel)]='projectUuid'
+                         [ngClass]="{'disabled': !serviceUuid || !projects}"
+                         [disabled]="!serviceUuid || !projects">
+                <ng-option *ngIf="projects" [value]="''">All</ng-option>
+                <ng-option *ngFor='let project of projects?.meta' [value]='project.project_uuid'>
+                  {{project.project_title}}
+                </ng-option>
+              </ng-select>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-2">
+              <span>Enter a date range</span>
+              <input class='form-input datatime' name='releaseDate' required
+                     [nbDatepicker]='formpicker' [(ngModel)]='dateRange' />
+              <nb-rangepicker #formpicker (rangeChange)='datesUpdated($event)'></nb-rangepicker>
+              <!--              <input class="customSelect" nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker">-->
+              <!--              <nb-rangepicker #dateTimePicker></nb-rangepicker>-->
+              <!--              <mat-form-field appearance='fill'>-->
+              <!--                <mat-label>Enter a date range</mat-label>-->
+              <!--                <mat-date-range-input [rangePicker]='picker'>-->
+              <!--                  <input (dateChange)='datesUpdated($event)' matStartDate placeholder='Start date'-->
+              <!--                         [(ngModel)]='dateRange.start'>-->
+              <!--                  <input (dateChange)='datesUpdated($event)' matEndDate placeholder='End date'-->
+              <!--                         [(ngModel)]='dateRange.end'>-->
+              <!--                </mat-date-range-input>-->
+              <!--                <mat-datepicker-toggle matSuffix [for]='picker'></mat-datepicker-toggle>-->
+              <!--                <mat-date-range-picker #picker></mat-date-range-picker>-->
+              <!--              </mat-form-field>-->
+              </div>
+          </div>
+          <div class="row">
+            <div  class="col-12">
+              <div class="row">
+                <div class="col-12">
+                  <div class='canvasWrapper'>
+                    <div class='chart'>
+                      <canvas #monthlyCanvas>{{ monthlyChart }}</canvas>
+                    </div>
+                  </div>
+                </div>
+                <!-- DEPLOY TO PLATFORMS -->
+              </div>
+            </div>
+            <div class="col-4">
+            </div>
+          </div>
+        <!-- </tab> -->
+
+        <!-- <tab heading="Revenue">
+          <div class="row">
+            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 mt-2">
+              <span>Select Service</span>
+            </div>
+          </div>
+        </tab>
+      </tabset> -->
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class='asyncLoading'>
+    <ion-spinner name='lines'></ion-spinner>
+    <span class='ml10'>Loading...</span>
+  </div>
+</ng-template>

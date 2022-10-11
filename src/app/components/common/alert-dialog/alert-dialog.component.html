@@ -1,0 +1,21 @@
+<div class="modal-header">
+  <span>{{title}}</span>
+  <span><i class="fas fa-close" (click)="onClose()"></i></span>
+</div>
+<div class="modal-body">
+  <div class="row container">
+    <div class="col-12 message">
+      {{message}}
+    </div>
+    <div class="col-12" *ngIf="description">
+      {{description}}
+    </div>
+  </div>
+  <div class="row horizontalCenterRow p10">
+    <div class="col-6">
+      <button nbButton shape="semi-round" fullWidth status="primary" (click)="onConfirm()">
+        <div class="wrapper"><span>OK</span></div>
+      </button>
+    </div>
+  </div>
+</div>

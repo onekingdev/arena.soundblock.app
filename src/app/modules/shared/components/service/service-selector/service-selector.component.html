@@ -1,0 +1,23 @@
+<ng-select
+  class="customSelect no-margin-top" required name="service"
+  [ngClass]="{'is-invalid': errors && touched}"
+  [searchable]="false"
+  (change)='clicked($event)' [ngModel]='selectedService'
+  [ngClass]="{'gradientText': currentService && currentService.user_uuid === userUUID}">
+    <ng-option *ngFor="let service of userServices" [value]="service.account">
+      <span class="gradientText" [ngClass]="{'gradientText': checkServiceOwned(service)}"> {{service.account.account_name }} </span>
+    </ng-option>
+    <ng-option *ngFor="let service of nonUserServices" [value]="service.account">
+      <span class="gradientText" [ngClass]="{'gradientText': checkServiceOwned(service)}"> {{service.account.account_name }} </span>
+    </ng-option>
+</ng-select>
+<!-- <nb-select class="customSelect" required name="service"
+           [ngClass]="{'is-invalid': errors && touched}"
+           (selectedChange)='clicked($event)' [(ngModel)]='selectedService'>
+  <nb-option *ngFor="let service of userServices" [value]="service.service">
+    <span class="gradientText" [ngClass]="{'gradientText': checkServiceOwned(service)}"> {{service.service.service_name }} </span>
+  </nb-option>
+  <nb-option *ngFor="let service of nonUserServices" [value]="service.service">
+    <span class="gradientText" [ngClass]="{'gradientText': checkServiceOwned(service)}"> {{service.service.service_name }} </span>
+  </nb-option>
+</nb-select> -->

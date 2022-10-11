@@ -1,0 +1,26 @@
+<div class="page-wrapper">
+  <div class="page-container">
+    <div [nbSpinner]="!emailVerified && !emailError" class="content-wrapper">
+      <div class="message">
+        <h6 *ngIf="emailVerified; else notVerified">
+          Your email has been verified successfully
+        </h6>
+
+        <button nbButton status="primary" routerLink="/home">Continue</button>
+      </div>
+
+      <ng-template #notVerified>
+        <h6>{{ emailError }}</h6>
+      </ng-template>
+
+      <div class="artwork-image"></div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

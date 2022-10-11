@@ -1,0 +1,37 @@
+<div class="modal-header">
+  <div class="modal-title pull-left">Track Publishers</div>
+  <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="d-flex justify-content-end">
+    <button status="info" (click)="addpublishers()" class="appearance-filled size-medium shape-rectangle status-info">
+      <div class="gradientText">
+        <span>
+          <i class='fas fa-plus-circle gradientText mr-1'></i>
+
+          Track Publishers
+        </span>
+      </div>
+    </button>
+  </div>
+  <div class="container mt-3">
+    <table *ngIf="publishers?.length" class="table table-fixed">
+      <thead class="table-header">
+        <tr>
+          <th>Publishers</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let publisher of publishers">
+          <td>{{publisher.publisher_name}}</td>
+          <td>
+            <i role="button" (click)="onDeletepublishers(publisher)" class="fas fa-trash-alt"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

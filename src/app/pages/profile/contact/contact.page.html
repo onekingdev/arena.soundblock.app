@@ -1,0 +1,150 @@
+<div class="page-wrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <app-profile-header tab="3"></app-profile-header>
+      <ion-row class="heading">
+        <p>Please provide your <span>contact information</span> below.</p>
+      </ion-row>
+
+      <ion-row class="ion-margin-bottom">
+        <ion-col size="12" sizeMd="6" class="panel">
+          <div
+            [nbSpinner]="setPrimaryEmailLoading || deleteEmailLoading || addEmailLoading"
+            class="panelContainer bluePane"
+          >
+            <div class="sectionTitle">
+              <span class="gradientText">EMAIL</span>
+            </div>
+            <div class="addEmailForm">
+              <input
+                autocomplete="off"
+                class="form-input mr10"
+                [(ngModel)]="email"
+                name="email"
+                #emailInput="ngModel"
+                [pattern]="emailRegEx"
+                [ngClass]="{'is-invalid': !emailInput.valid}"
+              />
+              <button nbButton status="primary" (click)="addEmail()">
+                Add
+              </button>
+            </div>
+
+            <div class="messages">
+              <div class="error" *ngIf="emailErrorMsg">{{ emailErrorMsg }}</div>
+              <div class="success" *ngIf="emailSuccessMsg">
+                {{ emailSuccessMsg }}
+              </div>
+            </div>
+
+            <div
+              [style.overflow-y]="emails && emails.length > 4 ? 'scroll' : 'hidden'"
+              class="contacts-list"
+            >
+              <ion-radio-group [(ngModel)]="primaryEmail">
+                <ion-row
+                  class="item"
+                  *ngFor="let item of emails; let i = index"
+                >
+                  <ion-col size="1" class="verticalCenterRow radio-col">
+                    <ion-radio
+                      [value]="item"
+                      [disabled]="!item.flag_verified"
+                      (ionFocus)="setPrimaryEmail(item)"
+                      nbTooltipStatus="info"
+                      nbTooltip="Set as Primary"
+                    ></ion-radio>
+                  </ion-col>
+                  <ion-col sizeSm="9" size="8" class="verticalCenterRow">
+                    <span class="data">{{item.user_auth_email}}</span>
+                  </ion-col>
+                  <ion-col sizeSm="2" size="3" class="verticalCenterRow">
+                    <button
+                      nbButton
+                      status="danger"
+                      (click)="deleteEmail(item)"
+                      *ngIf="!item.flag_primary"
+                    >
+                      Remove
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </ion-radio-group>
+            </div>
+          </div>
+        </ion-col>
+        <ion-col size="12" sizeMd="6" class="panel">
+          <div
+            [nbSpinner]="addPhoneLoading || setPrimaryPhoneLoading || deletePhoneLoading"
+            class="panelContainer purplePane"
+          >
+            <div class="sectionTitle">
+              <span class="gradientText">PHONE</span>
+            </div>
+
+            <div class="addPhoneForm">
+              <nb-select class="phoneTypeSelect" [(ngModel)]="type" required>
+                <nb-option *ngFor="let item of phoneTypes" [value]="item">
+                  {{item}}
+                </nb-option>
+              </nb-select>
+              <input
+                style="margin-right: 10px"
+                autocomplete="off"
+                class="form-input"
+                name="phones"
+                [(ngModel)]="phone"
+                required
+              />
+              <button nbButton status="primary" (click)="addPhone()">
+                Add
+              </button>
+            </div>
+
+            <div class="messages">
+              <div class="error" *ngIf="phoneErrorMsg">{{ phoneErrorMsg }}</div>
+              <div class="success" *ngIf="phoneSuccessMsg">
+                {{ phoneSuccessMsg }}
+              </div>
+            </div>
+
+            <div
+              [style.overflow-y]="phones && phones.length > 4 ? 'scroll' : 'hidden'"
+              class="contacts-list"
+            >
+              <ion-radio-group [(ngModel)]="primaryPhone">
+                <ion-row
+                  class="item"
+                  *ngFor="let item of phones; let i = index"
+                >
+                  <ion-col size="1" class="verticalCenterRow radio-col">
+                    <ion-radio
+                      [value]="item"
+                      (ionFocus)="setPrimaryPhone(item)"
+                    ></ion-radio>
+                  </ion-col>
+                  <ion-col size="2" class="verticalCenterRow">
+                    <span class="type"><b>{{item.phone_type}}</b></span>
+                  </ion-col>
+                  <ion-col sizeSm="7" size="6" class="verticalCenterRow">
+                    <span class="data">{{item.phone_number}}</span>
+                  </ion-col>
+                  <ion-col sizeSm="2" size="3" class="verticalCenterRow">
+                    <button
+                      nbButton
+                      status="danger"
+                      (click)="deletePhone(item)"
+                      *ngIf="!item.flag_primary"
+                    >
+                      Remove
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </ion-radio-group>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</div>

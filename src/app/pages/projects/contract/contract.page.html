@@ -1,0 +1,262 @@
+<div class="page-wrapper teamPageWrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <div class="mainContent" id="mainContent">
+        <app-infoheader></app-infoheader>
+        <app-tabheader tab="contract"></app-tabheader>
+        <div [nbSpinner]="getContractLoading" nbSpinnerSize="giant" class="container">
+          <div class="contract-section">
+            <!-- TODO: This will change once the the endpoint for get voided contract is fixed -->
+            <div
+              *ngIf="
+                (
+                  (!contract?.contract_users?.length && !contract?.contract_invites?.length) ||
+                  (contract?.flag_status === 'Voided')
+                ) && hasModifyContractPermission === false"
+              class="members-with-permissions"
+            >
+              <i class="fas fa-exclamation fa-3x mr15"></i>
+              <div *ngIf="projectOwner && usersWithContractPermission">
+                This project doesn't have a contract yet.
+                <span *ngIf="!usersWithContractPermission?.length">Only the</span>
+                <span *ngIf="usersWithContractPermission?.length">The</span>
+                account holder {{projectOwner.name }}
+                <span *ngIf="usersWithContractPermission?.length"
+                  >and the following users</span
+                >
+                may start one<span *ngIf="usersWithContractPermission?.length">:</span>
+                <span *ngIf="!usersWithContractPermission?.length">.</span>
+              </div>
+              <ul>
+                <li *ngFor="let user of usersWithContractPermission">
+                  <span>{{ user.name }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <ion-row
+              class="section"
+              *ngIf="(!contract?.contract_users?.length && !contract?.contract_invites?.length) || contract?.flag_status === 'Voided'"
+            >
+              <button
+                *ngIf="hasModifyContractPermission"
+                nbButton
+                status="info"
+                (click)="createContract()"
+              >
+                <div class="gradientText"><div class="wrapper"><span>Create Contract</span></div></div>
+              </button>
+            </ion-row>
+
+            <div
+              *ngIf="
+                contract?.contract_users?.length ||
+                contract?.contract_invites?.length ||
+                contract?.flag_status === 'Voided'
+              "
+            >
+              <!-- CONTRACT INFO -->
+              <ion-row class="section">
+                <ion-col size="12" sizeMd="3" sizeLg="2.5">
+                  <span class=""><b>CONTRACT ID</b></span>
+                </ion-col>
+                <ion-col size="12" sizeMd="9">
+                  <span class="colorBlue ml20">{{contract?.contract_uuid}}
+                    <div *ngIf="!contract.ledger_uuid" class="asyncLoading">
+                      <ion-spinner name="lines"></ion-spinner>
+                    </div>
+                    <i
+                      *ngIf="contract.ledger_uuid"
+                      class="fad fa-dice-d6 ml10"
+                      (click)="showBlockchainViewer(contract.ledger_uuid)"
+                      [style.cursor]="'pointer'"
+                      nbTooltip="Blockchain Record"
+                      nbTooltipPlacement="top"
+                      nbTooltipStatus="info"
+                    ></i>
+                  </span>
+                </ion-col>
+              </ion-row>
+              <ion-row class="section">
+                <ion-col size="12" sizeMd="3" sizeLg="2.5">
+                  <span class=""><b>CONTRACT STATUS</b></span>
+                </ion-col>
+                <ion-col size="12" sizeMd="9">
+                  <span class="colorBlue ml20">{{contract?.flag_status}}</span>
+                </ion-col>
+              </ion-row>
+              <ion-row class="section">
+                <ion-col size="12" sizeMd="3" sizeLg="2.5">
+                  <span *ngIf="contract?.flag_status !== 'Active'"
+                    ><b>CONTRACT CREATED</b></span
+                  >
+                  <span *ngIf="contract?.flag_status === 'Active'"
+                    ><b>ACTIVE SINCE</b></span
+                  >
+                </ion-col>
+                <ion-col size="12" sizeMd="9">
+                  <span class="colorBlue ml20"
+                    >{{contract.stamp_updated | timestamp: 'MMM dd, yyyy'}}</span
+                  >
+                </ion-col>
+              </ion-row>
+              <!-- CONTRACT INFO -->
+
+              <ion-row
+                *ngIf="contract?.flag_status !== 'Voided'"
+                class="section table-section"
+              >
+                <!-- MEMBER PAYOUT TABLE -->
+                <ion-col class="member-payout-table" size="8">
+                  <ion-row><b>MEMBER PAYOUT</b></ion-row>
+                  <div class="full-width p20">
+                    <ion-row
+                      *ngFor="let user of contract.contract_users; let index = index;"
+                      class="member"
+                    >
+                      <ion-col size="5" sizeMd="3"><b>{{user.name}}</b></ion-col>
+                      <ion-col size="2" class="hide-xs hide-vs hide-sm">
+                        <button
+                          *ngIf="user.contract_status === 'Pending'"
+                          [class.disabled]="!user.flag_remind"
+                          class="reminder-button"
+                          (click)="(user.flag_remind && user.contract_status === 'Pending') ? sendEmailReminder(user.user_uuid, 'user') : null"
+                        >
+                          Send Reminder
+                        </button>
+                      </ion-col>
+                      <ion-col size="3" class="hide-xs hide-vs hide-sm"
+                        >{{user.user_role}}</ion-col
+                      >
+                      <ion-col size="3" sizeMd="2">
+                        <span *ngIf="user.user_payout > 0">{{user.user_payout}}%</span>
+                        <span class="deleted" *ngIf="user.user_payout === 0"
+                          >Removing</span
+                        >
+                      </ion-col>
+                      <ion-col size="4" sizeMd="2">
+                        <span
+                          [ngClass]="{'colorBlue': user.contract_status === 'Accepted', 'colorPurple': user.contract_status === 'Pending'}"
+                        >
+                          {{user.contract_status}}</span
+                        >
+                      </ion-col>
+                    </ion-row>
+                    <ion-row
+                      *ngFor="let invite of contract.contract_invites; let index = index;"
+                      class="member"
+                    >
+                      <ion-col size="5" sizeMd="3"><b>{{invite.invite_name}}</b></ion-col>
+                      <ion-col size="2" class="hide-xs hide-vs hide-sm">
+                        <a
+                          [class.disabled]="!invite.flag_remind"
+                          (click)="invite.flag_remind ? sendEmailReminder(invite.invite_uuid, 'invite') : null"
+                          >Send Reminder</a
+                        >
+                      </ion-col>
+                      <ion-col size="3" class="hide-xs hide-vs hide-sm"
+                        >{{invite.invite_role}}</ion-col
+                      >
+                      <ion-col size="3" sizeMd="2">{{invite.invite_payout}}%</ion-col>
+                      <ion-col size="4" sizeMd="2">
+                        <span class="colorPurple"> Pending</span>
+                      </ion-col>
+                    </ion-row>
+                  </div>
+                </ion-col>
+                <!-- MEMBER PAYOUT TABLE -->
+
+                <!-- CHART SECTION -->
+                <div
+                  *ngIf="contract && contract.contract_uuid"
+                  class="chart-section hide-xs hide-vs"
+                >
+                  <app-chart [id]="projectId"></app-chart>
+                </div>
+                <!-- CHART SECTION -->
+              </ion-row>
+
+              <ion-row
+                *ngIf="contract?.flag_status !== 'Voided'"
+                class="section actions-section"
+              >
+                <!-- MODIFY -->
+                <button
+                  [class.disabled]="!hasModifyContractPermission"
+                  [nbTooltip]="
+                    hasModifyContractPermission
+                      ? null
+                      : 'You do not have permission to Modify the contract'
+                    "
+                  [nbTooltipTrigger]="hasModifyContractPermission ? 'noop' : 'hover'"
+                  nbTooltipStatus="danger"
+                  nbButton
+                  status="info"
+                  class="mr20"
+                  [hidden]="userContract?.contract_status === 'Pending' || contract?.flag_status === 'Modifying'"
+                  (click)="modifyContract(contract)"
+                >
+                  <div style="padding-top: 5px;"><span class="gradientText">Modify Contract</span></div>
+                </button>
+                <!-- MODIFY -->
+
+                <!-- CANCEL -->
+                <button
+                  [class.disabled]="!hasModifyContractPermission"
+                  [nbTooltip]="
+                    hasModifyContractPermission
+                      ? null
+                      : 'You do not have permission to Cancel the contract'
+                    "
+                  [nbTooltipTrigger]="hasModifyContractPermission ? 'noop' : 'hover'"
+                  nbTooltipStatus="danger"
+                  nbButton
+                  status="info"
+                  (click)="cancelContract(contract.contract_uuid)"
+                  class="mr20"
+                  *ngIf="
+                    contract.flag_status === 'Modifying' ||
+                    contract.flag_status === 'Pending'
+                  "
+                >
+                  <div style="padding-top: 5px;"><span class="gradientText">Cancel Contract</span></div>
+                </button>
+                <!-- CANCEL -->
+
+                <!-- ACCEPT -->
+                <button
+                  nbButton
+                  status="primary"
+                  class="mr20"
+                  (click)="acceptContract(contract)"
+                  *ngIf="userContract?.contract_status === 'Pending'"
+                >
+                  Accept Contract
+                </button>
+                <!-- ACCEPT -->
+
+                <!-- REJECT -->
+                <button
+                  nbButton
+                  status="info"
+                  (click)="rejectContract(contract)"
+                  *ngIf="userContract?.contract_status === 'Pending'"
+                >
+                  <div class="gradientText">Reject <span>Contract</span></div>
+                </button>
+                <!-- REJECT -->
+              </ion-row>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <app-historybar class="sidemenu hidebar"></app-historybar> -->
+    </div>
+  </div>
+</div>
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

@@ -1,0 +1,22 @@
+
+<section>
+    <!-- Content from the CdkStep is projected here -->
+  <header *ngIf="showStepper">
+    <div class="text-center">
+      <button
+          class="pure-button p-3"
+          *ngFor="let step of steps; let i = index;"
+          [ngClass]="{'text-primary': selectedIndex === i}"
+      >
+      <i *ngIf="selectedIndex===i" class="fad fa-circle"></i>
+      <i *ngIf="selectedIndex!==i && !step.completed" class="fal fa-circle"></i>
+      <i *ngIf="selectedIndex!==i && step.completed" class="fal fa-check-circle"></i>
+     {{step.label}} 
+     <i class="fal fa-horizontal-rule pl-3" *ngIf="i!== steps.length -1 "></i>
+      </button>
+
+    </div>
+  </header>
+  <div [ngTemplateOutlet]="selected?.content"></div>
+
+</section>

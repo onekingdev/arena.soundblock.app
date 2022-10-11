@@ -1,0 +1,214 @@
+<ion-card class="uploadDialog" *ngIf="step === 'upload files'">
+  <ion-card-header #header>
+    <span>Upload File(s)</span>
+    <span><i class="fas fa-close" (click)="close()"></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row class="container">
+      <ion-col (click)="errors = []" class="erorrs" *ngIf="errors.length" size="12">
+        <nb-alert status="danger" *ngIf="errors.length === 1">
+          <span>{{ errors[0] }}</span>
+        </nb-alert>
+        <nb-alert class="danger" *ngIf="errors.length > 1">
+          <span>Some files will not be uploaded based on your permissions</span>
+        </nb-alert>
+      </ion-col>
+      <ion-col (click)="fileError = ''" class="erorrs" *ngIf="fileError" size="12">
+        <nb-alert status="danger">
+          <span>{{ fileError }}</span>
+        </nb-alert>
+      </ion-col>
+      <div #fileList class="file-list">
+        <ion-col size="12" *ngFor="let file of files; let i = index" class="fileInfo" [@fadeOutOnLeave]>
+          <div class="file-entry">
+            <div (click)="file.expanded = !file.expanded" [style.cursor]="file.isZip ? 'pointer' : 'default'"
+              class="entry-wrapper">
+              <i *ngIf="file.isZip" class="fas fa-file-archive mr10"></i>
+
+              <div class="info-wrapper">
+                <div class="top-info">
+                  <span [title]="file.fileName">{{ file.fileName }}</span>
+
+                  <div class="file-actions">
+                    <i *ngIf="file.isZip" [title]="file.expanded ? 'Collapse' : 'Expand'" [class]="
+                        file.expanded
+                          ? 'fas mr10 fa-chevron-up'
+                          : 'fas mr10 fa-chevron-down'
+                      "></i>
+
+                    <i title="Remove File" class="fas fa-close" (click)="removeFile(file, i)"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div [class.expanded]="file.expanded" [@showOrHide]="file.expanded" *ngIf="file.children.length"
+              class="zip-entries">
+              <div *ngFor="let item of file.children; let childIndex = index" [@fadeOutOnLeave] class="file-entry">
+                <i [ngClass]="'fas ' + getFileIcon(getFileKind(item.fileName))"></i>
+
+                <div class="info-wrapper">
+                  <div class="top-info">
+                    <span [title]="item.fileName">{{ item.fileName }}</span>
+
+                    <i title="Remove File" class="fas fa-close" (click)="removeFileFromZip(childIndex, i)"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </div>
+
+      <ion-col size="12" class="inputFileZone">
+        <upload-file placeholder="Click or Drop Files" multiple="true" (fileSelected)="fileSelected($event)">
+        </upload-file>
+      </ion-col>
+      <ion-col size="12" class="commentWrapper">
+        <ion-input class="form-textarea" name="comment" [(ngModel)]="comment"
+          placeholder="Share Comment for Team Members" #fileCommentInput></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row class="horizontalCenterRow p10">
+      <ion-col size="6">
+        <button shape="semi-round" fullWidth status="info" nbButton [disabled]="!files.length || !comment"
+          (click)="this.step = 'set file-category'">
+          <span class="gradientText">Save And Next</span>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-card-content>
+</ion-card>
+<ion-card class="uploadDialog categoryDialog" *ngIf="step === 'set file-category'">
+  <ion-card-header #header>
+    <span>Upload File(s)</span>
+    <span><i class="fas fa-close" (click)="close()"></i></span>
+  </ion-card-header>
+  <app-stepper-component [showStepper]="true" [selectedIndex]="0">
+    <cdk-step label="Upload Files">
+      <ion-card-content>
+        <ion-row class="container">
+          <ion-col (click)="errors = []" class="erorrs" *ngIf="errors.length" size="12">
+            <nb-alert status="danger" *ngIf="errors.length === 1">
+              <span>{{ errors[0] }}</span>
+            </nb-alert>
+            <nb-alert class="danger" *ngIf="errors.length > 1">
+              <span>Some files will not be uploaded based on your permissions</span>
+            </nb-alert>
+          </ion-col>
+          <ion-col (click)="fileError = ''" class="erorrs" *ngIf="fileError" size="12">
+            <nb-alert status="danger">
+              <span>{{ fileError }}</span>
+            </nb-alert>
+          </ion-col>
+          <div #fileList class="file-list">
+            <ion-col size="12" *ngFor="let file of files; let i = index" class="fileInfo" [@fadeOutOnLeave]>
+              <div class="file-entry">
+                <div (click)="file.expanded = !file.expanded" [style.cursor]="file.isZip ? 'pointer' : 'default'"
+                  class="entry-wrapper">
+                  <i *ngIf="file.isZip" class="fas fa-file-archive mr10"></i>
+    
+                  <div class="info-wrapper">
+                    <div class="top-info">
+                      <span [title]="file.fileName">{{ file.fileName }}</span>
+    
+                      <div class="file-actions">
+                        <i *ngIf="file.isZip" [title]="file.expanded ? 'Collapse' : 'Expand'" [class]="
+                            file.expanded
+                              ? 'fas mr10 fa-chevron-up'
+                              : 'fas mr10 fa-chevron-down'
+                          "></i>
+    
+                        <i title="Remove File" class="fas fa-close" (click)="removeFile(file, i)"></i>
+                      </div>
+                    </div>
+    
+                    <div class="bottom-info">
+                      <span>{{ file.fileSize | fileSize }}</span>
+                      <span *ngIf="file.isZip">{{ file.dateModified | date }}</span>
+                      <nb-select *ngIf="!file.isZip" [selected]="getFileCategory(file)"
+                        (selectedChange)="changeFileCategory(file, $event)">
+                        <nb-option *ngIf="getFileKind(file.fileName) === 'wav'" [disabled]="
+                            !checkPermission(Permissions.PROJECT_FILE_MUSIC_ADD)
+                          " [value]="'music'">
+                          Music
+                        </nb-option>
+                        <nb-option *ngIf="getFileKind(file.fileName) === 'mp4'" [disabled]="
+                            !checkPermission(Permissions.PROJECT_FILE_VIDEO_ADD)
+                          " [value]="'video'">
+                          Video
+                        </nb-option>
+                        <nb-option *ngIf="getFileKind(file.fileName) === 'psd'" [disabled]="
+                            !checkPermission(Permissions.PROJECT_FILE_MERCH_ADD)
+                          " [value]="'merch'">
+                          Merch
+                        </nb-option>
+                        <nb-option [disabled]="
+                            !checkPermission(Permissions.PROJECT_FILE_OTHER_ADD)
+                          " [value]="'files'">
+                          Files
+                        </nb-option>
+                      </nb-select>
+                    </div>
+                  </div>
+                </div>
+    
+                <div [class.expanded]="!file.expanded" [@showOrHide]="!file.expanded" *ngIf="file.children.length"
+                  class="zip-entries">
+                  <div *ngFor="let item of file.children; let childIndex = index" [@fadeOutOnLeave] class="file-entry">
+                    <i [ngClass]="'fas ' + getFileIcon(getFileKind(item.fileName))"></i>
+    
+                    <div class="info-wrapper">
+                      <div class="top-info">
+                        <span [title]="item.fileName">{{ item.fileName }}</span>
+    
+                        <i title="Remove File" class="fas fa-close" (click)="removeFileFromZip(childIndex, i)"></i>
+                      </div>
+    
+                      <div class="bottom-info">
+                        <span>{{ item.fileSize | fileSize }}</span>
+                        <nb-select [selected]="getFileCategory(item)" (selectedChange)="changeFileCategory(item, $event)">
+                          <nb-option *ngIf="getFileKind(item.fileName) === 'wav'" [disabled]="
+                              !checkPermission(Permissions.PROJECT_FILE_MUSIC_ADD)
+                            " [value]="'music'">
+                            Music
+                          </nb-option>
+                          <nb-option *ngIf="getFileKind(item.fileName) === 'mp4'" [disabled]="
+                              !checkPermission(Permissions.PROJECT_FILE_VIDEO_ADD)
+                            " [value]="'video'">
+                            Video
+                          </nb-option>
+                          <nb-option *ngIf="getFileKind(item.fileName) === 'psd'" [disabled]="
+                              !checkPermission(Permissions.PROJECT_FILE_MERCH_ADD)
+                            " [value]="'merch'">
+                            Merch
+                          </nb-option>
+                          <nb-option [disabled]="
+                              !checkPermission(Permissions.PROJECT_FILE_OTHER_ADD)
+                            " [value]="'files'">
+                            Files
+                          </nb-option>
+                        </nb-select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+          </div>
+        </ion-row>
+        <ion-row class="horizontalCenterRow p10">
+          <ion-col size="12">
+            <button shape="semi-round" fullWidth status="info" nbButton [disabled]="!files.length || !comment"
+              (click)="uploadFile()">
+              <span class="gradientText">Submit</span>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </cdk-step>
+    <cdk-step *ngIf="uploadService.files.music.length" label="Track Data"></cdk-step>
+    <cdk-step *ngIf="uploadService.files.merch.length || uploadService.files.video.length || uploadService.files.files.length" label="Files Info"></cdk-step>
+    <cdk-step label="Done"></cdk-step>
+  </app-stepper-component>
+</ion-card>

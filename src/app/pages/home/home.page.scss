@@ -1,0 +1,50 @@
+.page-wrapper {
+    .content-wrapper {
+        .sectionTitle { color: #782c7f; font-size: 1.4rem; padding: 10px; font-weight: bold;}
+        .newProject { padding: 10px;
+            button { height: 40px; width: 200px;}
+        }
+        
+        @media (min-width: 0px) and (max-width: 767px) {
+            .album { display: flex; cursor: pointer; margin-bottom: 20px; border-bottom: solid 2px #edf1f7; outline: none; flex-direction: column;
+                &:first-child { border-top: solid 2px #edf1f7; }
+                .top { display: flex;
+                    .artwork { width: 25%; display: flex; align-items: center; justify-content: center; padding: 7px; max-width: 120px;
+                        img { width: 100%; object-fit: contain; border-radius: 7px; }
+                    }
+                    .metaInfo { display: flex; flex-direction: column; flex: 1; padding: 15px; justify-content: space-around;
+                        .albumTitle { font-size: 1.2rem; font-weight: bold; font-family: 'Roboto', sans-serif; color: #782c7f; padding-bottom: 10px; }
+                        .filesInfo { color: gray; 
+                            span { padding: 0 10px; }
+                        }
+                    }    
+                }
+                .bottom { padding: 7px;
+                    .section { width: 100%; display: flex;
+                        .author { color: #518DC9; font-weight: bold; }
+                        span { flex: 1; }
+                    }
+                }
+            }
+        }
+        @media (min-width: 768px){
+            .album { display: flex; cursor: pointer; margin-bottom: 20px; border-bottom: solid 2px #edf1f7; outline: none; 
+                &:first-child { border-top: solid 2px #edf1f7; }
+                .artwork { width: 20%; display: flex; align-items: center; justify-content: center; padding: 10px; max-width: 200px;
+                    img { width: 100%; object-fit: contain; border-radius: 15px; }
+                }
+                .metaInfo { display: flex; flex-direction: column; flex: 1; padding: 15px; justify-content: space-around;
+                    .albumTitle { font-size: 1.2rem; font-weight: bold; font-family: 'Roboto', sans-serif; color: #782c7f; padding-bottom: 10px; }
+                    .section { 
+                        span { margin-right: 40px; }
+                        .author { color: #518DC9; font-weight: bold; }
+                    }
+                    .filesInfo { color: gray; 
+                        span { padding: 0 10px; }
+                    }
+                }
+            }
+        }
+        
+    }
+}

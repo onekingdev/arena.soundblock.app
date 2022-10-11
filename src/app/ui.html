@@ -1,0 +1,12 @@
+<nb-layout>
+  <nb-layout-column>
+    <ion-app>
+      <app-header></app-header>
+      <div class="main-content">
+        <ion-router-outlet id="rootContent"></ion-router-outlet>
+      </div>
+      <app-ticket-sidebar *ngIf="ticketbarVisible" [technicalSupport]="ticketTechnicalSupport"></app-ticket-sidebar>
+      <app-toast class="custom-toast-{{toastPosition}}" id="notification-toast"></app-toast>
+    </ion-app>
+  </nb-layout-column>
+</nb-layout>

@@ -1,0 +1,11 @@
+{
+  "name": "soundblock-portal",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular",
+  "hooks": {
+    "build:before": "./src/environments/config-pre.js",
+    "build:after": "./src/environments/config-post.js"
+  }
+}

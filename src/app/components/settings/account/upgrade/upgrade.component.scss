@@ -1,0 +1,92 @@
+.priceDescription {
+  margin-top: 1rem;
+  display: flex;
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+  }
+
+  .section {
+    padding: 0 15px;
+    border-top: 2px solid #782c7f;
+    border-right: 2px solid #782c7f;
+    flex: 1;
+    margin: 10px 5px;
+    border-bottom: 2px solid #518dc9;
+    border-left: 2px solid #518dc9;
+    margin-bottom: 10px;
+    border-radius: 15px;
+
+    h6 {
+      color: #782c7f;
+      font-weight: bold !important;
+      text-align: center;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+  }
+}
+
+input.serviceName {
+  width: 100%;
+  outline: none;
+  border: 1px solid #518dc9;
+  height: 58px;
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 16px;
+  &::placeholder {
+    color: #aaaaaa;
+  }
+}
+
+span.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.sectionTitle {
+  padding: 10px;
+  border: none !important;
+
+  h6 {
+    font-weight: bold !important;
+  }
+}
+
+.selectStorage {
+  font-size: 1rem;
+  padding: 10px;
+
+  span {
+    cursor: pointer;
+  }
+}
+
+.buttonSection {
+  display: flex;
+  flex-direction: row-reverse;
+
+  button {
+    margin-right: 10px;
+    width: 150px;
+  }
+}
+
+#card-errors {
+  color: #525252;
+  font-size: 1rem;
+  padding: 10px 0;
+}
+.upgrading-price {
+  text-align: right;
+  text-transform: uppercase;
+  padding: 10px 15px;
+}
+.errors {
+  font-size: 1.2rem;
+  color: red;
+  margin: 0.5rem 0;
+}

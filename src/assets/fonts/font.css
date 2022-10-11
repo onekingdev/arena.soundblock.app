@@ -1,0 +1,42 @@
+/*
+ * The Typekit service used to deliver this font or fonts for use on websites
+ * is provided by Adobe and is subject to these Terms of Use
+ * http://www.adobe.com/products/eulas/tou_typekit. For font license
+ * information, see the list below.
+ *
+ * itc-avant-garde-gothic-pro:
+ *   - http://typekit.com/eulas/00000000000000007735ba14
+ *   - http://typekit.com/eulas/00000000000000007735ba1d
+ *   - http://typekit.com/eulas/00000000000000007735ba1e
+ *
+ * © 2009-2020 Adobe Systems Incorporated. All Rights Reserved.
+ */
+/*{"last_published":"2021-02-18 20:10:59 UTC"}*/
+
+@import url("https://p.typekit.net/p.css?s=1&k=iku2ixs&ht=tk&f=39347.39348.39349&a=7605399&app=typekit&e=css");
+
+@font-face {
+font-family:"itc-avant-garde-gothic-pro";
+src:url("itc-avant-garde-gothic-pro-700.woff2") format("woff2"),
+    url("itc-avant-garde-gothic-pro-700.woff") format("woff"),
+    url("itc-avant-garde-gothic-pro-700.otf") format("opentype");
+font-display:auto;font-style:normal;font-weight:700;
+}
+
+@font-face {
+font-family:"itc-avant-garde-gothic-pro";
+src:url("itc-avant-garde-gothic-pro-300.woff2") format("woff2"),
+    url("itc-avant-garde-gothic-pro-300.woff") format("woff"),
+    url("itc-avant-garde-gothic-pro-300.otf") format("opentype");
+font-display:auto;font-style:normal;font-weight:300;
+}
+
+@font-face {
+font-family:"itc-avant-garde-gothic-pro";
+src:url("itc-avant-garde-gothic-pro-500.woff2") format("woff2"),
+    url("itc-avant-garde-gothic-pro-500.woff") format("woff"),
+    url("itc-avant-garde-gothic-pro-500.otf") format("opentype");
+font-display:auto;font-style:normal;font-weight:500;
+}
+
+.tk-itc-avant-garde-gothic-pro { font-family: "itc-avant-garde-gothic-pro",sans-serif; }

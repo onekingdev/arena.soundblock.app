@@ -1,0 +1,52 @@
+<div class="projectTab">
+  <button
+    class="tablinks"
+    (click)="navigate()"
+    [ngClass]="{'active': tab === ProjectTab.PROJECT}"
+  >
+    <div class="wrapper">
+      <i class="fad fa-list-music"></i><span>Project</span>
+    </div>
+    <div class="border"></div>
+  </button>
+  <button
+    class="tablinks"
+    (click)="navigate(ProjectTab.CONTRACT)"
+    [ngClass]="{'active': tab === ProjectTab.CONTRACT}"
+  >
+    <div class="wrapper">
+      <i class="fad fa-handshake"></i><span>Contract</span>
+    </div>
+    <div class="border"></div>
+  </button>
+  <button
+  class="tablinks"
+  (click)="navigate(ProjectTab.DATABASE)"
+  [ngClass]="{'active': tab === ProjectTab.DATABASE}"
+>
+  <div class="wrapper">
+    <i class="fad fa-database icon-colors"></i><span>Database</span>
+  </div>
+  <div class="border"></div>
+</button>
+  <button
+    class="tablinks"
+    (click)="navigate(ProjectTab.DEPLOYMENTS)"
+    [ngClass]="{'active': tab === ProjectTab.DEPLOYMENTS}"
+  >
+    <div class="wrapper">
+      <i class="fad fa-clouds"></i
+      ><span class="hide-sm hide-md hide-vl hide-lg hide-xl">Deploy</span>
+      <span class="hide-xs hide-vs">Deployments</span>
+    </div>
+    <div class="border"></div>
+  </button>
+  <button
+    class="tablinks"
+    (click)="navigate(ProjectTab.TEAM)"
+    [ngClass]="{'active': tab === ProjectTab.TEAM}"
+  >
+    <div class="wrapper"><i class="fad fa-users"></i><span>Team</span></div>
+    <div class="border"></div>
+  </button>
+</div>

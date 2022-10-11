@@ -1,0 +1,240 @@
+.container {
+  .user-col {
+    background-color: #edf1f7;
+  }
+  .title {
+    p {
+      font-size: 1.3rem;
+      color: #782c7f;
+      font-weight: bold;
+    }
+  }
+ 
+  .content {
+    .tabs-container {
+      width: 430px;
+      height: 390px;
+      margin-top: 10px;
+      background-image: linear-gradient(white, white),
+        linear-gradient(to right, #518dc9, #782c7f);
+      background-origin: border-box;
+      border: double 0.2em transparent;
+      border-radius: 10px;
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+    }
+
+    .projectTab {
+      width: 430px;
+      margin: 0;
+      padding: 0 10px;
+
+      .tablinks {
+        min-width: 114px;
+      }
+    }
+
+    .accountTab {
+      padding-top: 0 !important;
+    }
+
+    .fileTab {
+      height: 440px !important;
+    }
+
+    .tab {
+      padding: 20px 20px;
+      padding-bottom: 0;
+      margin-bottom: -20px;
+      justify-content: space-evenly;
+
+      .select-all {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        button {
+          width: auto;
+          height: auto;
+          padding: 8px;
+          margin: -8px;
+          border-radius: 5px;
+          background-color: transparent;
+          transition: all 0.3s;
+          float: unset;
+  
+          &:hover {
+            background-color: lightgray;
+          }
+        }
+      }
+      i {
+        width: 16px;
+        height: 18px;
+
+        &.fa-times {
+          transform: scale(1.24);
+          padding-left: 2.5px;
+        }
+      }
+    }
+
+    .table {
+      padding: 10px 30px;
+
+      @media screen and (max-width: 948px) {
+        .permissionSection {
+          display: none;
+        }
+
+        .gradientTable {
+          width: 100% !important;
+        }
+      }
+
+      .gradientTable {
+        width: calc(100% - 430px - 40px);
+
+        .inviteRow {
+         margin: auto;
+
+          button {
+            width: auto;
+            height: auto;
+            padding: 8px;
+            margin: auto;
+            border-radius: 5px;
+            background-color: transparent;
+            transition: all 0.3s;
+            float: unset;
+
+            &:hover {
+              background-color: lightgray;
+            }
+
+            &.disabled {
+              color: gray !important;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+
+      // @media screen and (max-width: 767px) {
+      //   padding: 5px;
+      // }
+
+      .tableHeader {
+        font-weight: bold;
+      }
+
+      .roleCol {
+        ::ng-deep ng-select button {
+          height: 31px;
+          border: none !important;
+          border-radius: 5px;
+          width: 130px !important;
+
+          &:hover {
+            background-color: lightgray !important;
+          }
+        }
+
+        span {
+          width: 100%;
+          // padding: 0.4375rem 1rem;
+        }
+      }
+
+      .tableBody {
+        cursor: pointer;
+
+        .table-col {
+          padding: 20px 10px;
+          display: flex;
+          align-items: center;
+        }
+
+        .permission {
+          padding: 0 20px 10px 20px;
+
+          ion-col {
+            padding: 5px;
+            display: flex;
+            align-items: center;
+          }
+
+          // .checkbox {
+          //   margin-right: 5px;
+          //   width: 20px;
+          //   height: 20px;
+          // }
+          // input[type=checkbox]:after {
+          //  background-color: #782c7f;
+          // }
+
+          .project {
+            padding-bottom: 5px;
+          }
+        }
+
+        .actionCol {
+          display: flex;
+          align-items: center;
+
+          i {
+            width: 30px;
+
+            text-align: center;
+            cursor: pointer;
+
+            &:hover {
+              cursor: pointer;
+              transform: scale(1.05);
+            }
+          }
+        }
+      }
+
+      .crownIcon {
+        color: goldenrod;
+      }
+
+      .active {
+        color: darkblue;
+      }
+
+      button {
+        height: 40px;
+        border-radius: 10px;
+        float: right;
+        width: 200px;
+      }
+    }
+
+    .submit-button {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .chartWrapper {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+
+      app-chart {
+        width: 100%;
+        height: fit-content;
+        max-width: 200px;
+        margin: auto;
+      }
+    }
+  }
+}
+.rowWrapper{
+  padding-left: 1rem;
+}
+.tableHeader,.tableBody{
+  border-bottom: 2px solid #512c7f;
+  background: transparent;
+}

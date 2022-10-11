@@ -1,0 +1,320 @@
+::ng-deep .tooltip-350 ~ .tooltip .tooltip-inner {
+  max-width: 350px;
+  min-width: 350px;
+}
+.btn {
+  :focus {
+    box-shadow: none;
+}
+}
+accordion-group::ng-deep.panel {
+  
+  .card-header {
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: white;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+}
+.track-info-icon {
+  padding: 10px;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+.color-purple{
+  color: purple;
+}
+.color-black {
+  color: black;
+}
+}
+.track-content {
+    overflow-y: auto;
+    overflow-x: hidden ;
+    height: calc(100vh - 181px);
+    padding: 10px;
+}
+.form-input {
+    border: 2px solid gray !important;
+    padding: 9px !important;
+  }
+  ng-select::ng-deep.ng-select-container {
+    border: 2px solid gray !important;
+    padding: 7px;
+    .ng-value-container{
+      .ng-placeholder {
+        position: static;
+      }
+    }
+    
+  }
+  
+    .delete-file {
+      outline: none;
+    }
+  
+    .header {
+      padding: 0;
+      display: flex;
+      margin: 0;
+      padding-right: 18px;
+  
+      @media screen and (max-width: 767px) {
+        display: none;
+      }
+  
+      span {
+        padding: 0 1rem;
+        flex: 1;
+      }
+    }
+  
+    .trackItem {
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      padding: 10px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      color: #222b45;
+      border-top: 2px solid #782c7f;
+      border-right: 2px solid #782c7f;
+      border-bottom: 2px solid #518dc9;
+      border-left: 2px solid #518dc9;
+  
+      .file {
+        margin-right: 5px;
+      }
+  
+      .reorder {
+        width: 40px;
+      }
+  
+      .track {
+        width: 50px;
+  
+        @media (max-width: 767px) {
+          width: 25px;
+        }
+      }
+  
+      .contentWrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1;
+        overflow: hidden;
+  
+        .title {
+          width: 280px;
+  
+          span {
+            font-weight: bolder;
+            margin-right: 5px;
+          }
+  
+          input {
+            width: 220px;
+          }
+        }
+  
+        .size {
+          color: gray;
+        }
+  
+        input {
+          outline: none;
+          height: 30px;
+          padding: 5px;
+          border: solid 1px #518dc9;
+        }
+  
+        .fileInfo {
+          .name {
+            width: 270px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+  
+            span:first-child {
+              font-weight: bolder;
+              margin-right: 5px;
+              width: 35px;
+              display: inline-block;
+            }
+          }
+        }
+  
+        @media (max-width: 767px) {
+          flex-direction: column;
+          align-items: flex-start;
+  
+          .title {
+            width: 100%;
+            display: flex;
+            align-items: center;
+  
+            input {
+              width: calc(100% - 95px);
+            }
+          }
+  
+          .name {
+            width: 100% !important;
+          }
+  
+          .fileInfo {
+            justify-content: space-between;
+            width: 100%;
+          }
+        }
+      }
+    }
+  
+    .fileInfoList {
+      display: flex;
+      flex-wrap: wrap;
+  
+      @media screen and (max-width: 767px) {
+        border-bottom: solid 1px rgba(211, 211, 211, 0.747);
+        padding-bottom: 0.5rem;
+      }
+  
+      span {
+        margin-left: 10px;
+      }
+  
+      .wrapper {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+      }
+  
+      .fileInfo {
+        display: flex;
+        flex: 1;
+        min-width: 200px;
+        flex-direction: column;
+        padding-top: 2px;
+  
+        & > span {
+          margin-bottom: 3px;
+        }
+  
+        &.videoFile {
+          flex: 1.5;
+        }
+  
+        .fileBody {
+          position: relative;
+          display: flex;
+          flex: 1;
+  
+          input {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            height: 38px;
+            padding-right: calc(63px + 10px);
+          }
+  
+          .fileSize {
+            position: absolute;
+            right: 0;
+            color: gray;
+            align-self: center;
+            padding-right: 10px;
+          }
+        }
+      }
+  
+      .title {
+        flex: 1;
+        min-width: 200px;
+        flex-direction: column;
+  
+        input {
+          height: 38px;
+        }
+      }
+  
+      .track {
+        flex: 1;
+        min-width: 200px;
+        flex-direction: column;
+  
+        ::ng-deep {
+          nb-select {
+            width: 100%;
+  
+            button {
+              height: 38px;
+            }
+          }
+        }
+      }
+  
+      .delete {
+        padding-top: 15px;
+  
+        i {
+          color: red;
+          cursor: pointer;
+        }
+      }
+    }
+  
+    .container {
+      max-height: 300px;
+      padding: 10px;
+      overflow: auto;
+    }
+  
+    .retryButton {
+      color: #518dc9;
+      cursor: pointer;
+      padding: 5px;
+      display: flex;
+      align-items: center;
+  
+      &:hover {
+        color: #782c7f;
+      }
+    }
+  
+    .progressBar {
+      width: 100%;
+      height: 10px;
+      background-color: #eeeeee;
+  
+      .current {
+        height: 10px;
+  
+        &.success {
+          background: linear-gradient(90deg, #518dc9 0%, #782c7f 100%);
+        }
+  
+        &.failed {
+          background-color: #782c7f;
+        }
+      }
+    }
+  
+    @media (max-width: 767px) {
+      .form-textarea {
+        padding: 5px 10px;
+      }
+    }
+
+    .loader {
+      margin: auto;
+      left: 358px;
+      right: 0;
+      top: 285px;
+      z-index: 88;
+      bottom: 0;
+      position: absolute;
+    }

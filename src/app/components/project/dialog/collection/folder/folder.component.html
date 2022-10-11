@@ -1,0 +1,59 @@
+<ion-card class="folderDialog">
+  <ion-card-header>
+    <span>{{ action }} {{ category }} Folder</span>
+    <span><i class="fas fa-close" (click)="close()"></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-row class="ion-padding">
+      <ion-col size="12">
+        <div class="ion-pading-start">
+          <input
+            type="text"
+            name="folder"
+            [(ngModel)]="folderName"
+            class="form-input"
+            placeholder="Please input folder name."
+            #folderNameInput
+          />
+        </div>
+      </ion-col>
+      <ion-col size="12">
+        <ion-textarea
+          class="dialogForm form-textarea"
+          rows="6"
+          name="comment"
+          [(ngModel)]="comment"
+          placeholder="Share Comment for Team Members"
+          #commentInput
+        >
+        </ion-textarea>
+      </ion-col>
+    </ion-row>
+    <ion-row class="horizontalCenterRow p10">
+      <ion-col size="6">
+        <button
+          nbButton
+          shape="semi-round"
+          fullWidth
+          status="info"
+          type="button"
+          (click)="submit()"
+          *ngIf="action == 'Add'"
+        >
+          <span class="gradientText">Create Folder</span>
+        </button>
+        <button
+          nbButton
+          shape="semi-round"
+          fullWidth
+          status="info"
+          type="button"
+          (click)="edit()"
+          *ngIf="action == 'Edit'"
+        >
+          <span class="gradientText">Save Changes</span>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-card-content>
+</ion-card>

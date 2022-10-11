@@ -1,0 +1,98 @@
+<div class="playback-wrapper">
+  <!-- VOLUME CONTROL -->
+  <div class="volume-control">
+    <i (click)="mute()" *ngIf="trackVolume > 0" class="fad fa-volume fa-lg mr5"></i>
+    <i (click)="unMute()" *ngIf="trackVolume === 0" class="fad fa-volume-mute fa-lg mr5"></i>
+    <input (input)="changeVolume()" type="range" min="0" max="100" [(ngModel)]="trackVolume"/>
+  </div>
+  <!-- VOLUME CONTROL -->
+
+  <!-- PLAYBACK TIME -->
+  <div *ngIf="!trackLoading" class="playback-time">
+    <div class="track">{{ currentTime }} / {{ trackDuration }}</div>
+  </div>
+  <!-- PLAYBACK TIME -->
+
+  <!-- PLAYBACK -->
+  <div class="playback">
+    <!-- PLAYBACK CONTROLS -->
+    <div class="controls">
+      <i *ngIf="!regionPlaying" [class.disabled]="trackLoading" (click)="playRegion()" class="fad fa-play fa-2x"></i>
+      <i *ngIf="regionPlaying" (click)="stop()" class="fad fa-stop fa-2x"></i>
+    </div>
+    <!-- PLAYBACK CONTROLS -->
+
+    <!-- WAVESURFER -->
+    <div [style.visibility]="trackLoading ? 'hidden' : 'visible'" [style.width]="trackLoading ? '0' : '100%'" #wavesurferRef class="wavesurfer"></div>
+    <!-- WAVESURFER -->
+
+    <!-- CUSTOM LOADING BAR -->
+    <div *ngIf="trackLoading" class="loading-wrapper">
+      <span [style.left]="downloadTrackProgress + '%'" class="percentage">{{ downloadTrackProgress }}%</span>
+      <div [style.width]="downloadTrackProgress + '%'" class="progress"></div>
+    </div>
+    <!-- CUSTOM LOADING BAR -->
+  </div>
+  <!-- PLAYBACK -->
+
+  <!-- PREVIEW TIME -->
+  <div *ngIf="!trackLoading" class="playback-time">
+    Preview {{ previewStart }}-{{ previewStop }}
+  </div>
+  <!-- PREVIEW TIME -->
+</div>
+
+<!-- PREVIEW ACTION -->
+<div class="preview-actions">
+  <button nbButton status="info" [disabled]="trackLoading || setTimecodesLoading" [nbSpinner]="setTimecodesLoading" (click)="setTrackPreview()">
+    <div class="gradientText verticalCenterRow"><span>Set Preview</span></div>
+  </button>
+</div>
+<!-- PREVIEW ACTION -->
+
+<!-- PREVIEW MESSAGE -->
+<div class="preview-message">
+  <nb-alert *ngIf="successMessage" status="success"> {{ successMessage }} </nb-alert>
+  <nb-alert *ngIf="errorMessage" status="danger"> {{ errorMessage }} </nb-alert>
+</div>
+<!-- PREVIEW MESSAGE -->
+
+<!-- TRACKS TABLE -->
+<div class="tableWrapper">
+  <ion-row *ngIf="tracks.length">
+    <div class="m10 gradientTable full-width">
+      <div class="border-bottom ion-padding-horizontal tableHeader">
+        <ion-row class="rowWrapper">
+          <ion-col size="1" class="verticalCenterRow ion-hide-lg-down"><b>Track</b></ion-col>
+          <ion-col sizeLg="5" size="6" class="verticalCenterRow"><b>Title</b></ion-col>
+          <ion-col size="2" class="verticalCenterRow isrc-col ion-hide-lg-down"><b>ISRC</b></ion-col>
+          <ion-col sizeLg="2" size="3" class="verticalCenterRow"><b>Preview</b></ion-col>
+          <ion-col sizeLg="2" size="3" class="verticalCenterRow"><b>Duration</b></ion-col>
+        </ion-row>
+      </div>
+      <div class="row-highlight transition-action-2 tableBody" *ngFor="let track of tracks">
+        <ion-row (click)="selectTrack(track)"
+          [class.disabled]="track.meta.file_duration <= 30"
+          [class.selected]="selectedTrack && selectedTrack.file_uuid === track.file_uuid"
+          [nbSpinner]="selectedTrack && selectedTrack.file_uuid === track.file_uuid && trackLoading"
+          class="rowWrapper">
+          <ion-col class="column ion-hide-lg-down" size="1">{{track.meta.file_track}}</ion-col>
+          <ion-col class="column" sizeLg="5" size="6">
+            <span [title]="track.file_title" class="tableTitle">{{ track.file_title }}</span>
+          </ion-col>
+          <ion-col class="column isrc-col ion-hide-lg-down" size="2">{{track.meta.file_isrc}}</ion-col>
+          <ion-col class="column" sizeLg="2" size="3">
+            <span *ngIf="track.meta.preview_start && track.meta.preview_stop; else noPreview">
+              {{ secondsToTime(track.meta.preview_start) }}-{{ secondsToTime(track.meta.preview_stop) }}
+            </span>
+            <ng-template #noPreview>
+              <i>None</i>
+            </ng-template>
+          </ion-col>
+          <ion-col class="column" sizeLg="2" size="3">{{track.meta.file_duration | duration}}</ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </ion-row>
+</div>
+<!-- TRACKS TABLE -->

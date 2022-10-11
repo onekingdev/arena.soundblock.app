@@ -1,0 +1,8 @@
+.container {
+    overflow: auto;
+    text-align: center;
+    height: calc(100vh - 300px);
+    @media (max-width: 770px) {
+      height: calc(100vh - 147px);
+    }
+  }

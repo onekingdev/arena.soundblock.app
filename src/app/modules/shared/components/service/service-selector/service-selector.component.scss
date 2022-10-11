@@ -1,0 +1,10 @@
+app-service-selector {
+  display: block;
+  width: 100%;
+}
+
+nb-select {
+  width: 100%;
+}
+
+nb-select.appearance-outline.status-basic .select-button { background-color: transparent !important; }

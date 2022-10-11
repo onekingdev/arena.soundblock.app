@@ -1,0 +1,89 @@
+<ion-card *ngIf="category ==='tracks'" class="fileHistoryDialog">
+  <ion-card-header>
+    <span>Track History</span>
+    <span><i class="fas fa-close" (click)="close()"></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <div class="container" *ngIf="historyList?.length;else loading">
+      <ion-row>
+        <ion-col size="2">
+          <b>Date</b>
+        </ion-col>
+        <ion-col size="2">
+          <b>User</b>
+        </ion-col>
+        <ion-col size="3">
+          <b>Field</b>
+        </ion-col>
+        <ion-col size="2">
+          <b>Old Value</b>
+        </ion-col>
+        <ion-col size="3">
+          <b>New Value</b>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngFor="let item of historyList; let index = index">
+        <ion-col size="2">
+          {{item.stamp_updated | timestamp:'MM/dd/y' }}
+        </ion-col>
+        <ion-col size="2">
+          {{item?.stamp_created_by?.name}}
+        </ion-col>
+        <ion-col size="3">
+          {{item.field_name}}
+        </ion-col>
+        <ion-col size="2">
+          {{item.old_value=="[]"?'Added Record':item.old_value}}
+        </ion-col>
+        <ion-col size="3">
+          {{item.new_value=="[]"?'Edited Record':item.new_value}}
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-card-content>
+</ion-card>
+<ion-card *ngIf="category !=='tracks'" class="fileHistoryDialog">
+  <ion-card-header>
+    <span>File History</span>
+    <span><i class="fas fa-close" (click)="close()"></i></span>
+  </ion-card-header>
+  <ion-card-content>
+    <div class="container" *ngIf="historyObs | async as history; else loading;">
+      <ion-row>
+        <ion-col size="3">
+          <b>Uuid</b>
+        </ion-col>
+        <ion-col size="3">
+          <b>User</b>
+        </ion-col>
+        <ion-col size="3">
+          <b>Date</b>
+        </ion-col>
+        <ion-col size="3">
+          <b>Action</b>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngFor="let item of history; let index = index">
+        <ion-col size="3" class="fileUuid">
+          {{item.file_uuid}}
+        </ion-col>
+        <ion-col size="3">
+          {{item.stamp_created_by.name}}
+        </ion-col>
+        <ion-col size="3">
+          {{item.stamp_updated | timestamp:'MM/dd/y' }}
+        </ion-col>
+        <ion-col size="3">
+          {{item.file_action}}
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-card-content>
+</ion-card>
+
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

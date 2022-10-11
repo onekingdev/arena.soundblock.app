@@ -1,0 +1,708 @@
+<div class='directory'>
+  <div class='recentPanel' *ngIf='(curItemListObs | async) as curItemList; else loading'>
+    <!-- Desktop breadcrumb header -->
+    <div class='breadcrumbHeader hide-sm hide-xs hide-vs' *ngIf='currentTab !== ProjectTab.INFO'>
+      <div class='row verticalCenterRow breadcrumbRow' *ngIf='currentTab !== ProjectTab.MUSIC' >
+        <!-- <ul class='breadcrumb'>
+          <li *ngFor='let item of breadcrumb; let $index = index; let $last = last' title='{{ item.name }}'>
+            <a *ngIf='!$last' (click)='onClickBreadcrumb($index)'>{{item.name}}</a>
+            <span *ngIf='$last'>{{ item.name }}</span>
+          </li>
+        </ul> -->
+        <a class='checkedFilesLink' *ngIf='checkedItemsCount' (click)='showCheckedList()'>{{ checkedItemsCount }} Files
+          Selected</a>
+        </div>
+    </div>
+    <!-- Mobile breadcrumb header -->
+    <div class='breadcrumbHeader hide-md hide-lg hide-vl hide-xl' *ngIf='currentTab !== ProjectTab.INFO'>
+      <div class='infoWrapper'>
+        <span>Collection UUID:</span><span>{{ curColUuid }}</span>
+        <div class="alert blue" *ngIf='isRecentCollection' status='info' (click)='showHistoryDialog()'>Current</div>
+        <div class="alert backgroundPurple" *ngIf='!isRecentCollection' (click)='showHistoryDialog()'>Historical
+        </div>
+      </div>
+      <div class='verticalCenterRow breadcrumbRow'>
+        <ul class='breadcrumb'>
+          <li *ngFor='let item of breadcrumb; let $index = index; let $last = last' title='{{ item.name }}'>
+            <a *ngIf='!$last' (click)='onClickBreadcrumb($index)'>{{item.name}}</a>
+            <span *ngIf='$last'>{{ item.name }}</span>
+          </li>
+        </ul>
+        <span *ngIf="!curItemList.ledger_uuid">
+          <ion-spinner name="lines"></ion-spinner>
+        </span>
+        <button *ngIf="curItemList.ledger_uuid" nbButton status="info" class="historyButton" (click)="showBlockchainView(curItemList.ledger_uuid, $event)">
+          <div class="gradientText verticalCenterRow">
+            <i class="fas fa-dice-d6 mr5"></i> History
+          </div>
+        </button>
+      </div>
+      <div>
+        <a class='checkedFilesLink' *ngIf='checkedItemsCount' (click)='showCheckedList()'>{{ checkedItemsCount }} Files
+          Selected</a>
+      </div>
+    </div>
+    <!-- Collection controls -->
+    <div class='row no-padding' class='controlGroup'>
+      <div class='left'>
+        <button nbButton status='info' [disabled]='!checkedItemsCount' (click)="deleteFiles($event, 'multi')"
+                *ngIf='
+            ((currentTab === ProjectTab.MUSIC && checkPermission(Permissions.PROJECT_FILE_MUSIC_DELETE)) ||
+            (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_DELETE)) ||
+            (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DELETE)) ||
+            (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DELETE))) && isRecentCollection
+          '
+                tooltip='Delete'
+                placement='top'
+        >
+          <i class='fas fa-trash gradientText'></i>
+        </button>
+        <button nbButton status='info' [disabled]='!checkedItemsCount' (click)='restoreFiles($event)'
+                *ngIf='
+            ((currentTab === ProjectTab.MUSIC && checkPermission(Permissions.PROJECT_FILE_MUSIC_RESTORE)) ||
+            (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_RESTORE)) ||
+            (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_RESTORE)) ||
+            (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_RESTORE))) && !isRecentCollection
+          '
+                nbTooltip='Restore'
+                nbTooltipPlacement='top'
+                nbTooltipStatus='info'
+        >
+          <i class='fas fa-trash-undo gradientText'></i>
+        </button>
+        <button
+          nbButton
+          status='info'
+          [disabled]='!checkedItemsCount'
+          (click)='downloadFiles(null,$event)'
+          *ngIf='
+            (currentTab === ProjectTab.MUSIC && checkPermission(Permissions.PROJECT_FILE_MUSIC_DOWNLOAD)) ||
+            (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_DOWNLOAD)) ||
+            (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DOWNLOAD)) ||
+            (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DOWNLOAD))
+          '
+          nbTooltip='Download'
+          nbTooltipPlacement='top'
+          nbTooltipStatus='info'
+        >
+          <i class='fas fa-download gradientText'></i>
+        </button>
+      </div>
+      <div class='right'>
+        <!-- ORGANIZE BUTTON -->
+        <!-- <button
+          nbButton
+          status="info"
+          (click)="organizeMusic()"
+          *ngIf="
+            isRecentCollection &&
+            currentTab === ProjectTab.MUSIC &&
+            checkPermission(Permissions.PROJECT_FILE_MUSIC_UPDATE) &&
+            curItemList?.files.length > 1
+          "
+          id="reorderTracks"
+        >
+          <i class="fas fa-line-columns gradientText"></i>
+          <span class="gradientText">Reorder Tracks</span>
+        </button> -->
+        <!-- ORGANIZE BUTTON -->
+
+        <!-- UPLOAD TRACK/FILE BUTTON -->
+        <button nbButton status='info' (click)='uploadFile()'
+                *ngIf='
+            (
+              (currentTab === ProjectTab.MUSIC && checkPermission(Permissions.PROJECT_FILE_MUSIC_ADD)) ||
+              (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_ADD)) ||
+              (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_ADD)) ||
+              (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_ADD))
+            )
+          '
+        >
+          <div class='gradientText verticalCenterRow'>
+            <i class='fas fa-plus-circle'></i><span>{{ currentTab === ProjectTab.MUSIC ? 'Track' : 'File' }}</span>
+          </div>
+        </button>
+        <!-- UPLOAD TRACK/FILE BUTTON -->
+
+        <!-- TRACK PREVIEWS BUTTON -->
+        <button
+          nbButton
+          status='info'
+          [class.disabled]='!trackOver30s'
+          nbTooltip='There are not tracks over 30s to set preview for'
+          nbTooltipStatus='danger'
+          [nbTooltipTrigger]="!trackOver30s ? 'hover' : 'noop'"
+          (click)='trackOver30s ? openTrackPreviews() : null'
+          class='track-preview-button'
+          *ngIf='
+            curItemList?.files.length &&
+            isRecentCollection &&
+            currentTab === ProjectTab.MUSIC
+          '
+        >
+          <div class='gradientText verticalCenterRow'>
+            <i class='fas fa-waveform'></i><span> Track Previews</span>
+          </div>
+        </button>
+        <!-- TRACK PREVIEWS BUTTON -->
+
+        <!-- ADD FOLDER BUTTON -->
+        <button nbButton status='info' (click)='addFolder()'
+                *ngIf='
+            isRecentCollection &&
+            (
+              (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_ADD)) ||
+              (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_ADD))
+            )
+          '
+        >
+          <div class='gradientText verticalCenterRow'>
+            <i class='fas fa-plus-circle'></i><span>Folder</span>
+          </div>
+        </button>
+        <!-- ADD FOLDER BUTTON -->
+      </div>
+    </div>
+    <!-- Desktop datatable -->
+    <div *ngIf='currentTab === ProjectTab.MUSIC && tempCollectionFiles?.length'>
+      <app-track-detail
+      [files]="tempCollectionFiles"
+      [Permissions]="Permissions"
+      [userPermissions]="this.permissionService.userPermissionsForProject"
+      (openBlockchainDialog)="this.showBlockchainView($event)"
+      (openHistory)="this.onHistory($event)"
+      [trackDownloadPermission]="this.checkPermission(Permissions.PROJECT_FILE_MUSIC_DOWNLOAD)"
+      [trackEditPermission]="this.checkPermission(Permissions.PROJECT_FILE_MUSIC_UPDATE)"
+      [trackDeletePermission]="this.checkPermission(Permissions.PROJECT_FILE_MUSIC_DELETE)"
+      [trackRestorePermission]="this.checkPermission(Permissions.PROJECT_FILE_MUSIC_RESTORE)"
+      [trackUUIDLoading]="trackUUIDLoading"
+      [isRecentCollection]="isRecentCollection"
+      [trackUUIDPlaying]="trackUUIDPlaying"
+      [checkArray]="this.checkArray"
+      (downloadFile)="downloadFiles($event)"
+      (editFile)="editTrackFiles($event)"
+      (trackPlayed)="playTrack($event)"
+      (deleteFile)="deleteTrackFile($event)"
+      (trackStopped)="stopPlayingTrack()"
+      (updateTrackMeta)="updateTrackMeta($event)"
+      (organizeMusic)="reOrganization($event)"
+      (restoreFile)="restoreFile($event)"
+      (openLyrics)="openLyrics($event)"
+      (openNotes)="openNotes($event)"
+      (checkBoxClicked)="clickTrackCheckbox($event)"
+      (openPublishers)="openPublishers($event)"
+      (openContributors)="openContributors($event)"
+      (openArtists)="openArtists($event)"
+      ></app-track-detail>
+    </div>
+    <div class='desktopTable mb20 hide-xs hide-vs hide-sm hide-md' *ngIf='currentTab !== ProjectTab.MUSIC'>
+      <div class='reorderHeader'>
+        <div class='reorderContentHeader'>
+          <div class='row tableHeader'>
+            <div class="custom-control custom-checkbox column col-1 table-col">
+              <input type="checkbox" class="custom-control-input" id="checkAll"
+                [(ngModel)]="checkAll" (change)="onCheckAll()">
+                <label class="custom-control-label" for="checkAll"></label>
+            </div>
+            <div  *ngFor='let col of columns' class="table-col {{'col-'+col.size}}">
+              {{ col.name !== 'Info' ? col.name : '' }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Folder List -->
+      <!-- Up a folder item -->
+      <div class="row" class='row-highlight tableBody' *ngIf='breadcrumb.length > 1'>
+        <div class='table-col column col-1'></div>
+        <div class="table-col column {{'col-'+col.size}}" *ngFor='let col of columns' (click)='navigateUpAFolder()'>
+          <div *ngIf="col.name == 'File'">
+            <i class='fas fileIcon' [ngClass]="getFileIcon('dir')"></i>
+            <div class='verticalCell'>
+              <div class='fileInfoWrapper'>
+                <span style='font-size: 1.4rem' class='fileTitle'>...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Up a folder item -->
+
+      <!-- Folders -->
+      <div class='row-highlight tableBody row' *ngFor='let folder of curItemList?.directories; let index = index'>
+        <div class='table-col column col-1'></div>
+        <div class="table-col column {{'col-'+col.size}}" *ngFor='let col of columns' (click)='navigateFolder(folder)'
+                 [style.overflow]="col.name == 'Date' ? 'visible' : 'hidden'">
+          <div *ngIf="col.name == 'File'">
+            <i class='fas fileIcon' [ngClass]="getFileIcon('dir')"></i>
+            <div class='verticalCell'>
+              <div class='fileInfoWrapper'>
+                <span [title]='folder.directory_name' class='fileTitle'>{{folder.directory_name}}</span>
+                <span *ngIf='folder.size' class='fileSize'>{{folder?.directory_size | fileSize}}</span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="col.name === 'Date'" style='overflow: visible' class='verticalCell'>
+            <!-- CREATED BY -->
+            <div (mouseenter)="idForImagePreview = folder.directory_uuid + 'created'"
+                 (mouseleave)='idForImagePreview = null' class='dateCell'>
+              <div class='creator-image' [style.background-image]="'url(' + folder.stamp_created_by.avatar + ')'">
+                <div *ngIf="idForImagePreview === folder.directory_uuid + 'created'" class='creator-preview'>
+                  <img [src]='folder.stamp_created_by.avatar' alt='Creator Preview' />
+                  <div class='flex-column'>
+                    <span>{{ folder.stamp_created_by.name }}</span>
+                    <span>Created at {{ folder.stamp_created | timestamp: 'MM/dd/y' }}</span>
+                  </div>
+                </div>
+              </div>
+              <span>{{ folder.stamp_created | dateAgo }}</span>
+            </div>
+            <!-- CREATED BY -->
+
+            <!-- UPDATED BY -->
+            <div (mouseenter)="idForImagePreview = folder.directory_uuid + 'updated'"
+                 (mouseleave)='idForImagePreview = null' class='dateCell'>
+              <div class='creator-image' [style.background-image]="'url(' + folder.stamp_updated_by.avatar + ')'">
+                <div *ngIf="idForImagePreview === folder.directory_uuid + 'updated'" class='creator-preview'>
+                  <img [src]='folder.stamp_updated_by.avatar' alt='Creator Preview' />
+                  <div class='flex-column'>
+                    <span>{{ folder.stamp_updated_by.name }}</span>
+                    <span>Updated at{{ folder.stamp_updated | timestamp: 'MM/dd/y' }}</span>
+                  </div>
+                </div>
+              </div>
+              <span>{{ folder.stamp_updated | dateAgo }}</span>
+            </div>
+            <!-- UPDATED BY -->
+          </div>
+          <div *ngIf="col.name == 'Actions' && isRecentCollection">
+            <i class='mr10 fas fa-download actionIcon'
+               *ngIf='
+                (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DOWNLOAD)) ||
+                (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DOWNLOAD))
+              '
+               (click)='downloadFolder($event, folder)'
+               nbTooltip='Download'
+               nbTooltipPlacement='top'
+               nbTooltipStatus='info'
+            ></i>
+            <i class='mr10 fas fa-edit actionIcon'
+               *ngIf='
+                (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_UPDATE)) ||
+                (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_UPDATE))
+              '
+               (click)='editFolder($event, folder)'
+               nbTooltip='Edit'
+               nbTooltipPlacement='top'
+               nbTooltipStatus='info'
+            ></i>
+            <i class='mr10 fas fa-trash-alt icon-colors actionIcon'
+               *ngIf='
+                (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DELETE)) ||
+                (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DELETE))
+              '
+               (click)='deleteFolder($event, folder)'
+               nbTooltip='Delete'
+               nbTooltipPlacement='top'
+               nbTooltipStatus='info'
+            ></i>
+          </div>
+        </div>
+      </div>
+      <!-- Folders -->
+
+      <!-- File List -->
+
+        <div *ngFor='let file of tempCollectionFiles; let index = index; trackBy: trackByFn' class='reorderWrapper'>
+          <div class='reorderContent'>
+            <div class='row row-highlight tableBody' >
+                <div class="custom-control custom-checkbox column col-1 table-col">
+                  <input type="checkbox" class="custom-control-input" id="deployPlatform{{index}}"
+                 
+                  [(ngModel)]="checkArray[index]" (change)="clickCheckbox(file, index)">
+                  <label class="custom-control-label" for="deployPlatform{{index}}"></label>
+                </div>
+              <div class="table-col column {{'col-'+col.size}}" [class.play-section]="col.name === 'Play'"
+                       *ngFor='let col of columns'
+                       [style.overflow]="col.name === 'Title' || col.name === 'Date' ? 'visible' : 'hidden'">
+                <!-- MUSIC TRACK NUMBER -->
+                <div *ngIf="col.name === 'Track'">
+                  <span>{{ file.meta.file_track }}</span>
+                </div>
+                <!-- MUSIC TRACK NUMBER -->
+
+                <!-- MUSIC PLAY -->
+                <ng-container *ngIf="col.name === 'Play'">
+                  <i *ngIf='trackUUIDLoading !== file.file_uuid' [hidden]='trackUUIDPlaying === file.file_uuid'
+                     [class.disabled]='trackUUIDLoading && trackUUIDLoading !== file.file_uuid'
+                     (click)='playTrack(file)' title='Play' class='fad fa-play fa-lg'></i>
+                  <i *ngIf='trackUUIDPlaying === file.file_uuid' (click)='stopPlayingTrack()' title='Stop'
+                     class='fad fa-stop fa-lg'></i>
+                  <div class='download-progress'
+                       *ngIf='downloadTrackProgress && trackUUIDLoading === file.file_uuid'>{{ downloadTrackProgress }}</div>
+                  <ion-spinner *ngIf='trackUUIDLoading === file.file_uuid' name='crescent'></ion-spinner>
+                </ng-container>
+                <!-- MUSIC PLAY -->
+
+                <!-- VIDEO'S TRACK NAME -->
+                <div *ngIf="col.name == 'Track' && currentTab === ProjectTab.VIDEO">
+                  <span>{{ file?.meta?.track?.file_title }}</span>
+                  <div *ngIf='!file?.meta?.track && checkPermission(Permissions.PROJECT_FILE_VIDEO_UPDATE)'
+                       class='actionIcon' (click)="editFiles($event, 'single', file)" nbTooltip='Add Track'
+                       nbTooltipPlacement='top' nbTooltipStatus='info'><i class='fas fa-music mr5'></i> <span>+</span>
+                  </div>
+                </div>
+                <!-- VIDEO'S TRACK NAME -->
+
+                <!-- FILE INFO(ALL EXCEPT MUSIC) -->
+                <div style='width: 100%' *ngIf="col.name == 'File'">
+                  <i class='fas fileIcon' [ngClass]='getFileIcon(getFileKind(file.file_name))'></i>
+                  <div class='verticalCell'>
+                    <div>
+                      <span
+                        [ngClass]='{backgroundRed: file.restorable, backgroundBlue: file.revertable, fileTitle: true}'
+                        [title]='file.file_title'>{{ file.file_title }}</span>
+                    </div>
+                    <div class='fileInfoWrapper'>
+                      <span
+                        [ngClass]='{backgroundRed: file.restorable, backgroundBlue: file.revertable, fileTitle: true}'>{{ file.file_name }}</span>
+                      <span *ngIf='file.file_size' class='fileSize'>{{file.file_size | fileSize}}</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- FILE INFO(ALL EXCEPT MUSIC) -->
+
+                <!-- MUSIC TITLE -->
+                <div style='width: 100%; align-items: center' *ngIf="col.name == 'Title'" class='track-artwork'>
+                  <div (mouseenter)='trackUUIDPreview = file.file_uuid' (mouseleave)='trackUUIDPreview = null'
+                       class='artwork-image' [style.background-image]="'url(' + file.meta.cover + ')'">
+                    <div [hidden]='trackUUIDPreview !== file.file_uuid' class='track-artwork-preview'>
+                      <div (click)='uploadTrackArtwork(file)' (mouseenter)='iconHover = true'
+                           (mouseleave)='iconHover = false' class='upload-icon'>
+                        <i nbTooltip='Change Track Cover' nbTooltipStatus='info' class='fas fa-edit'></i>
+                      </div>
+                      <img [style.filter]="iconHover ? 'brightness(0.8)' : 'none'" [src]='file.meta.cover'
+                           alt='Track Artwork Preview' />
+                    </div>
+                  </div>
+                  <div class='track-duration'>
+                    <!-- <span [title]="file.file_title" [ngClass]="{backgroundRed: file.restorable, backgroundBlue: file.revertable}" style="margin-right: 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"> -->
+                    {{ file.file_title }}
+                    <!-- </span> -->
+                    <p>{{file.meta?.file_duration | duration}} ({{secondsToTime(file.meta?.preview_start)}}
+                      -{{secondsToTime(file.meta?.preview_stop)}})</p>
+                  </div>
+                </div>
+                <!-- MUSIC TITLE -->
+
+                <!-- DATES -->
+                <div style='overflow: visible' *ngIf="col.name == 'Date'" class='verticalCell'>
+                  <!-- CREATED BY -->
+                  <div (mouseenter)="idForImagePreview = file.file_uuid + 'created'"
+                       (mouseleave)='idForImagePreview = null' class='dateCell'>
+                    <div class='creator-image' [style.background-image]="'url(' + file.stamp_created_by.avatar + ')'">
+                      <div *ngIf="idForImagePreview === file.file_uuid + 'created'" class='creator-preview'>
+                        <img [src]='file.stamp_created_by.avatar' alt='Creator Preview' />
+                        <div class='flex-column'>
+                          <span>{{ file.stamp_created_by.name }}</span>
+                          <span>Created at {{ file.stamp_created | timestamp: 'MM/dd/y' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <span>{{ file.stamp_created | dateAgo }}</span>
+                  </div>
+                  <!-- CREATED BY -->
+
+                  <!-- UPDATED BY -->
+                  <div (mouseenter)="idForImagePreview = file.file_uuid + 'updated'"
+                       (mouseleave)='idForImagePreview = null' class='dateCell'>
+                    <div class='creator-image' [style.background-image]="'url(' + file.stamp_updated_by.avatar + ')'">
+                      <div *ngIf="idForImagePreview === file.file_uuid + 'updated'" class='creator-preview'>
+                        <img [src]='file.stamp_updated_by.avatar' alt='Creator Preview' />
+                        <div class='flex-column'>
+                          <span>{{ file.stamp_updated_by.name }}</span>
+                          <span>Updated at {{ file.stamp_updated | timestamp: 'MM/dd/y' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <span>{{ file.stamp_updated | dateAgo }}</span>
+                  </div>
+                  <!-- UPDATED BY -->
+                </div>
+                <!-- DATES -->
+
+                <!-- ISRC & SKU -->
+                {{ col.name == 'ISRC' ? file.meta.file_isrc : '' }}
+                {{ col.name == 'SKU' ? file.meta.file_sku : '' }}
+                <!-- ISRC & SKU -->
+
+                <!-- FILE ACTIONS -->
+                <div *ngIf="col.name == 'Actions'">
+                  <div>
+                    <span *ngIf="!file.ledger_uuid" >
+                      <ion-spinner name="lines"></ion-spinner>
+                    </span>
+                    <i *ngIf="file.ledger_uuid" class="fas fa-dice-d6 actionIcon mr10" (click)="showBlockchainView(file.ledger_uuid, $event)" nbTooltip="Blockchain Record" nbTooltipPlacement="top" nbTooltipStatus="info"></i>
+                  </div>
+                  <div *ngIf='isRecentCollection'>
+                    <i class='mr10 fas fa-clipboard-list actionIcon' (click)='onHistory(file,$event)'
+                       nbTooltip='History' nbTooltipPlacement='top' nbTooltipStatus='info'></i>
+                    <i class='mr10 fas fa-download actionIcon'
+                       *ngIf='
+                        (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_DOWNLOAD)) ||
+                        (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DOWNLOAD)) ||
+                        (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DOWNLOAD))
+                      '
+                       (click)='downloadFiles(file, $event)' nbTooltip='Download' nbTooltipPlacement='top'
+                       nbTooltipStatus='info'></i>
+                    <i class='mr10 fas fa-edit actionIcon'
+                       *ngIf='
+                       
+                        (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_UPDATE)) ||
+                        (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_UPDATE)) ||
+                        (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_UPDATE))
+                      '
+                       (click)="editFiles($event, 'single', file)" nbTooltip='Edit' nbTooltipPlacement='top'
+                       nbTooltipStatus='info'></i>
+                    <i class='mr10 fas fa-trash-alt icon-colors actionIcon'
+                       *ngIf='
+                        (checkPermission(Permissions.PROJECT_FILE_MUSIC_DELETE)) ||
+                        (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_DELETE)) ||
+                        (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DELETE)) ||
+                        (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DELETE))
+                      ' (click)="deleteFiles($event, 'single', file)" nbTooltip='Delete' nbTooltipPlacement='top'
+                       nbTooltipStatus='info'></i>
+                  </div>
+                </div>
+                <!-- FILE ACTIONS -->
+
+                <!-- FILE ACTIONS NOT RECENT -->
+                <div *ngIf="col.name == 'Actions' && !isRecentCollection">
+                  <i class='mr10 fas fa-clipboard-list actionIcon'
+                     (click)='onHistory(file, $event)' nbTooltip='History' nbTooltipPlacement='top'
+                     nbTooltipStatus='info'></i>
+                  <i class='mr10 fas fa-download actionIcon'
+                     *ngIf='
+                      ( checkPermission(Permissions.PROJECT_FILE_MUSIC_DOWNLOAD)) ||
+                      (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_DOWNLOAD)) ||
+                      (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DOWNLOAD)) ||
+                      (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DOWNLOAD))
+                    '
+                     (click)='downloadFiles(file, $event)' nbTooltip='Download' nbTooltipPlacement='top'
+                     nbTooltipStatus='info'></i>
+                  <i class='mr10 fas fa-trash-undo actionIcon'
+                     *ngIf='
+                      (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_RESTORE)) ||
+                      (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_RESTORE)) ||
+                      (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_RESTORE))
+                    '
+                     (click)='restoreFile(file, $event)' nbTooltip='Restore' nbTooltipPlacement='top'
+                     nbTooltipStatus='info'></i>
+                  <i class='mr10 fas fa-edit actionIcon' *ngIf='file.revertable' (click)='revertFile($event, file)'
+                     nbTooltip='Revert' nbTooltipPlacement='top' nbTooltipStatus='info'></i>
+                </div>
+                <!-- FILE ACTIONS NOT RECENT -->
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <!-- Mobile datatable -->
+    <div class='mobileTable hide-lg hide-vl hide-xl' *ngIf="currentTab !== ProjectTab.MUSIC">
+      <!-- Up A folder -->
+      <div class='row' *ngIf='breadcrumb.length > 1'>
+        <div class='column col-1' ></div>
+        <div class='col-11 contentWrapper' (click)='navigateUpAFolder()'>
+          <div class='row'>
+            <div class="col-7">
+              <i class='fas fileIcon' [ngClass]="getFileIcon('dir')"></i>
+              <span><b>...</b></span>
+            </div>
+            <div class="col-5"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Up A folder -->
+
+      <!-- Folder List -->
+      <div class='row' *ngFor='let folder of curItemList?.directories; let index = index'
+               [class.backgroundGray]='index % 2 == 0'>
+        <div class='column col-1'></div>
+        <div class="col-11 contentWrapper" (click)='navigateFolder(folder)'>
+          <div class="row">
+            <div class="col-7">
+              <i class='fas fileIcon' [ngClass]="getFileIcon('dir')"></i>
+              <span><b>{{ folder.directory_name }}</b></span
+              >
+              </div>
+            <div class="col-5">
+              <div *ngIf='isRecentCollection' class='actions'>
+                <i class='fas fa-trash-alt'
+                   *ngIf='
+                    (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DELETE)) ||
+                    (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DELETE))
+                  '
+                   (click)='deleteFolder($event, folder)'></i>
+                <i class='fas fa-edit'
+                   *ngIf='
+                    (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_UPDATE)) ||
+                    (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_UPDATE))
+                  '
+                   (click)='editFolder($event, folder)'></i>
+                <i class='fas fa-download'
+                   *ngIf='
+                    (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DOWNLOAD)) ||
+                    (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DOWNLOAD))
+                  '
+                   (click)='downloadFiles( folder, $event)'></i>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <img [src]='folder.stamp_created_by.avatar' class='avatar' />
+              <span nbTooltip='{{ folder.stamp_created | dateAgo }}' (click)='onClickInfo($event)'
+                    nbTooltipPlacement='top' nbTooltipStatus='info'>
+                Created {{ folder.stamp_created | timestamp: 'MM/dd/y' }}
+              </span>
+            </div>
+            <div class="col-6">
+              <img [src]='folder.stamp_updated_by.avatar' class='avatar' />
+              <span nbTooltip='{{ folder.stamp_updated | dateAgo }}' (click)='onClickInfo($event)'
+                    nbTooltipPlacement='top' nbTooltipStatus='info'>
+                Modified {{ folder.stamp_updated | timestamp: 'MM/dd/y' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- File List -->
+
+        <div class='row reorderWrapper' *ngFor='let file of tempCollectionFiles; let index = index'
+             [class.backgroundGray]='curItemList?.directories.length % 2 === 0 ? index % 2 === 0 : index % 2 !== 0'>
+          <div class='reorderContent'>
+            <ion-row>
+              <div  class='column col-1 custom-control custom-checkbox column'>
+                <input type="checkbox" class="custom-control-input" id="checkRow{{index}}"
+                 
+                [(ngModel)]="checkArray[index]" (change)="clickCheckbox(file, index)">
+                <label class="custom-control-label" for="checkRow{{index}}"></label>
+                
+              </div>
+              <ion-col size='11' class='contentWrapper' (click)='expandColumn(index)'>
+                <ion-row>
+                  <!-- <ion-col size='7' *ngIf='currentTab === ProjectTab.MUSIC'>
+                    <span [ngClass]='{backgroundRed: file.restorable, backgroundBlue: file.revertable, fileTitle: true}'
+                          [title]='file.file_title'>
+                      {{ file.file_track }} - <b>{{ file.file_title }}</b>
+                    </span>
+                  </ion-col> -->
+                  <ion-col size='7'>
+                    <i class='fas fileIcon' [ngClass]='getFileIcon(getFileKind(file.file_name))'></i>
+                    <span [ngClass]='{backgroundRed: file.restorable, backgroundBlue: file.revertable, fileTitle: true}'
+                          [title]='file.file_title'><b>{{ file.file_title }}</b></span>
+                  </ion-col>
+                  <ion-col size='5'>
+                    <div *ngIf='isRecentCollection' class='actions'>
+                      <i class='fas fa-trash-alt'
+                         *ngIf='
+                          (checkPermission(Permissions.PROJECT_FILE_MUSIC_DELETE)) ||
+                          (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_DELETE)) ||
+                          (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DELETE)) ||
+                          (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DELETE))
+                        '
+                         (click)="deleteFiles($event, 'single', file)"></i>
+                      <i class='fas fa-edit'
+                         *ngIf='
+                          ( checkPermission(Permissions.PROJECT_FILE_MUSIC_UPDATE)) ||
+                          (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_UPDATE)) ||
+                          (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_UPDATE)) ||
+                          (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_UPDATE))
+                        '
+                         (click)="editFiles($event, 'single', file)"></i>
+                      <i class='fas fa-download'
+                         *ngIf='
+                          (checkPermission(Permissions.PROJECT_FILE_MUSIC_DOWNLOAD)) ||
+                          (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_DOWNLOAD)) ||
+                          (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_DOWNLOAD)) ||
+                          (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_DOWNLOAD))
+                        '
+                        (click)="downloadFiles(file, $event)"></i>
+                      <i class="fas fa-clipboard-list" (click)="onHistory(file, $event)"></i>
+                      <span *ngIf="!file.ledger_uuid">
+                        <ion-spinner name="lines"></ion-spinner>
+                      </span>
+                      <i *ngIf="file.ledger_uuid" class="fas fa-dice-d6 actionIcon" (click)="showBlockchainView(file.ledger_uuid, $event)"></i>
+                    </div>
+                    <div *ngIf='!isRecentCollection' class='actions'>
+                      <i class='fas fa-trash-undo'
+                         *ngIf='
+                          (file.restorable && checkPermission(Permissions.PROJECT_FILE_MUSIC_RESTORE)) ||
+                          (currentTab === ProjectTab.VIDEO && checkPermission(Permissions.PROJECT_FILE_VIDEO_RESTORE)) ||
+                          (currentTab === ProjectTab.MERCH && checkPermission(Permissions.PROJECT_FILE_MERCH_RESTORE)) ||
+                          (currentTab === ProjectTab.FILES && checkPermission(Permissions.PROJECT_FILE_OTHER_RESTORE))
+                        '
+                        (click)="restoreFile(file, $event)"></i>
+                      <i class="fas fa-edit" *ngIf="file.revertable" (click)="revertFile($event, file)"></i>
+                      <span *ngIf="!file.ledger_uuid">
+                        <ion-spinner name="lines"></ion-spinner>
+                      </span>
+                      <i *ngIf="file.ledger_uuid" class="fas fa-dice-d6 actionIcon" (click)="showBlockchainView(file.ledger_uuid, $event)"></i>
+                    </div>
+                  </ion-col>
+                </ion-row>
+                <!-- File Common Info -->
+                <ion-row>
+                  <ion-col size='6'>
+                    <span [title]='file.file_name' class='fileTitle'> {{ file.file_name }} </span>
+                  </ion-col>
+                  <ion-col size='6'>
+                    {{ file.file_size | fileSize }}
+                  </ion-col>
+                </ion-row>
+                <!-- ISRC SKU TRACK-->
+                <ion-row>
+                  <ion-col size='6'
+                           *ngIf='(currentTab === ProjectTab.VIDEO) && file.meta.file_isrc'>
+                    ISRC: {{ file.meta.file_isrc }}
+                  </ion-col>
+                  <ion-col size='6' *ngIf='currentTab === ProjectTab.MERCH && file.meta.file_sku'>
+                    SKU: {{ file.meta.file_sku }}
+                  </ion-col>
+                  <ion-col size='6' *ngIf='currentTab === ProjectTab.VIDEO'>
+                    <span>{{ file?.meta?.track?.file_title }}</span>
+                    <div *ngIf='!file?.meta?.track && checkPermission(Permissions.PROJECT_FILE_VIDEO_UPDATE)'
+                         class='actionIcon' (click)="editFiles($event, 'single', file)">
+                      <i class='fas fa-music mr5'></i> <span>+</span>
+                    </div>
+                  </ion-col>
+                </ion-row>
+                <ion-row *ngIf='expandStatus[index]'>
+                  <ion-col size='6'>
+                    <img [src]='file.stamp_created_by.avatar' class='avatar' />
+                    <span nbTooltip='{{ file.stamp_created | dateAgo }}' (click)='onClickInfo($event)'
+                          nbTooltipPlacement='top' nbTooltipStatus='info'>
+                      Created {{ file.stamp_created | timestamp: 'MM/dd/y' }}
+                    </span>
+                  </ion-col>
+                  <ion-col size='6'>
+                    <img [src]='file.stamp_updated_by.avatar' class='avatar' />
+                    <span nbTooltip='{{ file.stamp_updated | dateAgo }}' (click)='onClickInfo($event)'
+                          nbTooltipPlacement='top' nbTooltipStatus='info'>
+                      Modified {{ file.stamp_updated | timestamp: 'MM/dd/y' }}
+                    </span>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class='asyncLoading'>
+    <ion-spinner name='lines'></ion-spinner>
+    <span class='ml10'>Loading...</span>
+  </div>
+</ng-template>

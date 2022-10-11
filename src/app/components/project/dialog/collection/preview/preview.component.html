@@ -1,0 +1,64 @@
+<div class="row play-container">
+  <div class="col-12">
+    <div class="playback-wrapper">
+      <!-- VOLUME CONTROL -->
+      <div class="volume-control">
+        <i (click)="mute()" *ngIf="trackVolume > 0" class="fad fa-volume fa-lg mr5"></i>
+        <i (click)="unMute()" *ngIf="trackVolume === 0" class="fad fa-volume-mute fa-lg mr5"></i>
+        <input (input)="changeVolume()" type="range" min="0" max="100" [(ngModel)]="trackVolume"/>
+      </div>
+      <!-- VOLUME CONTROL -->
+    
+      <!-- PLAYBACK TIME -->
+      <div *ngIf="!trackLoading" class="playback-time">
+        <div class="track">{{ currentTime }} / {{ trackDuration }}</div>
+      </div>
+      <!-- PLAYBACK TIME -->
+    
+      <!-- PLAYBACK -->
+      <div class="playback">
+        <!-- PLAYBACK CONTROLS -->
+        <div class="controls">
+          <i *ngIf="!regionPlaying" [class.disabled]="trackLoading" (click)="playRegion()" class="fad fa-play fa-2x"></i>
+          <i *ngIf="regionPlaying" (click)="stop()" class="fad fa-stop fa-2x"></i>
+        </div>
+        <!-- PLAYBACK CONTROLS -->
+    
+        <!-- WAVESURFER -->
+        <div [style.visibility]="trackLoading ? 'hidden' : 'visible'" [style.width]="trackLoading ? '0' : '100%'" #wavesurferRef class="wavesurfer"></div>
+        <!-- WAVESURFER -->
+    
+        <!-- CUSTOM LOADING BAR -->
+        <div *ngIf="trackLoading" class="loading-wrapper">
+          <span [style.left]="downloadTrackProgress + '%'" class="percentage">{{ downloadTrackProgress }}%</span>
+          <div [style.width]="downloadTrackProgress + '%'" class="progress"></div>
+        </div>
+        <!-- CUSTOM LOADING BAR -->
+      </div>
+      <!-- PLAYBACK -->
+    
+      <!-- PREVIEW TIME -->
+      <div *ngIf="!trackLoading" class="playback-time">
+        Preview {{ previewStart }}-{{ previewStop }}
+      </div>
+      <!-- PREVIEW TIME -->
+    </div>
+  </div>
+  
+  <!-- PREVIEW ACTION -->
+  <div class="row col-12">
+    <div class="col-6">
+    </div>
+    <!-- PREVIEW ACTION -->
+    
+    <!-- PREVIEW MESSAGE -->
+    <div class="col-6" style='padding-left: 10px; padding-right: 10px'>
+      <div class="preview-message">
+        <nb-alert *ngIf="successMessage" status="success"> {{ successMessage }} </nb-alert>
+        <nb-alert *ngIf="errorMessage" status="danger"> {{ errorMessage }} </nb-alert>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- PREVIEW MESSAGE -->     
+</div>

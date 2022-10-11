@@ -1,0 +1,29 @@
+<div class="modal-header">
+  <div class="modal-title pull-left">Remove Artist Publisher</div>
+  <button (click)="bsModalRef.hide()" type="button" class="close pull-right text-white" aria-label="Close">
+    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+  </button>
+</div>
+<div class="modal-body">
+  Are you sure you want to remove this Publisher?
+</div>
+<div class="modal-footer">
+  <span *ngIf="artistPublisherRemovedError" class="text-danger text-right">
+    {{artistPublisherRemovedError?.error.status.message}}
+  </span>
+  <span *ngIf="artistPublisherRemoved" class="text-success text-right">
+    <span>Publisher Removed</span>
+  </span>
+  <button (click)="bsModalRef.hide()" class="btn btn-secondary">
+    <span class="gradientText">
+      Cancel
+    </span>
+  </button>
+  <button (click)="confirm()" [disabled]="artistPublisherRemoving || artistPublisherRemoving"
+    class="btn btn-round btn-primary">
+    <i *ngIf="artistPublisherRemoving" class="fas fa-circle-notch fa-spin"></i>
+    <i *ngIf="!artistPublisherRemoving" class="fas fa-check"></i> <span class="gradientText">
+      Save
+    </span>
+  </button>
+</div>

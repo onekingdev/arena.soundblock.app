@@ -1,0 +1,256 @@
+<div class="page-wrapper">
+  <div class="page-container">
+    <div class="content-wrapper" *ngIf="projects; else loading;">
+      <div class="row hide-sm hide-xs hide-vs mt-3 desktop" style="width: 100%;">
+        <div class="col-lg-3 col-md-4">
+          <div class="nav flex-column nav-pills nav-pills-custom" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link mb-3 p-3 shadow" id="v-pills-home-tab" data-toggle="pill" (click)="selectedTab = Tabs.PROJECTS" [ngClass]="{'active': selectedTab === Tabs.PROJECTS}" role="tab" aria-controls="v-pills-home" aria-selected="true">
+                <i class="fa-user-music mr-2" [ngClass]="{'icon-colors-2 fad': selectedTab !== Tabs.PROJECTS, 'fas': selectedTab === Tabs.PROJECTS}"></i>
+                <span class="font-weight-bold small text-uppercase">Projects</span>
+            </a>
+            <div class="project-buttons" [ngClass]="{'show': selectedTab === Tabs.PROJECTS}">
+              <button class="p-3" (click)="newProject()">
+                <span class="fad fa-plus"></span> New Project
+              </button>
+              <button class="p-3" routerLink="/settings/accounts">
+                <span class="fad fa-user"></span> Manage Accounts
+              </button>
+              <button class="p-3 mb-3" routerLink="/settings/projects">
+                <span class="fad fa-user-music"></span> Manage Projects
+              </button>
+            </div>
+
+            <a class="nav-link mb-3 p-3 shadow" id="v-pills-profile-tab" data-toggle="pill" (click)="selectedTab = Tabs.ANNOUNCEMENTS" [ngClass]="{'active': selectedTab === Tabs.ANNOUNCEMENTS}" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+                <i class="fa-megaphone mr-2" [ngClass]="{'icon-colors fad': selectedTab !== Tabs.ANNOUNCEMENTS, 'fas': selectedTab === Tabs.ANNOUNCEMENTS}"></i>
+                <span class="font-weight-bold small text-uppercase">Announcements</span>
+            </a>
+
+            <a class="nav-link mb-3 p-3 shadow" id="v-pills-messages-tab" data-toggle="pill" (click)="selectedTab = Tabs.PROJECT_DRAFTS" [ngClass]="{'active': selectedTab === Tabs.PROJECT_DRAFTS}" role="tab" aria-controls="v-pills-messages" aria-selected="false">
+                <i class="fa-album mr-2" [ngClass]="{'icon-colors fad': selectedTab !== Tabs.PROJECT_DRAFTS, 'fas': selectedTab === Tabs.PROJECT_DRAFTS}"></i>
+                <span class="font-weight-bold small text-uppercase">Project Drafts</span>
+            </a>
+
+            <a class="nav-link mb-3 p-3 shadow" id="v-pills-settings-tab" data-toggle="pill" (click)="selectedTab = Tabs.PROJECT_INVITES" [ngClass]="{'active': selectedTab === Tabs.PROJECT_INVITES}" role="tab" aria-controls="v-pills-settings" aria-selected="false">
+                <i class="fa-home mr-2" [ngClass]="{'icon-colors fad': selectedTab !== Tabs.PROJECT_INVITES, 'fas': selectedTab === Tabs.PROJECT_INVITES}"></i>
+                <span class="font-weight-bold small text-uppercase">Invites</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-9 col-md-8">
+          <!-- Tabs content -->
+          <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane" [ngClass]="{'active': selectedTab === Tabs.PROJECTS, 'show': selectedTab === Tabs.PROJECTS}" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+            <div class="welcome" *ngIf="(projects && projects.length === 0) || !projects">
+              <p class="gradientText">Welcome to Soundblock</p>
+              <img src="assets/images/soundblock-welcome.png" />
+            </div>
+              <div class="project_item" *ngFor="let project of projects; let index = index;" (click)="openProject(project)">
+                <div class="project_header d-flex justify-content-between align-items-center">
+                  <div class="gradientText">
+                    <span><b>{{project?.project_title}}</b></span>
+                  </div>
+                  <h6><span class="badge badge-secondary">{{project?.format?.dataFormat}}</span></h6>
+                </div>
+                <div class="project_body">
+                  <div class="project_img">
+                    <img [src] = "project.artwork" />
+                  </div>
+                  <div class="project_description">
+                    <div class="row">
+                      <div class="col-12">
+                        <p><b>UPC: {{project.project_upc}}</b></p>    
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <span><b>Artist Display Name</b>: {{project?.project_artist}}</span>    
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-6 col-md-12">
+                        <span><b>Release Date</b>: {{project?.project_date | date: "MM/dd/YY"}}</span>
+                      </div>
+                      <div class="col-lg-6 col-md-12" *ngIf="project?.project_label">
+                        <span><b>Record Label</b>: {{project?.project_label}}</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-6 col-md-12">
+                        <span><b>Primary Genre</b>: {{project?.primary_genre.dataGenre}}</span>
+                      </div>
+                      <div class="col-lg-6 col-md-12" *ngIf="project?.secondary_genre">
+                        <span><b>Secondary Genre</b>: {{project?.secondary_genre?.dataGenre}}</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <span><b>Updated By {{project?.stamp_updated_by.name}} at {{project?.stamp_updated | timestamp}}</b></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab-pane" [ngClass]="{'active': selectedTab === Tabs.ANNOUNCEMENTS, 'show': selectedTab === Tabs.ANNOUNCEMENTS}" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+              <app-announcements></app-announcements>
+            </div>
+            
+            <div class="tab-pane" [ngClass]="{'active': selectedTab === Tabs.PROJECT_DRAFTS, 'show': selectedTab === Tabs.PROJECT_DRAFTS}" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+              <div class="drafts-wrapper" *ngIf="(drafts && drafts.length === 0) || !drafts">
+                <h6 style='text-align: center;'>
+                  <i>Nothing to display here.</i>
+                </h6>
+              </div>
+              <div class="table_wrapper shadow" *ngIf="drafts && drafts.length">
+                <table class="drafts_table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Title</th>
+                      <th>Type</th>
+                      <th>Created</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let draft of drafts; let index = index;" (click) = "openDraft(draft)">
+                      <td>{{index + 1}}</td>
+                      <td>{{draft.draft_json.project.project_title}}</td>
+                      <td>{{draft.draft_json.project.project_type}}</td>
+                      <td>{{draft.stamp_updated | timestamp}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane" [ngClass]="{'active': selectedTab === Tabs.PROJECT_INVITES, 'show': selectedTab === Tabs.PROJECT_INVITES}" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                <app-project-invites (refreshProjects)="getProjects(); checkUserServices()"></app-project-invites>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Desktop Version -->
+
+      <!-- Mobile Version -->
+      <div class="hide-md hide-lg hide-vl hide-xl mobile" style="width: 100%;">
+        <div class="c-navbar">
+          <button class="tablinks" (click) = "onNavClick(Tabs.PROJECTS)" [ngClass]="{'active': selectedTab === Tabs.PROJECTS}">
+            <div class="wrapper">
+              PROJECTS
+            </div>
+            <div class="border"></div>
+          </button>
+          <button class="tablinks" (click) = "onNavClick(Tabs.ANNOUNCEMENTS)" [ngClass]="{'active': selectedTab === Tabs.ANNOUNCEMENTS}">
+            <div class="wrapper">
+              ANNOUNCE
+            </div>
+            <div class="border"></div>
+          </button>
+          <button class="tablinks" (click) = "onNavClick(Tabs.PROJECT_DRAFTS)" [ngClass]="{'active': selectedTab === Tabs.PROJECT_DRAFTS}">
+            <div class="wrapper">
+              DRAFTS
+            </div>
+            <div class="border"></div>
+          </button>
+          <button class="tablinks" (click) = "onNavClick(Tabs.PROJECT_INVITES)" [ngClass]="{'active': selectedTab === Tabs.PROJECT_INVITES}">
+            <div class="wrapper">
+              INVITES
+            </div>
+            <div class="border"></div>
+          </button>
+        </div>
+        <div class="mobile-content-wrapper">
+          <div class="mobile_tab projects_tab" *ngIf="selectedTab === Tabs.PROJECTS">
+            <div class="welcome" *ngIf="(projects && projects.length === 0) || !projects">
+              <p class="gradientText">Welcome to Soundblock</p>
+              <img src="assets/images/soundblock-welcome.png" />
+            </div>
+            <div class="action_group">
+              <button (click)="newProject()">New Project</button>
+              <button routerLink = "/settings/projects">Manage Projects</button>
+              <button routerLink = "/settings/accountsa">Manage Accounts</button>
+            </div>
+            <div class="project_item" *ngFor="let project of projects; let index = index;" (click)="openProject(project)">
+              <div class="project_header d-flex justify-content-between align-items-center">
+                <span class="gradientText"><b>{{project?.project_title}}</b></span>
+                <h6><span class="badge badge-secondary">{{project?.format?.dataFormat}}</span></h6>
+              </div>
+              <div class="project_body" style="background: url({{project?.artwork}}); background-size: cover; background-position: top; background-repeat: no-repeat;">
+                <div class="project_description">
+                  <div class="row">
+                    <div class="col-12">
+                      <p><b>UPC: {{project.project_upc}}</b></p>    
+                    </div>
+                    <div class="col-12">
+                      <span><b>Artist Display Name</b>: {{project?.project_artist}}</span>    
+                    </div>
+                    <div class="col-12">
+                      <span><b>Release Date</b>: {{project?.project_date | date: "MM/dd/YY"}}</span>
+                    </div>
+                    <div class="col-12" *ngIf="project?.project_label">
+                      <span><b>Record Label</b>: {{project?.project_label}}</span>
+                    </div>
+                    <div class="col-12">
+                      <span><b>Primary Genre</b>: {{project?.primary_genre.dataGenre}}</span>
+                    </div>
+                    <div class="col-12" *ngIf="project?.secondary_genre">
+                      <span><b>Secondary Genre</b>: {{project?.secondary_genre?.dataGenre}}</span>
+                    </div>
+                    <div class="col-12">
+                      <span><b>Updated By {{project?.stamp_updated_by.name}} at {{project?.stamp_updated | timestamp}}</b></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mobile_tab accouncements_tab" *ngIf="selectedTab === Tabs.ANNOUNCEMENTS">
+            <app-announcements></app-announcements>
+          </div>
+          <div class="mobile_tab project_drafts_tab" *ngIf="selectedTab === Tabs.PROJECT_DRAFTS">
+            <div class="drafts-wrapper" *ngIf="(drafts && drafts.length === 0) || !drafts">
+              <h6 style='text-align: center;'>
+                <i>Nothing to display here.</i>
+              </h6>
+            </div>
+            <div class="table_wrapper shadow" *ngIf="drafts && drafts.length > 0">
+              <table class="drafts_table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Created</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let draft of drafts; let index = index;" (click) = "openDraft(draft)">
+                    <td>{{index + 1}}</td>
+                    <td>{{draft.draft_json.project.project_title}}</td>
+                    <td>{{draft.draft_json.project.project_type}}</td>
+                    <td>{{draft.stamp_updated | timestamp}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mobile_tab project_invites_tab" *ngIf="selectedTab === Tabs.PROJECT_INVITES">
+            <app-project-invites></app-project-invites>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile Version -->
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="asyncLoading d-flex justify-content-center align-items-center flex-column" style="height: calc(100vh - 130px);">
+  <img src="assets/images/soundblock-logo.png" style="margin-bottom: 1rem;"/>
+    <button class="btn loading_button" type="button" disabled>
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="width: 1.5rem; height: 1.5rem;"></span>
+      <span class="ml-2">Loading...</span>
+    </button>
+  </div>
+</ng-template>

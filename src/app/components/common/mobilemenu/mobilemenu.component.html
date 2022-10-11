@@ -1,0 +1,112 @@
+<div class="mobileMenu">
+  <ion-row class="header">
+    <img
+      routerLinkActive="router-link-active"
+      src="{{ cloudUrl }}/images/soundblock-logo.png"
+    />
+    <span class='beta-mobile-menu'>beta</span>
+    <i class="fas fa-close" (click)="close()"></i>
+  </ion-row>
+  <ion-row class="content">
+    <ion-col size="6" class="leftPane">
+      <div
+        [hidden]="!userHasService"
+        class="customCard transition-action"
+        (click)="navigate('projects')"
+        *ngIf="authService.isAuthorized"
+      >
+        <i class="icon-colors-2 fad fa-user-music"></i><span>Projects</span>
+      </div>
+      <div
+        class="customCard transition-action"
+        (click)="navigate('reports')"
+        *ngIf="authService.isAuthorized"
+      >
+        <i class="icon-colors fad fa-user-chart"></i><span>Reports</span>
+      </div>
+      <div
+        class="customCard transition-action"
+        (click)="navigate('settings')"
+        *ngIf="authService.isAuthorized"
+      >
+        <i class="icon-colors fad fa-user-cog"></i><span>Settings</span>
+      </div>
+      <div
+        class="customCard transition-action"
+        (click)="navigate('auth/signin')"
+        *ngIf="!authService.isAuthorized"
+      >
+        <i class="icon-colors fad fa-sign-in-alt"></i><span>Sign In</span>
+      </div>
+      <div
+        class="customCard transition-action"
+        (click)="navigate('auth/signup')"
+        *ngIf="!authService.isAuthorized"
+      >
+        <i class="icon-colors fad fa-user-plus"></i><span>Sign Up</span>
+      </div>
+    </ion-col>
+    <ion-col size="6" class="rightPane">
+      <ion-row class="avatar">
+        <img class="mb10" [src]="user.avatar" />
+      </ion-row>
+      <ion-row class="horizontalCenterRow">
+        <b>{{ user.name }}</b>
+      </ion-row>
+      <ion-row class="links">
+        <button nbButton status="primary" (click)="navigate('profile')">
+          Profile
+        </button>
+        <!-- <button nbButton status="primary" (click)="showNotification()">
+          Notifications
+        </button> -->
+        <button nbButton status="primary" (click)="showTicketbar()">
+          Support
+        </button>
+      </ion-row>
+      <ion-row class="signOut">
+        <button
+          nbButton
+          status="info"
+          class="transition-action"
+          (click)="signOut()"
+          *ngIf="authService.isAuthorized"
+        >
+          <i class="icon-colors fad fa-sign-out-alt mr5"></i
+          ><span style="margin-top: 4px;">Sign Out</span>
+        </button>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+  <div class="notify">
+    <div class="title">
+      <span>Notifications</span>
+    </div>
+    <div class="itemWrapper">
+      <ion-slides pager="true" [options]="slideOpts" pager="true">
+        <ion-slide *ngFor="let notifyItem of notifications; let index = index">
+          <div class="notifyItem">
+            <ion-row class="title">
+              <span class="gradientText"
+                ><b>{{ notifyItem.notification_name }}</b></span
+              >
+            </ion-row>
+            <ion-row class="body">
+              <ion-col size="2" class="bellIcon">
+                <i class="fad fa-bells icon-colors"></i>
+              </ion-col>
+              <ion-col size="10" class="contentWrapper">
+                <p>{{ notifyItem.notification_memo }}</p>
+              </ion-col>
+            </ion-row>
+            <div
+              class="actions"
+              *ngIf="notifyItem.notification_action && notifyItem.notification_action === 'Default Action' && notifyItem.notification_action === 'Not Triggered'"
+              [innerHTML]="notifyItem.notification_action | safeHtml"
+            ></div>
+          </div>
+        </ion-slide>
+      </ion-slides>
+    </div>
+  </div>
+</div>

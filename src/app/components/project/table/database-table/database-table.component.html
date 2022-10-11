@@ -1,0 +1,145 @@
+<div class="page-wrapper teamPageWrapper">
+  <div class="page-container">
+    <div class="content-wrapper">
+      <div class="mainContent" id="mainContent">
+        <app-infoheader></app-infoheader>
+        <app-tabheader tab="database"></app-tabheader>
+        <div>
+          <div class="contract-section">
+            <div class="projectTab">
+              <div class='category col-12'>
+                <div class='categoryButton' [ngClass]="{'active': currentDatabaseTab === DatabaseTab.ARTIST}"
+                  (click)='setCurrentDatabaseTab(DatabaseTab.ARTIST)'>
+                  <i class="fas fa-user-music"></i>
+                  <p class="pt-2">{{DatabaseTab.ARTIST}}</p>
+                </div>
+                <div class='categoryButton' [ngClass]="{'active': currentDatabaseTab === DatabaseTab.ARTIST_PUBLISHER}"
+                  (click)='setCurrentDatabaseTab(DatabaseTab.ARTIST_PUBLISHER)'>
+                  <i class='fad fa-handshake'
+                    [ngClass]="{'fas': currentDatabaseTab === DatabaseTab.ARTIST_PUBLISHER , 'fad icon-colors': currentDatabaseTab !== DatabaseTab.ARTIST_PUBLISHER}"></i>
+                  <p class="pt-2">{{DatabaseTab.ARTIST_PUBLISHER}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end mt-3 mr-3" *ngIf="DatabaseTab.ARTIST === currentDatabaseTab">
+              <button nbButton status='info' (click)="onAddArtist()">
+                <div class='gradientText verticalCenterRow'>
+                  <i class='fas fa-plus-circle mr-1'></i><span>Add Artist</span>
+                </div>
+              </button>
+            </div>
+            <div class="d-flex justify-content-end mt-3 mr-3" *ngIf="DatabaseTab.ARTIST_PUBLISHER === currentDatabaseTab">
+              <button nbButton status='info' (click)="onAddArtistPublisher()">
+                <div class='gradientText verticalCenterRow'>
+                  <i class='fas fa-plus-circle mr-1'></i><span> Add Artist Publisher</span>
+                </div>
+              </button>
+            </div>
+
+            <ngx-datatable class="bootstrap table-hover" [rows]="artists" [loadingIndicator]="artistLoading"
+            [limit]="10"
+              [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+              *ngIf="currentDatabaseTab === DatabaseTab.ARTIST" [rowHeight]="55">
+              <ngx-datatable-column [sortable]="false" name="Artist Name">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="card-title" *ngIf="!row.editable">
+                    <img [src]="row.avatar_url" class="ml-3 artist-img">
+                    {{row.artist_name}}</div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [sortable]="false" name="Apple URL">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a *ngIf="row.url_apple"  target="_blank" class="card-title text-center" [href]="row.url_apple" >     <i class="mt-2 fab fa-itunes-note mr-2 gradientText fa-2x"></i></a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [sortable]="false" name="Spotify URL">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a *ngIf="row.url_spotify"  target="_blank" class="card-title text-center" [href]="row.url_spotify" >       <i class="fab fa-spotify fa-2x text-success mr-2 artist-info-icon"></i></a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [sortable]="false" name="Soundcloud URL">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a *ngIf="row.url_soundcloud"  target="_blank" class="card-title text-center" [href]="row.url_soundcloud" >    <i style="color: #FE5000;" class="fab fa-soundcloud fa-2x mr-2 artist-info-icon"></i></a>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [sortable]="false" name="Action">
+                <ng-template #buttonTemplate let-value="value" let-row="row" let-rowIndex="rowIndex"
+                  ngx-datatable-cell-template>
+                  <div>
+                    <span class="text-right">
+                      <button class="btn btn-sm btn-outline-secondary" *ngIf="!row.editable"
+                        (click)="onEditArtist(row, rowIndex)"><i class="fal fa-edit"></i></button>
+                      <button *ngIf="!row.editable" (click)="onDeleteArtist(row.artist_uuid)"
+                        class="ml-2 edit-track-btn btn btn-sm btn-outline-danger">
+                        <i class="fal fa-trash-alt"></i>
+                      </button>
+                    </span>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <!-- <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                  let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset" let-isVisible="isVisible">
+                  <div class="container">
+
+                  </div>
+                </ng-template>
+              </ngx-datatable-footer> -->
+            </ngx-datatable>
+
+            <ngx-datatable class="bootstrap table-hover" [rows]="artistPublishers" [columnMode]="'force'"
+              [headerHeight]="50" [footerHeight]="0" style="height: 439px;" [loadingIndicator]="artistPublisherLoading"
+              *ngIf="currentDatabaseTab === DatabaseTab.ARTIST_PUBLISHER" [rowHeight]="55">
+              <ngx-datatable-column name="Publisher Name" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="card-title" *ngIf="!row.editable">{{row.publisher_name}}</div>
+                  <input class="form-control mb-3" [value]="row.publisher_name" [(ngModel)]="row.publisher_name"
+                    *ngIf="row.editable">
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Action" [sortable]="false">
+                <ng-template #buttonTemplate let-value="value" let-row="row" let-rowIndex="rowIndex"
+                  ngx-datatable-cell-template>
+                  <div>
+                    <span class="text-right">
+                      <button class="btn btn-sm btn-outline-secondary" *ngIf="!row.editable"
+                        (click)="row.editable = true"><i class="fal fa-edit"></i></button>
+                      <button *ngIf="row.editable" (click)="onEditArtistPublisher(row, rowIndex)"
+                        class="ml-2 edit-track-btn btn-sm btn-light">
+                        <i *ngIf="!artistSaving[rowIndex]" class="fal fa-save"></i>
+                        <i *ngIf="artistSaving[rowIndex]" class="fas fa-circle-notch fa-spin"></i>
+                      </button>
+                      <button *ngIf="row.editable" (click)="row.editable = false"
+                        class="ml-2 btn btn-sm btn-outline-danger">
+                        <i class="far fa-times"></i>
+                      </button>
+                      <button *ngIf="!row.editable" (click)="onDeleteArtistPublisher(row.artist_uuid)"
+                        class="ml-2 edit-track-btn btn btn-sm btn-outline-danger">
+                        <i class="fal fa-trash-alt"></i>
+                      </button>
+                    </span>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-footer>
+                <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                  let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset" let-isVisible="isVisible">
+                  <div class="container">
+
+                  </div>
+                </ng-template>
+              </ngx-datatable-footer>
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <app-historybar class="sidemenu hidebar"></app-historybar> -->
+</div>
+<ng-template #loading>
+  <div class="asyncLoading">
+    <ion-spinner name="lines"></ion-spinner>
+    <span class="ml10">Loading...</span>
+  </div>
+</ng-template>

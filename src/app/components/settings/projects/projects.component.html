@@ -1,0 +1,177 @@
+<div>
+  <!-- NO DATA START -->
+  <div class="mt20" *ngIf="!projectInvites?.length && !userServices?.length && loading">
+    <div class="asyncLoading">
+      <ion-spinner name="lines"></ion-spinner>
+      <span class="ml10">Loading...</span>
+    </div>
+  </div>
+  <!-- NO DATA END -->
+
+  <!-- INVITES -->
+  <div *ngFor="let service of projectInvites" class="service-wrapper invite-wrapper">
+    <div class="top-section">
+      <div class="service-info">
+        <div class="service-heading mt0">
+          <h5 class="mr5">{{ service.account_name }}</h5>
+        </div>
+
+        <div class="property">
+          <div class="name">Service Holder:</div>
+          <div class="value">
+            {{ service.account_holder }}
+          </div>
+        </div>
+        <div class="property">
+          <div class="name">Date Created:</div>
+          <div class="value">{{ service.stamp_created | dateAgo }}</div>
+        </div>
+      </div>
+
+      <div class="service-actions">
+        <button nbButton status="info" class="mb5" (click)="acceptService(service.account_uuid)">
+          <div class="wrapper"><span class="gradientText">Accept</span></div>
+        </button>
+        <button nbButton status="info" (click)="rejectService(service.account_uuid)">
+          <div class="wrapper"><span class="gradientText">Reject</span></div>
+        </button>
+      </div>
+    </div>
+    <div class="bottom-section" *ngIf="service.projects.length > 0">
+      <div *ngFor="let project of service.projects" class="project-wrapper">
+        <!-- PROJECT ARTWORK -->
+        <div class="project-artwork">
+          <img [src]="project.artwork" alt="Project Artwork" />
+        </div>
+        <!-- PROJECT ARTWORK -->
+
+        <!-- PROJECT INFO -->
+        <div class="project-info">
+          <div class="property">
+            <div class="name">Name:</div>
+            <div [title]="project.project_title" class="value project-title">
+              {{ project.project_title }}
+            </div>
+          </div>
+          <div class="property">
+            <div class="name">Release Date:</div>
+            <div class="value">
+              {{ project.project_date | date: 'MM-dd-y' }}
+            </div>
+          </div>
+          <div class="property">
+            <div class="name">Project Type:</div>
+            <div class="value">{{ project.project_type }}</div>
+          </div>
+          <div class="property">
+            <div class="name">Created:</div>
+            <div nbTooltip="{{ project.stamp_created_by.name }} Created at {{
+                project.stamp_created | timestamp: 'MM/dd/y'
+              }}" nbTooltipStatus="info" class="value">
+              {{ project.stamp_created | dateAgo }}
+            </div>
+          </div>
+        </div>
+        <!-- PROJECT INFO -->
+      </div>
+    </div>
+  </div>
+  <!-- INVITES -->
+
+  <!-- SERVICES -->
+  <div *ngFor="let service of userServices" class="service-wrapper">
+    <div class="top-section">
+      <div class="service-info">
+        <div class="service-heading mt0">
+          <h5 class="mr5">{{ service.account_name }}</h5>
+          <button type="button" class="btn btn-danger btn-unlink"  tooltip="You cant unlink the account with active project contract"
+            *ngIf="!checkServiceOwned(service)" [isDisabled]="!getUserProjectsWithUserInContract(service)"
+            [ngClass]="!!getUserProjectsWithUserInContract(service) ? 'disabled':''"
+            (click)="removeService(service)">
+            Unlink
+          </button>
+          <button nbButton status="primary"
+            *ngIf="!!getUserProjectsWithUserInContract(service) && checkServiceOwned(service)"
+            routerLink="/settings/accounts">
+            Manage
+          </button>
+        </div>
+
+        <div class="property">
+          <div class="name">Created By:</div>
+          <div class="value creator-avatar">
+            <div class="creator-image" (mouseenter)="userUUIDImagePreview = service.user.user_uuid"
+              (mouseleave)="userUUIDImagePreview = null" [style.background-image]="'url(' + service.user.avatar + ')'">
+              <div *ngIf="userUUIDImagePreview === service.user.user_uuid" class="creator-preview">
+                <img [src]="service.user.avatar" alt="Creator Preview" />
+              </div>
+            </div>
+            {{ service.user.user_name }}
+          </div>
+        </div>
+        <div class="property">
+          <div class="name">Date Created:</div>
+          <div class="value">{{ service.stamp_created | dateAgo }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-section mt10" *ngIf="service.projects.length > 0">
+      <div *ngFor="let project of service.projects" class="project-wrapper">
+
+        <!-- PROJECT ARTWORK -->
+        <div class="project-artwork">
+          <img [src]="project.artwork" alt="Project Artwork" />
+        </div>
+        <!-- PROJECT ARTWORK -->
+
+        <!-- PROJECT INFO -->
+        <div class="project-info">
+          <div class="property">
+            <div class="name">Name:</div>
+            <div [title]="project.project_title" class="value project-title">
+              {{ project.project_title }}
+            </div>
+          </div>
+          <div class="property">
+            <div class="name">Release Date:</div>
+            <div class="value">
+              {{ project.project_date | date: 'MM-dd-y' }}
+            </div>
+          </div>
+          <div class="property">
+            <div class="name">Project Type:</div>
+            <div class="value">{{ project.project_type }}</div>
+          </div>
+          <div class="property">
+            <div class="name">Created:</div>
+            <div nbTooltip="{{ project.stamp_created_by.name }} Created at {{
+                project.stamp_created | timestamp: 'MM/dd/y'
+              }}" nbTooltipStatus="info" class="value">
+              {{ project.stamp_created | dateAgo }}
+            </div>
+          </div>
+        </div>
+        <!-- PROJECT INFO -->
+
+        <!-- PROJECT ACTIONS -->
+        <div class="project-actions">
+          <button nbButton status="primary" routerLink="/project/info/{{ project.project_uuid }}">
+            Project
+          </button>
+          <button nbButton status="primary" routerLink="/project/{{ project.project_uuid }}/team">
+            Permissions
+          </button>
+          <button nbButton status="primary"
+            [nbTooltip]="project.flag_contract ? 'You cannot remove a project in which you are part of the contract' : null"
+            [nbTooltipTrigger]="project.flag_contract ? 'hover' : 'noop'" nbTooltipStatus="info"
+            (click)="removeProject(project)" class="btn-unlink-project"
+            *ngIf="!project.flag_contract && !checkServiceOwned(service)">
+            Unlink Project
+          </button>
+        </div>
+        <!-- PROJECT ACTIONS -->
+      </div>
+    </div>
+  </div>
+  <!-- SERVICES -->
+</div>
